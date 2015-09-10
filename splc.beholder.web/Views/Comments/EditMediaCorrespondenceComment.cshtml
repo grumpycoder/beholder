@@ -1,0 +1,16 @@
+﻿@model MediaCorrespondenceComment
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Comment</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditMediaCorrespondenceComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+<div>
+    @Html.ActionLink("Back", "Details", "MediaCorrespondences", new { id = Model.MediaCorrespondenceId }, null)
+</div>

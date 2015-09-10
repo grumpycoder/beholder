@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Reports</h2>
+
+<div style="">
+    @*<div class="list-group">
+        @Html.ActionLink("Year End Chapter", "YearEnd", "Report", new {@class = "list-group-item"})
+    </div>*@
+
+
+    <div class="list-group">
+        <a href="@Url.Action("YearEnd", "Report")" class="list-group-item">
+            <h4 class="list-group-item-heading">Year End</h4>
+            <p class="list-group-item-text">Year end reporting for chapters</p>
+        </a>
+        <a href="@Url.Action("ForTheRecord", "Report")" class="list-group-item">
+            <h4 class="list-group-item-heading">For the Record</h4>
+            <p class="list-group-item-text">Events for publishing</p>
+        </a>
+
+        @*<a href="@Url.Action("HateMap", "Report")" class="list-group-item">
+            <h4 class="list-group-item-heading">Hate Map</h4>
+            <p class="list-group-item-text">Chapters by location for mapping import to website</p>
+        </a>*@
+
+    </div>
+
+</div>
+

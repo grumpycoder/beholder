@@ -1,0 +1,15 @@
+﻿@model ChapterContactRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+<h2 class="page-title small">Edit Chapter/Contact Relationship</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditChapterContact", Model)
+    <input type="submit" value="Save Relationship" class="btn btn-primary pull-right" />
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

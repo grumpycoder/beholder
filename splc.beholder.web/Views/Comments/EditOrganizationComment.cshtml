@@ -1,0 +1,16 @@
+﻿@model OrganizationComment
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditOrganizationComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+<div>
+    @Html.ActionLink("Back", "Details", "Organizations", new { id = Model.OrganizationId }, null)
+</div>

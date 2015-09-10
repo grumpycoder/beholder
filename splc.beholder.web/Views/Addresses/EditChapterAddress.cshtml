@@ -1,0 +1,16 @@
+﻿@model AddressChapterRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Address</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditChapterAddress", Model)
+    <input type="submit" value="Create Address" class="btn btn-primary pull-right" />
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

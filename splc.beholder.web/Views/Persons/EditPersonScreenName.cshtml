@@ -1,0 +1,14 @@
+﻿@model PersonScreenName
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Screen Name</h2>
+<div class="row">
+    @Html.Partial("_CreateOrEditPersonScreenName", Model)
+    <input type="submit" value="Save" class="btn btn-primary pull-right" />
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

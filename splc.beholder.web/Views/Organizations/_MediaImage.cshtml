@@ -1,0 +1,23 @@
+﻿@model ICollection<splc.domain.Models.OrganizationMediaImageRel>
+
+@*<div class="row-fluid">
+    <div class="display-label">ImageTitle: @Model.MediaImage.ImageTitle</div>
+    <div class="display-label">RelationshipType:@(Model.RelationshipType == null ? "None" : Model.RelationshipType.Name)</div>
+    <div class="display-label">ApprovalStatus:@(Model.ApprovalStatus == null ? "None" : Model.ApprovalStatus.Name)</div>
+    <div class="display-label">PrimaryStatus:@(Model.PrimaryStatus == null ? "None" : Model.PrimaryStatus.Name)</div>
+</div>        *@
+                <div id="Carousel">
+                    <ul id="slider">
+                        @foreach (var images in Model)
+                        {
+                            foreach (var image in images.MediaImage.Images)
+                            {
+                                <li>
+                                    <img src="@Url.Action("ShowImage", "MediaImages", new { Id = image.Id })"  />
+                                    <br/>
+                                    @images.MediaImage.ImageTitle
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>

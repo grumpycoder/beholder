@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.ChapterType>
+
+@{
+    ViewBag.Title = "Chapter Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_ChapterTypeList", Model)

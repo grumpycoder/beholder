@@ -1,0 +1,14 @@
+﻿@model Boolean?
+
+@{
+    var htmlAttributes = new RouteValueDictionary();
+    if (ViewBag.@class != null)
+    {
+        htmlAttributes.Add("class", ViewBag.@class);
+    }
+}
+        @Html.CheckBox(
+            "",
+            Model.HasValue && Model.Value,
+            htmlAttributes)
+        @Html.ValidationMessageFor(m => m, null, new { @class = "help-block" })

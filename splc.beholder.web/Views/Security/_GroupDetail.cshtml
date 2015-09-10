@@ -1,0 +1,96 @@
+﻿@model Group
+
+
+<section>
+    <h4>Group Members</h4>
+</section>
+
+
+@if (!Model.GroupUsers.Any())
+{
+    <p>User assigned to no groups</p>
+}
+else
+{
+    <table class="table table-condensed table-striped">
+        <caption>Users</caption>
+        <tr>
+            <th>
+                UserName
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.GroupUsers.Where(x => x.DateDeleted == null))
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    <a href="@Url.Action("DeleteGroupUser", "Security", new {id = item.Id})"
+                       class="btnDelete"
+                       data-title="Delete User"
+                       data-message="Are you sure you want to delete?"
+                       data-refresh="true"
+                       data-action="@Url.Action("GroupDetail", "Security", new {id = @Model.Id})">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+<div class="form-group">
+    <label for="txtUser">User to add</label>
+    <input type="text" id="txtUser" name="txtUser" class="form-control" placeholder="username" />
+    @Html.ActionLink("Add to group", "CreateGroupUser", "Security", new { groupId = @Model.Id }, new { @class = "btn", id = "btnNewGroupUser", data_action = @Url.Action("GroupDetail", "Security", new { id = @Model.Id }) })
+</div>
+
+
+
+
+<script type="text/javascript">
+    var userId;
+    $(function () {
+        //$('#txtUser').on('change', function () {
+        //    userId = $(this).val();
+        //});
+
+        $('#btnNewGroupUser').on('click', function (e) {
+            e.preventDefault();
+            var $target = $('#group-detail');
+            var url = $(this).attr('href');
+            url += "&userId=" + userId;
+            var action = $(this).data('action');
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function () {
+                    toastr.success('User added');
+                    LoadView($target, action);
+                },
+                error: function (data) {
+                    toastr.error(data);
+                }
+            });
+
+        });
+
+        $('#txtUser').autocomplete({
+            source: '@Url.Action("GetUsers")',
+            change: function (event, ui) {
+                if (!ui.item) {
+                    this.value = '';
+                } else {
+                    userId = ui.item.id;
+                }
+            }
+        });
+
+    });
+</script>

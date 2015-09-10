@@ -1,0 +1,47 @@
+﻿@model Organization
+
+<div class="span4 card">
+    <div id="organization" class="title">
+        <div>
+            @Html.ActionLink(string.Format("{0}", Model.OrganizationName), "Details", "Organizations", new { id = Model.Id }, null)
+        </div>
+    </div>
+    <div>
+        @if (Model.OrganizationMediaImageRels.Count > 0)
+        {
+            <div>
+                <img src="@Url.Action("ShowPrimaryImage", "Organizations", new { Id = Model.Id })" alt="person image" class="person-thumbnail" />
+            </div>   
+        }
+        else
+        {
+            <div>
+                <img src="~/content/img/unknown-person.png" class="person-thumbnail" alt="no person image" />
+            </div>
+        }
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>Type</td>
+                <td>@(Model.OrganizationType == null ? "Unknown" : Model.OrganizationType.Name)</td>
+            </tr>
+            <tr>
+                <td>Movement</td>
+                <td>@(Model.MovementClass == null ? "Unknown" : Model.MovementClass.Name)</td>
+            </tr>
+            <tr>
+                <td>Formed</td>
+                <td>@(Model.FormedDate == null ? "Unknown" : @String.Format("{0:d}", Model.FormedDate))</td>
+            </tr>
+            <tr>
+                <td>Active Year</td>
+                <td>@(Model.ActiveYear == null ? "Unknown" :  Model.ActiveYear.ToString())</td>
+            </tr>
+            <tr>
+                <td>Active</td>
+                <td>@(Model.ActiveStatusId == null ? "Unknown" : Model.ActiveStatus.Name)</td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,3 @@
+﻿ALTER DATABASE [$(DatabaseName)]
+    ADD FILEGROUP [StreamGroup2] CONTAINS FILESTREAM;
+

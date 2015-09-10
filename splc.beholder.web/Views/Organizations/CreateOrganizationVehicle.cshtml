@@ -1,0 +1,18 @@
+﻿@model OrganizationVehicleRel
+
+@{
+	ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">New Organization/Vehicle Relationship</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditOrganizationVehicle", Model)
+    <input type="submit" value="Save Relationship" class="btn btn-primary pull-right" />
+</div>
+
+<div>
+	@Html.ActionLink("Back to List", "Index")
+</div>
+
+

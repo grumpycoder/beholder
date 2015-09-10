@@ -1,0 +1,22 @@
+﻿@model MediaAudioVideoComment
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+
+    @Html.HiddenFor(m => m.MediaAudioVideoId)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <div class="form-group">
+            @*@Html.BootstrapLabelFor(m => m.Comment)*@
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.Comment)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.Comment)</span>
+            </div>
+        </div>
+
+    </fieldset>
+}

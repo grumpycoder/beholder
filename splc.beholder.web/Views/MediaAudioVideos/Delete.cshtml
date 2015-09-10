@@ -1,0 +1,113 @@
+@model splc.domain.Models.MediaImage
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>MediaImage</legend>
+
+    <div class="display-label">ImageTitle</div>
+    <div class="display-field">@Model.ImageTitle</div>
+
+    <div class="display-label">PhotographerArtist</div>
+    <div class="display-field">@Model.PhotographerArtist</div>
+
+    <div class="display-label">DatePublished</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DatePublished)</div>
+
+    <div class="display-label">RollFrameNumber</div>
+    <div class="display-field">@Model.RollFrameNumber</div>
+
+    <div class="display-label">ContactOwner</div>
+    <div class="display-field">@Model.ContactOwner</div>
+
+    <div class="display-label">DateRenewalPermission</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateRenewalPermission)</div>
+
+    <div class="display-label">RenewalPermissionTypeId</div>
+    <div class="display-field">@Model.RenewalPermissionTypeId</div>
+
+    <div class="display-label">RenewalPermission</div>
+    <div class="display-field">@Model.RenewalPermission</div>
+
+    <div class="display-label">Summary</div>
+    <div class="display-field">@Model.Summary</div>
+
+    <div class="display-label">City</div>
+    <div class="display-field">@Model.City</div>
+
+    <div class="display-label">County</div>
+    <div class="display-field">@Model.County</div>
+
+    <div class="display-label">BatchSortOrder</div>
+    <div class="display-field">@Model.BatchSortOrder</div>
+
+    <div class="display-label">ImageFileName</div>
+    <div class="display-field">@Model.ImageFileName</div>
+
+    <div class="display-label">DateTaken</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateTaken)</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateCreated)</div>
+
+    <div class="display-label">CreatedUserId</div>
+    <div class="display-field">@Model.CreatedUserId</div>
+
+    <div class="display-label">DateModified</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateModified)</div>
+
+    <div class="display-label">ModifiedUserId</div>
+    <div class="display-field">@Model.ModifiedUserId</div>
+
+    <div class="display-label">RemovalReason</div>
+    <div class="display-field">@Model.RemovalReason</div>
+
+    <div class="display-label">DateDeleted</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateDeleted)</div>
+
+    <div class="display-label">DeletedUserId</div>
+    <div class="display-field">@Model.DeletedUserId</div>
+
+    <div class="display-label">ConfidentialityType</div>
+    <div class="display-field">@(Model.ConfidentialityType == null ? "None" : Model.ConfidentialityType.Name)</div>
+
+    <div class="display-label">Images</div>
+    <div class="display-field">@(Model.Images == null ? "None" : Model.Images.Count.ToString())</div>
+
+    <div class="display-label">ImageType</div>
+    <div class="display-field">@(Model.ImageType == null ? "None" : Model.ImageType.Name)</div>
+
+    <div class="display-label">MediaType</div>
+    <div class="display-field">@(Model.MediaType == null ? "None" : Model.MediaType.Name)</div>
+
+    <div class="display-label">MovementClass</div>
+    <div class="display-field">@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</div>
+
+    <div class="display-label">NewsSource</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.NewsSource).ToString()</div>
+
+    <div class="display-label">RemovalStatus</div>
+    <div class="display-field">@(Model.RemovalStatus == null ? "None" : Model.RemovalStatus.Name)</div>
+
+    <div class="display-label">RenewalPermmisionType</div>
+    <div class="display-field">@(Model.RenewalPermmisionType == null ? "None" : Model.RenewalPermmisionType.Name)</div>
+
+    <div class="display-label">State</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.State).ToString()</div>
+
+    <div class="display-label">OrganizationMediaImageRels</div>
+    <div class="display-field">@(Model.OrganizationMediaImageRels == null ? "None" : Model.OrganizationMediaImageRels.Count.ToString())</div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+
+

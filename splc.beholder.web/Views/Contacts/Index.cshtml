@@ -1,0 +1,61 @@
+@model Caseiro.Mvc.PagedList.PagedList<Contact>
+
+@{
+    ViewBag.Title = "Contacts";
+    var fname = Request["fname"];
+    var lname = Request["lname"];
+    var location = Request["location"];
+    var stateid = Session["stateid"] ?? Request["stateid"];
+}
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            @using (Html.BeginForm("Index", "Contacts", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+                <input type="text" id="fname" name="fname" placeholder="First Name" class="form-control" value="@(fname)" />
+                <input type="text" id="lname" name="lname" placeholder="Last Name" class="form-control" value="@(lname)" />
+                <input type="text" id="location" name="location" placeholder="City" class="form-control" value="@(location)" />
+                <select data-placeholder="Choose States..." name="stateid" id="stateid" multiple class="chosen-select form-control" style="width:350px;">
+                    @foreach (var item in (IEnumerable<State>)ViewBag.PossibleStates)
+                    {
+                        var selectedValue = false;
+                        if (@stateid != null)
+                        {
+                            foreach (var i in (List<int>)stateid)
+                            {
+                                if (i == item.Id) { selectedValue = true; break; }
+                            }
+                        }
+                        if (selectedValue)
+                        {
+                            <option value="@item.Id" selected="selected">
+                                @item.StateCode
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="@item.Id">
+                                @item.StateCode
+                            </option>
+                        }
+                    }
+                </select>
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+            }
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "Contacts", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+<div id="contactList">
+    @Html.Partial("_ContactList", Model)
+</div>
+

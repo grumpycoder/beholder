@@ -1,0 +1,72 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<MediaPublished>
+
+@{
+    var pageSize = Request["pageSize"];
+    var publishedname = Request["publishedname"];
+    var location = Request["location"];
+    var datefrom = Request["datefrom"];
+    var dateto = Request["dateto"];
+    var publishedtypeid = Request["publishedtypeid"];
+    var docsearch = Request["docsearch"];
+    
+    var publishedtypeid_string = "";
+    if ((Session["publishedtypeid"] ?? Request["publishedtypeid"]) != null)
+    {
+        publishedtypeid_string = string.Join(",", (List<int>)(Session["publishedtypeid"] ?? Request["publishedtypeid"]));
+    }
+    var stateid_string = "";
+    if ((Session["stateid"] ?? Request["stateid"]) != null)
+    {
+        stateid_string = string.Join(",", (List<int>)(Session["stateid"] ?? Request["stateid"]));
+    }
+}
+
+@if (!Model.Any())
+{
+    <h3>No Published Items found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, publishedname, location, datefrom, dateto, stateid_string, docsearch, publishedtypeid_string }))
+</div>
+
+<ul class="card-list">
+@foreach (var item in Model)
+{
+    <li>
+        <div class="thumbnail">
+
+            <a href="@Url.Action("Details", "MediaPublisheds", new { id = item.Id })">
+
+                <h4 class="title-elliipsis" title="@string.Format("{0}", item.Name)">@string.Format("{0}", item.Name)</h4>
+                <table class="table">
+                    <tr>
+                        <td>Movement</td>
+                        <td>@(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)</td>
+                    </tr>
+                    <tr>
+                        <td>Date Received</td>
+                        <td>@(item.DateReceived == null ? "Unknown" : @String.Format("{0:d}", item.DateReceived))</td>
+                    </tr>
+                    <tr>
+                        <td>Date Published</td>
+                        <td>@(item.DatePublished == null ? "Unknown" : @String.Format("{0:d}", item.DatePublished))</td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                        <td>
+                                @String.Format("{0}, {1}", @item.City, @item.State == null ? "": @item.State.StateName)
+                        </td>
+                    </tr>
+
+
+                </table>
+            </a>
+        </div>
+    </li>
+}
+</ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, publishedname, location, datefrom, dateto, publishedtypeid, stateid_string, docsearch, publishedtypeid_string }))
+</div>

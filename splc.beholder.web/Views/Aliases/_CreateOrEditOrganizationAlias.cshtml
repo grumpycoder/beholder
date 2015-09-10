@@ -1,0 +1,59 @@
+﻿@model AliasOrganizationRel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.OrganizationId)
+    @Html.HiddenFor(m => m.Alias.Id)
+    @Html.HiddenFor(m => m.AliasId)
+    @Html.HiddenFor(m => m.Alias.CreatedUserId)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.DateCreated)
+
+    <div class="form-group">
+        @Html.BootstrapLabelFor(m => m.PrimaryStatusId)
+        <div class="col-sm-8">
+            @Html.DropDownListFor(m => m.PrimaryStatusId, ((IEnumerable<PrimaryStatus>)ViewBag.PossiblePrimaryStatus).Select(option => option != null ? new SelectListItem
+                {
+                    Text = (option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.PrimaryStatusId)
+                } : null), "Choose...", new { @class = "form-control" })
+            <span class="help-block">@Html.ValidationMessageFor(m => m.PrimaryStatusId)</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.BootstrapLabelFor(m => m.Alias.AliasName)
+        <div class="col-sm-8">
+            @Html.TextBoxFor(m => m.Alias.AliasName)
+            <span class="help-block">@Html.ValidationMessageFor(m => m.Alias.AliasName)</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.BootstrapLabelFor(m => m.FirstKnownUseDate)
+        <div class="col-sm-8">
+            @Html.EditorFor(m => m.FirstKnownUseDate)
+            <span class="help-block">@Html.ValidationMessageFor(m => m.FirstKnownUseDate)</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.BootstrapLabelFor(m => m.LastKnownUseDate)
+        <div class="col-sm-8">
+            @Html.EditorFor(m => m.LastKnownUseDate)
+            <span class="help-block">@Html.ValidationMessageFor(m => m.LastKnownUseDate)</span>
+        </div>
+    </div>
+
+
+}
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+    });
+</script>

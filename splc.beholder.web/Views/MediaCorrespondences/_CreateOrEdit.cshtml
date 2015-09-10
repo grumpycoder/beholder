@@ -1,0 +1,273 @@
+@model MediaCorrespondence
+<div class="row">
+
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.DateCreated)
+
+    @*@Html.HiddenFor(m => m.MediaCorrespondenceContext.Id)*@
+    @Html.HiddenFor(m => m.MediaCorrespondenceContextId)
+    @*@Html.HiddenFor(m => m.MediaCorrespondenceContext.MimeTypeId)
+    @Html.HiddenFor(m => m.MediaCorrespondenceContext.MimeType.Name)
+    @Html.HiddenFor(m => m.MediaCorrespondenceContext.ContextText)*@
+
+
+    <fieldset class="col-sm-6">
+
+        <legend>Specifics</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CorrespondenceName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CorrespondenceName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CorrespondenceName)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ConfidentialityTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ConfidentialityTypeId, ((IEnumerable<ConfidentialityType>)ViewBag.PossibleConfidentialityTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.ConfidentialityTypeId)
+                }), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Confidentiality Type is required." })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ConfidentialityTypeId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.MovementClassId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.MovementClassId, ((IEnumerable<MovementClass>)ViewBag.PossibleMovementClasses).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.MovementClassId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.MovementClassId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.Summary)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.Summary)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.Summary)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.DateReceived)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.DateReceived)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.DateReceived)</span>
+            </div>
+        </div>
+    </fieldset>
+
+
+    <fieldset class="col-sm-6">
+
+        <legend>Location</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.City)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.City)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.City)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.County)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.County)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.County)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.StateId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.StateId, ((IEnumerable<State>)ViewBag.PossibleStates).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.StateName),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.StateId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.StateId)</span>
+            </div>
+        </div>
+    </fieldset>
+
+
+    <fieldset class="col-sm-6">
+
+        <legend>Renewal Info/Status</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.RenewalPermissionTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RenewalPermissionTypeId, ((IEnumerable<RenewalPermmisionType>)ViewBag.PossibleRenewalPermissionTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.RenewalPermissionTypeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RenewalPermissionTypeId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.DateRenewalPermission)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.DateRenewalPermission)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.DateRenewalPermission)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.RenewalPermission)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.RenewalPermission)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RenewalPermission)</span>
+            </div>
+        </div>
+    </fieldset>
+
+
+    <fieldset class="col-sm-6">
+
+        <legend>Miscellaneous</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.MediaTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.MediaTypeId, ((IEnumerable<MediaType>)ViewBag.PossibleMediaTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.MediaTypeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.MediaTypeId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CorrespondenceTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CorrespondenceTypeId, ((IEnumerable<CorrespondenceType>)ViewBag.PossibleCorrespondenceTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.CorrespondenceTypeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CorrespondenceTypeId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.FromName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.FromName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.FromName)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ToName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.ToName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ToName)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CatalogId)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CatalogId)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CatalogId)</span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+
+        <legend>Documents</legend>
+
+        <div class="form-group">
+            <div id="documentList">
+                @Html.Action("GetContextList", new { correspondenceId = Model.Id })
+            </div>
+            <div class="col-sm-12">
+                <input type="radio" name="uploadfile" value="Yes" class="uploadfile" checked="checked" />&nbsp;Upload File
+                <input type="radio" name="uploadfile" value="No" class="uploadfile" />&nbsp;Paste Text
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div id="uploadFile">
+                @if (@Model.Id != 0)
+                {
+                    @Html.Kendo().Upload().Name("attachments").Async(a => a.Save("SaveAttachments", "MediaCorrespondences", new { correspondenceId = @Model.Id })).ShowFileList(false).Events(e => e.Complete(@<text> function(e){LoadView("#documentList","@Url.Action("GetContextList", "MediaCorrespondences", new { correspondenceId = Model.Id })")}</text>)).Messages(m => m.HeaderStatusUploaded("").StatusUploaded("").Select("Choose"))
+                }
+                else
+                {
+                    <input name="attachments" id="attachments" type="file" />
+                }
+                
+            </div>
+            <div id="createFile" hidden="hidden">
+                <div class="col-sm-12">@Html.TextArea("fileContent", new { rows = 20, cols = 500, @placeholder = "Paste Content Here" })</div>
+                <div class="col-sm-12">
+                    @Html.TextBox("filename", null, new { @placeholder = "File Name" })
+                    @if (Model.Id == 0)
+                    {
+                        <div class="alert alert-warning">Content will be recorded when record saved.</div>
+                    }
+                    else
+                    {
+
+                        <a href="@Url.Action("SaveTextAsContent", "MediaCorrespondences")" id="btnSaveContext"
+                           class="btn btn-warning"
+                           data-target="#documentList"
+                           data-modelid="@Model.Id"
+                           data-action="@Url.Action("GetContextList", "MediaCorrespondences", new { correspondenceId = Model.Id })">Save as file</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </fieldset>
+
+</div>
+
+
+<script>
+    $(function () {
+        $('#fileContent').change(function (e) {
+            var $filename = $('#filename');
+            if ($filename.val().length == 0)
+                $filename.val($(this).val().replace(/\s/g, '').substring(0, 15));
+        });
+
+        $('#btnSaveContext').on('click', function (e) {
+            e.preventDefault();
+            var $content = $('#fileContent');
+            var $filename = $('#filename');
+            var modelid = $(this).data('modelid');
+            var $action = $(this).data('action');
+            var $target = $(this).data('target');
+
+            var url = this.href;
+            var $data = {
+                correspondenceId: modelid,
+                filename: $filename.val(),
+                content: $content.val()
+            }
+
+            $.post(url, $data,
+                function () {
+                    toastr.success('new record created');
+                    LoadView($target, $action);
+                    $filename.val('');
+                    $content.val('');
+                });
+
+        });
+        
+        $(function () {
+            $('#attachments').kendoUpload();
+        });
+
+
+    });
+</script>
+

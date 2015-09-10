@@ -1,0 +1,98 @@
+@model Vehicle
+<div class="row">
+    @Html.HiddenFor(model => model.CreatedUserId)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.DateCreated)
+
+
+    <fieldset>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.VIN)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.VIN)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.VIN)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.VehicleYear)
+            <div class="col-sm-8">
+                @Html.TextBoxFor(model => model.VehicleYear)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.VehicleYear)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.VehicleColorId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.VehicleColorId, ((IEnumerable<VehicleColor>)ViewBag.PossibleVehicleColors).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.VehicleColorId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.VehicleColorId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.VehicleMakeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.VehicleMakeId, ((IEnumerable<VehicleMake>)ViewBag.PossibleVehicleMakes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.VehicleMakeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.VehicleMakeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.VehicleModelId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.VehicleModelId, ((IEnumerable<VehicleModel>)ViewBag.PossibleVehicleModels).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.VehicleModelId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.VehicleModelId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.VehicleTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.VehicleTypeId, ((IEnumerable<VehicleType>)ViewBag.PossibleVehicleTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.VehicleTypeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.VehicleTypeId)</span>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.BootstrapLabel("Tags")
+            <div class="col-sm-8">
+
+                @*@Html.ListBox("VehicleTags", ((IEnumerable<VehicleTag>)Model.VehicleTags).Select(x => new SelectListItem
+                    {
+                        Text = x.TagNumber,
+                        Value = x.Id.ToString(),
+                        Selected = Model.VehicleTags != null && Model.VehicleTags.Any(y => y.Id == x.Id)
+                    }), new { @class = "chosen-select form-control" })*@
+            </div>
+        </div>
+
+    </fieldset>
+
+</div>
+
+<script type="text/javascript">
+    //$(function () {
+    //    initPartialControls();
+    //});
+</script>

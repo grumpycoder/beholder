@@ -1,0 +1,122 @@
+@using splc.domain.Models;
+@model Caseiro.Mvc.PagedList.PagedList<MediaCorrespondence>
+
+@{
+    ViewBag.Title = "Correspondence Items";
+
+    var docsearch = Session["docsearch"] ?? Request["docsearch"];
+    var correspondencename = Session["correspondencename"] ?? Request["correspondencename"];
+    var fromname = Session["fromname"] ?? Request["fromname"];
+    var datefrom = Session["datefrom"] ?? Request["datefrom"];
+    var dateto = Session["dateto"] ?? Request["dateto"];
+    var userid = Session["userid"] ?? Request["userid"];
+    var correspondencetypeid = Session["correspondencetypeid"] ?? Request["correspondencetypeid"];
+
+}
+<style type="text/css">
+    .panel-group .panel {
+        overflow: visible; /*This is the issue*/
+    }
+</style>
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-11 col-lg-11">
+            @using (Html.BeginForm("Index", "MediaCorrespondences", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+                <input type="text" id="correspondencename" name="correspondencename" class="form-control" placeholder="Correspondence Name" value="@correspondencename" />
+
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+                <div class="pull-right">
+                    <button class="btn btn-info">My Entries</button>
+                </div>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <small>More search options</small>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+
+                                <table class="table table-condensed table-responsive table-no-border">
+                                    <tr>
+                                        <td><label class="control-label">From</label></td>
+                                        <td><label class="control-label">Date Correspondence Received</label></td>
+                                        <td><label class="control-label">Document Search Term</label></td>
+                                        <td><label class="control-label">Correspondence Types</label></td>
+                                        <td><label class="control-label">Created By</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" name="fromname" id="fromname" placeholder="Name" value="@fromname" class="form-control" /></td>
+                                        <td>
+                                            <div class="input-daterange input-group" id="datepicker">
+                                                <input type="text" class="form-control" name="datefrom" value="@datefrom" />
+                                                <span class="input-group-addon">to</span>
+                                                <input type="text" class="form-control" name="dateto" value="@dateto" />
+                                            </div>
+                                        </td>
+                                        <td><input type="text" name="docsearch" id="docsearch" placeholder="Document Search Term" value="@docsearch" class="form-control" /></td>
+                                        <td>
+                                            <select data-placeholder="Choose Correspondence Types..." name="correspondencetypeid" multiple class="chosen-select">
+                                                @foreach (var item in (IEnumerable<CorrespondenceType>)ViewBag.PossibleCorrespondenceTypes)
+                                                {
+                                                    var selectedValue = false;
+                                                    if (correspondencetypeid != null)
+                                                    {
+                                                        foreach (var i in (List<int>)correspondencetypeid)
+                                                        {
+                                                            if (i == item.Id) { selectedValue = true; break; }
+                                                        }
+                                                    }
+                                                    if (selectedValue)
+                                                    {
+                                                        <option value="@item.Id" selected="selected">
+                                                            @item.Name
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Id">
+                                                            @item.Name
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            @Html.DropDownList("userid", ((IEnumerable<User>)ViewBag.Users).Select(option => new SelectListItem
+                                           {
+                                               Text = (option == null ? "None" : option.UserName),
+                                               Value = option.Id.ToString(),
+                                               Selected = false
+                                           }), "Username", new { @class = "chosen-select" }) 
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "MediaCorrespondences", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+
+<div id="correspondenceList">
+    @Html.Partial("_MediaCorrespondenceList", Model)
+</div>

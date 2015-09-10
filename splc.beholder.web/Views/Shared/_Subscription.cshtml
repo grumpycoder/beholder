@@ -1,0 +1,31 @@
+﻿@model Subscription
+
+<div class="span4 card">
+    <div class="title">
+        @Html.ActionLink(string.Format("{0}", Model.PublicationName), "Details", "Subscriptions", new { id = Model.Id }, null)
+    </div>
+    <div>
+@*        @if (Model.Image != null)
+        {
+            <div><img src="@Url.Action("ShowImage", "MediaAudioVideos", new { Id = Model.Image.Id })" alt="media image" class="person-thumbnail" /></div>
+        }
+        else
+        {
+            *@<div>
+                <img src="~/content/img/unknown-person.png" class="person-thumbnail" alt="no image" />
+            </div>
+@*        }*@
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>Renewal Permission Date</td>
+                <td>@(Model.RenewalPermissionDate == null ? "Unknown" : @String.Format("{0:d}", Model.RenewalPermissionDate))</td>
+            </tr>
+            <tr>
+                <td>Subscription Rate</td>
+                <td>@(Model.SubscriptionRate == null ? "Unknown" : @String.Format("{0:d}", Model.SubscriptionRate))</td>
+            </tr>
+        </table>
+    </div>    
+</div>

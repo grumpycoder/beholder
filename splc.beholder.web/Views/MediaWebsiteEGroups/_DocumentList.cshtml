@@ -1,0 +1,24 @@
+﻿@model IEnumerable<MediaWebsiteEGroupContext>
+@{
+    Layout = null;
+}
+
+<ul class="list-group">
+
+    @foreach (var item in @Model)
+    {
+        <li class="list-group-item">
+            <a href="@Url.Action("Download", "MediaWebsiteEGroups", new { Id = item.Id })" target="_blank">
+                <span class="glyphicon glyphicon-file">&nbsp;</span>@(string.IsNullOrWhiteSpace(item.FileName) ? string.Format("No Name") : @item.FileName)
+            </a>
+            <a href="@Url.Action("DeleteAttachment", "MediaWebsiteEGroups", new { id = item.Id })"
+               class="btnDelete"
+               data-title="Delete Document"
+               data-refresh="true"
+               data-target="#documentList"
+               data-action="@Url.Action("GetContextList", "MediaWebsiteEGroups", new { websiteEgroupId = @item.MediaWebsiteEGroupId })">&nbsp;<span class="glyphicon glyphicon-remove pull-right"></span></a>
+        </li>
+
+    }
+
+</ul>

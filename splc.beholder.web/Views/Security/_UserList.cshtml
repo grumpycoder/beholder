@@ -1,0 +1,57 @@
+﻿@model IEnumerable<User>
+@using GridMvc.Html
+    @{
+        ViewBag.Title = "Users";
+    }
+
+
+    @helper GridManageItemColumn(long Id)
+{
+    @Html.ActionLink("Edit", "EditUser", "Security", new { id = Id }, new
+{
+    @class = "btnEdit",
+    data_refresh = "true",
+    data_title = "Edit User",
+    data_target = "#userList",
+    data_action = @Url.Action("Users", "Security", new { gridpage = @ViewBag.gridpage })
+})
+
+}
+
+    @helper CustomRenderingOfBool(User user)
+{
+    if (user.Disabled)
+    { <text>Yes</text> }
+    else
+    { <text>No</text>
+}
+}
+    @helper RenderDisableToggle(User user, int id)
+{
+    @Html.ActionLink(user.Disabled ? "Enable" : "Disable", "ToggleDisableUser", "Security", new { id = id }, new
+     {
+         @class = "btnDelete",
+         data_refresh = "true",
+         data_title = user.Disabled ? "Enable User" : "Disable User",
+         data_message = user.Disabled ? "Sure you want to enable?" : "Sure you want to disable?",
+         data_success = user.Disabled ? "User enabled" : "Disable User",
+         data_action = @Url.Action("Users", "Security", new { gridpage = @ViewBag.gridpage })
+     })
+}
+
+    @Html.Grid(Model).Named("usersGrid").Columns(c =>
+{
+    c.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(m => GridManageItemColumn(m.Id).ToHtmlString());
+    c.Add(m => m.Id, true).Sortable(true).Filterable(true);
+    c.Add(m => m.UserName).Sortable(true).Filterable(true);
+    c.Add(m => m.LastLoginDate).Titled("Last Login").Sortable(true).Filterable(true);
+    c.Add().Titled("Disabled").Encoded(false).Sanitized(false).RenderValueAs(
+        m => CustomRenderingOfBool(m)).Filterable(true).Sortable(true);
+    c.Add().Encoded(false).Sanitized(false).RenderValueAs(
+    m => RenderDisableToggle(m, m.Id));
+}).Filterable(true).WithPaging(15, 15, "gridpage")
+
+

@@ -1,0 +1,95 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<BeholderPerson>
+
+@{
+    var pageSize = Request["pageSize"] ?? Session["pageSize"];
+    var fname = Request["fname"] ?? Session["fname"];
+    var lname = Request["lname"] ?? Session["lname"];
+    var alias = Request["alias"] ?? Session["alias"];
+    var location = Request["location"] ?? Session["location"];
+    var movementclassid = Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+    var stateid_string = "";
+    if ((Session["stateid"] ?? Request["stateid"]) != null)
+    {
+        stateid_string = string.Join(",", (List<int>)(Session["stateid"] ?? Request["stateid"]));
+    }
+}
+@if (!Model.Any())
+{
+    <h3>No People found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, fname, lname, movementclassid, movementclassid_string, stateid_string, alias, location }))
+</div>
+
+<ul class="card-list">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="thumbnail">
+
+                <a href="@Url.Action("Details", "Persons", new { id = item.Id })">
+                    @if (item.PersonMediaImageRels.Count > 0)
+                    {
+                        <img src="@Url.Action("ShowPrimaryImage", "Persons", new { item.Id })" alt="org image" class="thumbnail-img" height="175" width="250" />
+                    }
+                    else
+                    {
+                        @*<img src="http://placehold.it/250x175" alt="">*@
+                        <img src="~/Content/images/image_unavailable.jpg" alt="" height="175" width="250" class="thumbnail-img" />
+
+                    }
+
+
+                    <h4 class="title-elliipsis" title="@string.Format("{0}", item.CommonPerson.FullName)">@string.Format("{0}", item.CommonPerson.FullName)</h4>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                Alias
+                            </td>
+                            <td>
+                                @if (item.CommonPerson.AliasPersonRels.Count > 0)
+                                {
+                                    @item.CommonPerson.AliasPersonRels.First().Alias.AliasName
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Movement
+                            </td>
+                            <td>
+                                @(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Location</td>
+                            <td>
+                                @(item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatusId == 1) != null ?
+                                @String.Format("{0}, {1}", item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.City, item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State == null ? "Unknown" : item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State.StateCode)
+                                :
+                                @item.CommonPerson.AddressPersonRels.FirstOrDefault() == null ? "Unknown" :
+                                @String.Format("{0}, {1}", item.CommonPerson.AddressPersonRels.FirstOrDefault().Address.City, item.CommonPerson.AddressPersonRels.FirstOrDefault().Address.State == null ? "Unknown" : item.CommonPerson.AddressPersonRels.FirstOrDefault().Address.State.StateCode)
+                                )
+                            </td>
+
+
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </li>
+    }
+</ul>
+
+<div class="row">
+    @*@Html.Raw(@Html.Pager(Model))*@
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, fname, lname, movementclassid, movementclassid_string, stateid_string, alias, location }))
+</div>
+

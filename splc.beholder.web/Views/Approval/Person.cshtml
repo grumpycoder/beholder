@@ -1,0 +1,14 @@
+﻿@model IEnumerable<splc.domain.Models.BeholderPerson>
+
+@{
+    ViewBag.Title = "Person";
+    Layout = "~/Views/Approval/_ApprovalLayout.cshtml";
+}
+
+<h2>Person Approvals</h2>
+
+
+@foreach (var person in Model)
+{
+    @Html.Partial("_PersonAdmin", person)
+}

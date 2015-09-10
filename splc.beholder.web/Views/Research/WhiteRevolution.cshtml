@@ -1,0 +1,27 @@
+﻿@model Caseiro.Mvc.PagedList.PagedList<Customer>
+
+@{
+    ViewBag.Title = "White Revolution Members";
+    var searchTerm = Session["searchTerm"] ?? Request["searchTerm"];
+}
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            @using (Html.BeginForm("WhiteRevolution", "Research", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+
+                <input type="search" id="searchTerm" name="searchTerm" class="form-control" placeholder="Search Members" value="@searchTerm" />
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+                
+            }
+        </div>
+    </div>
+</div>
+<div id="memberList">
+    @Html.Partial("_WhiteRevolutionList", Model)
+</div>

@@ -1,0 +1,92 @@
+﻿@model Customer
+
+@{
+    ViewBag.Title = "Member Details";
+    var searchTerm = Session["searchTerm"];
+    var page = Session["page"];
+}
+
+<h2>@Model.Firstname @Model.Lastname</h2>
+
+<div class="container">
+    <hr />
+    <div class="row">
+        <span>Address</span>
+        <address>
+            @Model.Addr1 <br />
+            @Model.City, @Model.State @Model.Zip
+        </address>
+
+    </div>
+    <div class="row">
+        DOB: @Model.DOB<br/>
+        Phone: @Model.Phone <br />
+        Email: @Model.Email <br />
+        Fax: @Model.Fax <br />
+        CC#: @Model.CreditCardNo  Exp: @Model.ExpDate<br />
+        Additional Information: @Model.Info
+    </div>
+
+    <div class="row">
+        <h3>Orders</h3>
+        <ul class="list-group">
+            @if (!@Model.Orders.Any())
+            {
+                <li class="list-group-item">No Orders</li>
+            }
+            @foreach (var order in Model.Orders)
+            {
+            
+                <li class="list-group-item">
+                    <span>@string.Format("{0:d}", @order.OrderDate) : @string.Format("{0:C}", @order.AmtPaid)</span><br />
+                    <span><strong>Shipping Address</strong></span>
+                    <address>
+                        @order.ShipName <br />
+                        @order.ShipAddress1 <br />
+                        @order.ShipCity, @order.ShipState @order.ShipPostalCode
+                    </address>
+
+
+                    <span>Messages</span>
+                    <ul>
+                        @if (order.Message1 != null)
+                        {
+                            <li>@order.Message1</li> }
+                        @if (order.Message2 != null)
+                        {
+                            <li>@order.Message2</li> }
+                        @if (order.Message3 != null)
+                        {
+                            <li>@order.Message3</li> }
+                        @if (order.Message4 != null)
+                        {
+                            <li>@order.Message4</li> }
+                    </ul>
+
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="row">
+        <h3>Transactions</h3>
+        <ul class="list-group">
+            @if (!@Model.Transactions.Any())
+            {
+                <li class="list-group-item">No Transactions</li>
+            }
+            @foreach (var trans in Model.Transactions)
+            {
+                <li class="list-group-item">
+                    @trans.TransactionDate <br />
+                    @string.Format("{0:C}", trans.TransactionAmount) <br />
+                    @trans.TransactionDescription
+                </li>
+            }
+        </ul>
+
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Return to List", "WhiteRevolution", new { page = Session["page"], searchTerm = Session["searchTerm"] })
+</p>

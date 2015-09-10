@@ -1,0 +1,113 @@
+﻿@using splc.domain.Models;
+@model IEnumerable<OrganizationMediaCorrespondenceRel>
+@{
+    var viewItem = ViewBag.Controller == "Organizations" ? "Correspondence Items" : "Organizations";
+    var source = ViewBag.Controller == "Organizations" ? "Organizations" : "MediaCorrespondences";
+    var mediaCorrespondenceId =  ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"];
+    var organizationId = ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"]; 
+    var showOrganization = ViewBag.Controller == "MediaCorrespondences";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showOrganization){
+                        @Html.ActionLink(item.Organization.OrganizationName, "Details", "Organizations", new { id = item.Organization.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Organization.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(item.MediaCorrespondence.CorrespondenceName, "Details", "MediaCorrespondences", new { id = item.MediaCorrespondence.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaCorrespondence.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditOrganizationMediaCorrespondence", "Organizations", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#organizationMediaCorrespondences"
+                               data-action="@Url.Action("GetOrganizationMediaCorrespondences", "Organizations", new { organizationId =  @organizationId, mediaCorrespondenceId = @mediaCorrespondenceId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteOrganizationMediaCorrespondence", "Organizations", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#organizationMediaCorrespondences"
+                               data-action="@Url.Action("GetOrganizationMediaCorrespondences", "Organizations", new { organizationId =  @organizationId, mediaCorrespondenceId = @mediaCorrespondenceId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateOrganizationMediaCorrespondence", "Organizations", new { organizationId = @organizationId, mediaCorrespondenceId = @mediaCorrespondenceId })"
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#organizationMediaCorrespondences"
+           data-action="@Url.Action("GetOrganizationMediaCorrespondences", "Organizations", new { organizationId =  @organizationId, mediaCorrespondenceId = @mediaCorrespondenceId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+
+@*<table class="table table-bordered">
+    <caption>
+        @((string) ViewData["Controller"] == "Organizations" ? string.Format("Correspondence Items ({0})", Model.Count()) : string.Format("Organizations ({0})", Model.Count()))
+    </caption>
+    
+    @if (!Model.Any())
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",(string) ViewData["Controller"] == "Organizations" ? "Correspondence Items" : "Organizations")</td>
+        </tr>
+    }
+    @if (ViewData["Controller"].ToString() == "Organizations" && Model.Any())
+    {
+        foreach (var rel in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditOrganizationMediaCorrespondence", "Organizations", new { id = rel.Id, source = ViewData["Controller"].ToString()})" 
+class="btnEdit" data-title="Edit Relationship" data-refresh="true" data-action="@Url.Action("GetOrganizationMediaCorrespondences", "Organizations", new { organizationId =  ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"] , mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteOrganizationMediaCorrespondence", "Organizations", new { id = rel.Id})" 
+                       class="btnDelete" data-title="Delete Relationship" data-refresh="true" 
+data-action="@Url.Action("GetOrganizationMediaCorrespondences", "Organizations", new { organizationId =  ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"]  , mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+
+                <td>@Html.ActionLink(rel.MediaCorrespondence.CorrespondenceName, "Details", "MediaCorrespondences", new { id = rel.MediaCorrespondence.Id }, null)</td>
+                <td>@Html.DisplayFor(model => rel.MediaCorrespondence.MovementClass.Name)</td>
+            </tr>
+        }
+    }
+    @if (ViewData["Controller"].ToString() == "MediaCorrespondences")
+    {
+        foreach (var rel in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditOrganizationMediaCorrespondence", "Organizations", new { id = rel.Id, source = ViewData["Controller"].ToString()})" class="btnEdit" data-title="Edit Relationship" data-refresh="true" data-action="@Url.Action("GetOrganizationMediaCorrespondences", "Organizations", new { organizationId =  ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"] , mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteOrganizationMediaCorrespondence", "Organizations", new { id = rel.Id})" class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetOrganizationMediaCorrespondences", "Organizations", new { organizationId =  ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"]  , mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+
+                <td>@Html.ActionLink(rel.Organization.OrganizationName, "Details", "Organizations", new { id = rel.Organization.Id }, null)</td>
+                <td>@Html.DisplayFor(model => rel.Organization.MovementClass.Name)</td>
+            </tr>
+        }
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateOrganizationMediaCorrespondence", "Organizations", new { organizationId = ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"]  , mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"]})" class="btnNew" data-title="New Relationship" data-refresh="true" data-action="@Url.Action("GetOrganizationMediaCorrespondences", "Organizations", new {  organizationId = ViewData["OrganizationId"] == null ? -1 : ViewData["OrganizationId"], mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>*@

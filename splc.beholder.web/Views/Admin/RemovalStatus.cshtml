@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.RemovalStatus>
+
+@{
+    ViewBag.Title = "Removal Status";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_RemovalStatusList", Model)

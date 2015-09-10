@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.ContactInfoType>
+
+@{
+    ViewBag.Title = "Contact Info Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_ContactInfoTypeList", Model)

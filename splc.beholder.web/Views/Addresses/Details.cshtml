@@ -1,0 +1,67 @@
+@model Address
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Address</legend>
+
+    <div class="display-label">Address1</div>
+    <div class="display-field">@Model.Address1</div>
+
+    <div class="display-label">Address2</div>
+    <div class="display-field">@Model.Address2</div>
+
+    <div class="display-label">City</div>
+    <div class="display-field">@Model.City</div>
+
+    <div class="display-label">County</div>
+    <div class="display-field">@Model.County</div>
+
+    <div class="display-label">Country</div>
+    <div class="display-field">@Model.Country</div>
+
+    <div class="display-label">Zip5</div>
+    <div class="display-field">@Model.Zip5</div>
+
+    <div class="display-label">Zip4</div>
+    <div class="display-field">@Model.Zip4</div>
+
+    <div class="display-label">Longitude</div>
+    <div class="display-field">@String.Format("{0:F}", Model.Longitude)</div>
+
+    <div class="display-label">Latitude</div>
+    <div class="display-field">@String.Format("{0:F}", Model.Latitude)</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateCreated)</div>
+
+    <div class="display-label">CreatedUserId</div>
+    <div class="display-field">@Model.CreatedUserId</div>
+
+    <div class="display-label">DateModified</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateModified)</div>
+
+    <div class="display-label">ModifiedUserId</div>
+    <div class="display-field">@Model.ModifiedUserId</div>
+
+    <div class="display-label">DateDeleted</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateDeleted)</div>
+
+    <div class="display-label">DeletedUserId</div>
+    <div class="display-field">@Model.DeletedUserId</div>
+
+    <div class="display-label">AddressPersonRels</div>
+@* ReSharper disable SpecifyACultureInStringConversionExplicitly *@
+    <div class="display-field">@(Model.AddressPersonRels == null ? "None" : Model.AddressPersonRels.Count.ToString())</div>
+@* ReSharper restore SpecifyACultureInStringConversionExplicitly *@
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

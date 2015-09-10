@@ -1,0 +1,92 @@
+﻿@using System.Activities.Statements
+@using System.Net.Mime
+@using Caseiro.Mvc.PagedList.Helpers
+@using MvcContrib
+@using splc.domain.Models
+@using Caseiro.Mvc.PagedList
+@model PagedList<MediaWebsiteEGroup>
+
+@{
+    var pageSize = Request["pageSize"];
+    var name = Session["name"] ?? Request["name"];
+    var activeyear = Session["activeyear"] ?? Request["activeyear"];
+    var activestatusid = Session["activestatusid"] ?? Request["activestatusid"];
+    var mediaurl = Session["mediaurl"] ?? Request["mediaurl"];
+    var comment = Session["comment"] ?? Request["comment"];
+    var movementclassid = Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+
+}
+
+@if (!Model.Any())
+{
+    <h3>No Website EGroups found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, name, activeyear, activestatusid, movementclassid, movementclassid_string, mediaurl, comment }))
+</div>
+<ul class="card-list">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="thumbnail">
+
+                <a href="@Url.Action("Details", "MediaWebsiteEGroups", new { id = item.Id })">
+
+                    <h4 class="title-elliipsis" title="@string.Format("{0}", item.Name)">@string.Format("{0}", item.Name)</h4>
+                    <table class="table">
+                        <tr>
+                            <td>Movement</td>
+                            <td>
+                                <div class="card-ellipsis"
+                                     title="@(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)">
+                                    @(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Discovered</td>
+                            <td>@(item.DateDiscovered == null ? "Unknown" : @String.Format("{0:d}", item.DateDiscovered))</td>
+                        </tr>
+                        <tr>
+                            <td>Published</td>
+                            <td>@(item.DatePublished == null ? "Unknown" : @String.Format("{0:d}", item.DatePublished))</td>
+                        </tr>
+                        <tr>
+                            <td>Active Year</td>
+                            <td>@(item.ActiveYear == null ? "Unknown" : @String.Format("{0:d}", item.ActiveYear))</td>
+                        </tr>
+                        <tr>
+                            <td>URL</td>
+                            <td><div class="card-ellipsis" title="@string.Format("{0}", item.URL ?? "Unknown")">@(item.URL ?? "Unknown")</div></td>
+                        </tr>
+                        <tr>
+                            <td>Location</td>
+                            <td>
+                                @if (String.IsNullOrWhiteSpace(item.City) && item.State == null)
+                                {
+                                    <text>Unknown</text>
+                                }
+                                else
+                                {
+                                    @(String.Format("{0}{1}{2}", item.City, string.IsNullOrWhiteSpace(item.City) || item.State == null ? "" : ",", item.State != null ? item.State.StateCode : ""))
+                                }
+
+                            </td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </li>
+    }
+</ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, name, activeyear, activestatusid, movementclassid, movementclassid_string, mediaurl, comment }))
+</div>

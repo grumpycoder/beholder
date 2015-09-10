@@ -1,0 +1,77 @@
+﻿@using splc.domain.Models
+@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<Organization>
+
+@{
+    var pageSize = Request["pageSize"];
+    var organizationname = Request["organizationname"];
+    var activeyear = Request["activeyear"];
+    var activestatusid = Request["activestatusid"];
+    var movementclassid = Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+    
+}
+@if (!Model.Any())
+{
+    <h3>No Organizations found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, organizationname, activeyear, activestatusid, movementclassid, movementclassid_string }))
+</div>
+
+<ul class="card-list">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="thumbnail">
+
+                <a href="@Url.Action("Details", "Organizations", new { id = item.Id })">
+
+                    @if (item.OrganizationMediaImageRels.Count > 0)
+                    {
+                        <img src="@Url.Action("ShowPrimaryImage", "Organizations", new { item.Id })" alt="org image" class="thumbnail-img" height="175" width="250" />
+                    }
+                    else
+                    {
+                        @*<img src="http://placehold.it/250x175" alt="">*@
+                        <img src="~/Content/images/image_unavailable.jpg" alt="" class="thumbnail-img" height="175" width="250" />
+                        
+                    }
+
+                    <h4 class="title-elliipsis" title="@string.Format("{0}", item.OrganizationName)">@string.Format("{0}", item.OrganizationName)</h4>
+                    <table class="table">
+                        <tr>
+                            <td>Type</td>
+                            <td>@(item.OrganizationType == null ? "Unknown" : item.OrganizationType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Movement</td>
+                            <td>@(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Formed</td>
+                            <td>@(item.FormedDate == null ? "Unknown" : @String.Format("{0:d}", item.FormedDate))</td>
+                        </tr>
+                        <tr>
+                            <td>Active Year</td>
+                            <td>@(item.ActiveYear == null ? "Unknown" :  item.ActiveYear.ToString())</td>
+                        </tr>
+                        <tr>
+                            <td>Active</td>
+                            <td>@(item.ActiveStatusId == null ? "Unknown" : item.ActiveStatus.Name)</td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </li>
+    }
+</ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, organizationname, activeyear, activestatusid, movementclassid, movementclassid_string }))
+</div>

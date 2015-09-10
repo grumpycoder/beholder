@@ -1,0 +1,60 @@
+﻿@using splc.domain.Models;
+@model IEnumerable<ChapterVehicleRel>
+@{
+    var viewItem = ViewBag.Controller == "Chapters" ? "Vehicles" : "Chapters";
+    var source = ViewBag.Controller == "Chapters" ? "Chapters" : "Vehicles";
+    var vehicleId = ViewData["VehicleId"] == null ? -1 : (int) ViewData["VehicleId"];
+    var chapterId = ViewData["ChapterId"] == null ? -1 : (int)ViewData["ChapterId"]; 
+    var showChapter = ViewBag.Controller == "Vehicles";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showChapter){
+                        @Html.ActionLink(item.Chapter.ChapterName, "Details", "Chapters", new { id = item.Chapter.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Chapter.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(string.Format("{0}", item.Vehicle), "Details", "Vehicles", new { id = item.Vehicle.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Vehicle.VIN)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditChapterVehicle", "Chapters", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#chapterVehicles"
+                               data-action="@Url.Action("GetChapterVehicles", "Chapters", new { vehicleId =  @vehicleId, chapterId = @chapterId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteChapterVehicle", "Chapters", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#chapterVehicles"
+                               data-action="@Url.Action("GetChapterVehicles", "Chapters", new { vehicleId =  @vehicleId, chapterId = @chapterId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateChapterVehicle", "Chapters", new { vehicleId = @vehicleId, chapterId = @chapterId })" 
+           class="btnNew" data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#chapterVehicles"
+           data-action="@Url.Action("GetChapterVehicles", "Chapters", new { vehicleId =  @vehicleId, chapterId = @chapterId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

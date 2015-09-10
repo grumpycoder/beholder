@@ -1,0 +1,53 @@
+﻿@model IEnumerable<AddressPersonRel>
+@{
+    const string viewItem = "Addresses";
+    var commonPersonId = ViewBag.CommonPersonId; 
+}
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    No Known Addresses
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @(item.AddressType == null ? "[AddressType]" : item.AddressType.Name)<br />
+                    @(item.Address == null ? "[Address]" : string.Format("{0} {1}", String.IsNullOrEmpty(item.Address.Address1) ? "[Address]" : item.Address.Address1, item.Address.Address2) ) <br/>
+                    @(item.Address == null ? "[City]" : string.Format("{0},{1}  {2}-{3}",item.Address.City, item.Address.State == null ? "[State]" : item.Address.State.StateCode, item.Address.Zip5, item.Address.Zip4) ) 
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditPersonAddress", "Addresses", new { id = item.Id })" 
+                               class="btnEdit" 
+                               data-title="Update Address" 
+                               data-target="#personAddresses"
+                               data-refresh="true" 
+                               data-action="@Url.Action("GetPersonAddresses", "Addresses", new { id = commonPersonId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeletePersonAddress", "Addresses", new { id = item.Id })" 
+                               class="btnDelete" 
+                               data-title="Delete Address" 
+                               data-target="#personAddresses"
+                               data-refresh="true" 
+                               data-action="@Url.Action("GetPersonAddresses", "Addresses", new { id = commonPersonId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreatePersonAddress", "Addresses", new {  personId = commonPersonId })" 
+           class="btnNew" 
+           data-refresh="true" 
+           data-target="#personAddresses"
+           data-title="New Address" 
+           data-action="@Url.Action("GetPersonAddresses", "Addresses", new {  id = commonPersonId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

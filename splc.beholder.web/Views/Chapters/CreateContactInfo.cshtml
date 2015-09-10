@@ -1,0 +1,25 @@
+﻿@model ChapterContactInfoRel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">Create New Contact Information</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset class="form-horizontal well well-small fieldset-auto-width">
+        <legend></legend>
+
+        @Html.Partial("_CreateOrEditContactInfo", Model)
+
+        <input type="submit" value="Create" class="btn btn-primary pull-right" />
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

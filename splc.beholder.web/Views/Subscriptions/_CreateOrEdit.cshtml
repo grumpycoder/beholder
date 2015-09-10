@@ -1,0 +1,76 @@
+@model Subscription
+
+<div class="row">
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.DateCreated)
+
+
+    <fieldset class="col-sm-6">
+
+        <legend>Specifics</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.PublicationName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.PublicationName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.PublicationName)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.RenewalPermissionDate)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.RenewalPermissionDate)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RenewalPermissionDate)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.SubscriptionRate)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.SubscriptionRate)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.SubscriptionRate)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ActiveStatusId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ActiveStatusId, ((IEnumerable<ActiveStatus>)ViewBag.PossibleActiveStatus).Select(option => new SelectListItem
+                   {
+                       Text = (option == null ? "None" : option.Name),
+                       Value = option.Id.ToString(),
+                       Selected = (Model != null) && (option.Id == Model.ActiveStatusId)
+                   }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ActiveStatusId)</span>
+            </div>
+        </div>
+    </fieldset>
+
+    @*<fieldset class="col-sm-6">
+
+            <legend>Status</legend>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(model => model.RemovalStatusId)
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.RemovalStatusId, ((IEnumerable<splc.domain.Models.RemovalStatus>)ViewBag.PossibleRemovalStatuses).Select(option => new SelectListItem
+                       {
+                           Text = (option == null ? "None" : option.Name),
+                           Value = option.Id.ToString(),
+                           Selected = (Model != null) && (option.Id == Model.RemovalStatusId)
+                       }), "Choose...", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.RemovalStatusId)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.BootstrapLabelFor(model => model.RemovalReason)
+                <div class="col-sm-8">
+                    @Html.EditorFor(model => model.RemovalReason)
+                    @Html.ValidationMessageFor(model => model.RemovalReason)
+                </div>
+            </div>
+
+        </fieldset>*@
+
+
+
+
+</div>

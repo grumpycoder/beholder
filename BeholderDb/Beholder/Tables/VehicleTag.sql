@@ -1,0 +1,27 @@
+﻿CREATE TABLE [Beholder].[VehicleTag] (
+    [Id]             INT           IDENTITY (1, 1) NOT NULL,
+    [VehicleId]      INT           NOT NULL,
+    [TagNumber]      VARCHAR (25)  NOT NULL,
+    [TagTypeId]      INT           NOT NULL,
+    [IssueYear]      INT           NULL,
+    [Address1]       VARCHAR (256) NULL,
+    [Address2]       VARCHAR (256) NULL,
+    [City]           VARCHAR (256) NULL,
+    [County]         VARCHAR (256) NULL,
+    [StateId]        INT           NULL,
+    [Zip5]           CHAR (5)      NULL,
+    [Zip4]           CHAR (4)      NULL,
+    [DateCreated]    DATETIME2 (7) CONSTRAINT [DF_VehicleTag_DateCreated] DEFAULT (getdate()) NOT NULL,
+    [CreatedUserId]  INT           NOT NULL,
+    [DateModified]   DATETIME2 (7) NULL,
+    [ModifiedUserId] INT           NULL,
+    [DateDeleted]    DATETIME2 (7) NULL,
+    [DeletedUserId]  INT           NULL,
+    CONSTRAINT [PK_VehicleTag] PRIMARY KEY CLUSTERED ([Id] ASC) ON [BeholderData1],
+    CONSTRAINT [FK_VehicleTag_CreatedUser] FOREIGN KEY ([CreatedUserId]) REFERENCES [Security].[User] ([Id]),
+    CONSTRAINT [FK_VehicleTag_DeletedUser] FOREIGN KEY ([DeletedUserId]) REFERENCES [Security].[User] ([Id]),
+    CONSTRAINT [FK_VehicleTag_ModifiedUser] FOREIGN KEY ([ModifiedUserId]) REFERENCES [Security].[User] ([Id]),
+    CONSTRAINT [FK_VehicleTag_TagType] FOREIGN KEY ([TagTypeId]) REFERENCES [Beholder].[TagType] ([Id]),
+    CONSTRAINT [FK_VehicleTag_Vehicle] FOREIGN KEY ([VehicleId]) REFERENCES [Beholder].[Vehicle] ([Id])
+);
+

@@ -1,0 +1,291 @@
+@model MediaWebsiteEGroup
+
+@{
+    ViewBag.Title = string.Format("Details - {0}", Model.Name == "Unspecified On Conversion" ? (Model.Summary).Substring(0, 20) : Model.Name);
+
+    var pageSize = Session["pageSize"];
+    var page = Session["page"];
+    var name = Session["name"];
+    var activeyear = Session["activeyear"];
+    var activestatusid = Session["activestatusid"] ?? Request["activestatusid"];
+    var mediaurl = Session["mediaurl"];
+    var comment = Session["comment"];
+    var movementclassid = Request["movementclassid"];
+    var docsearch = Session["docsearch"] ?? Request["docsearch"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+
+}
+
+<h2 class="title-bar">@string.Format("{0}", Model.Name == "Unspecified On Conversion" ? (Model.Summary).Substring(0, 20) : Model.Name)</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page, pageSize, name, activeyear, activestatusid, movementclassid_string, mediaurl, comment, docsearch  })
+        </span>
+        <span class="pull-right">
+            @Html.ActionLink("Edit", "Edit", "MediaWebsiteEGroups", new { Model.Id }, new { @class = "btn btn-default" })
+        @Html.ActionLink("Delete", "RemoveWebsiteEgroup", "MediaWebsiteEGroups", new { id = Model.Id }, new { @class = "btn btn-default" })
+    </span>
+</div>
+</div>
+
+<div class="row">
+    <ul class="detail-list">
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ConfidentialityTypeId).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.ConfidentialityType.Name).ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.MovementClassId).ToString()</td>
+                            <td>@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.Summary).ToString()</td>
+                            <td>@Model.Summary</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateDiscovered).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateDiscovered)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DatePublished).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DatePublished)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateOffline).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateOffline)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ActiveStatusId).ToString()</td>
+                            <td>@(Model.ActiveStatus == null ? "None" : Model.ActiveStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ApprovalStatusId).ToString()</td>
+                            <td>@(Model.ApprovalStatus == null ? "None" : Model.ApprovalStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ActiveYear).ToString()</td>
+                            <td>@(Model.ActiveYear)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Miscellaneous</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.MediaTypeId).ToString()</td>
+                            <td>@(Model.MediaType == null ? "None" : Model.MediaType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.WebsiteEGroupTypeId).ToString()</td>
+                            <td>@(Model.WebsiteGroupType == null ? "None" : Model.WebsiteGroupType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.NewsSourceId).ToString()</td>
+                            <td>@(Model.NewsSource == null ? "None" : Model.NewsSource.NewsSourceName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.IsReported).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.IsReported).ToString()</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Location</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.URL).ToString()</td>
+                            <td>@Model.URL</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.IPAddress).ToString()</td>
+                            <td>@Model.IPAddress</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.WhoIsInfo).ToString()</td>
+                            <td>@Model.WhoIsInfo</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.City).ToString()</td>
+                            <td>@Model.City</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.County).ToString()</td>
+                            <td>@Model.County</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.StateId).ToString()</td>
+                            <td>@(Model.State == null ? "None" : Model.State.StateName)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Documents</div>
+                <div class="panel-body">
+                    <div id="documentList">
+                        @Html.Action("GetContextList", new { websiteEgroupId = Model.Id })
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    @(Html.Kendo().Upload().Name("attachments")
+                    .Async(a => a.Save("SaveAttachments", "MediaWebsiteEGroups", new { websiteEgroupId = @Model.Id })).ShowFileList(false)
+                    .Events(e => e.Complete(@<text> function(e){LoadView("#documentList","@Url.Action("GetContextList", "MediaWebsiteEGroups", new { websiteEgroupId = Model.Id })")}</text>).Error("onError"))
+                            .Messages(m => m.HeaderStatusUploaded("").StatusUploaded("").Select("Choose")))
+                </div>
+            </div>
+        </li>
+
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="personMediaWebsiteEGroups">
+                @Html.Partial("../Persons/_PersonMediaWebsiteEGroupList", Model.PersonMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterMediaWebsiteEGroups">
+                @Html.Partial("../Chapters/_ChapterMediaWebsiteEGroupList", Model.ChapterMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationMediaWebsiteEGroups">
+                @Html.Partial("../Organizations/_OrganizationMediaWebsiteEGroupList", Model.OrganizationMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="eventMediaWebsiteEGroups">
+                @Html.Partial("../Events/_EventMediaWebsiteEGroupList", Model.EventMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaWebsiteEGroupMediaAudioVideos">
+                @Html.Partial("../MediaWebsiteEGroups/_MediaWebsiteEGroupMediaAudioVideoList", Model.MediaWebsiteEGroupMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaWebsiteEGroupMediaWebsiteEGroups">
+                @Html.Partial("../MediaWebsiteEGroups/_MediaWebsiteEGroupMediaWebsiteEGroupList", Model)
+            </div>
+        </li>
+        <li>
+            <div id="vehicleMediaWebsiteEGroups">
+                @Html.Partial("../MediaWebsiteEGroups/_MediaWebsiteEGroupVehicleList", Model.MediaWebsiteEGroupVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceMediaWebsiteEGroups">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceMediaWebsiteEGroupList", Model.MediaCorrespondenceMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaPublishedMediaWebsiteEGroups">
+                @Html.Partial("../MediaPublisheds/_MediaPublishedMediaWebsiteEGroupList", Model.MediaPublishedMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaWebsiteEGroupSubscriptions">
+                @Html.Partial("../MediaWebsiteEGroups/_MediaWebsiteEGroupSubscriptionList", Model.MediaWebsiteEGroupSubscriptionRels)
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="row">
+    <div id="mediaWebsiteEGroupMediaImages">
+        @Html.Partial("../MediaImages/_MediaImageMediaWebsiteEGroupList", Model.MediaImageMediaWebsiteEGroupRels)
+    </div>
+</div>
+
+<div class="row">
+    <div id="mediaWebsiteEGroupComments">
+        @Html.Partial("../Comments/_MediaWebsiteEGroupCommentList", Model.MediaWebsiteEGroupComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "MediaWebsiteEGroupId", Model.Id } })
+    </div>
+</div>
+
+<script>
+    function onError(e) {
+        toastr.error(e.XMLHttpRequest.responseText);
+    };
+
+
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#PersonId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundPersonList() {
+        if ($("#PersonId").data("kendoComboBox").value() === '-1') {
+            $("#PersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroup2Id").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        console.log('databoundwebsite');
+        if ($("#MediaWebsiteEGroup2Id").data("kendoComboBox").value() === '0') {
+            $("#MediaWebsiteEGroup2Id").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

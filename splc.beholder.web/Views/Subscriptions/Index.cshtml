@@ -1,0 +1,44 @@
+@using splc.domain.Models;
+@model Caseiro.Mvc.PagedList.PagedList<Subscription>
+
+@{
+    ViewBag.Title = "Subscriptions";
+    var searchterm = Request["seachterm"];
+}
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            @*@using (Ajax.BeginForm("Index", "Subscriptions", null, new AjaxOptions
+                {
+                    HttpMethod = "POST",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "subscriptionList"
+                }, new { @class = "form-inline" }))*@
+            @using (Html.BeginForm("Index", "Subscriptions", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+                <input type="search" id="searchterm" name="searchterm" class="form-control" placeholder="Subscription Name" value=@(searchterm) />
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+            }
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "Subscriptions", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+<div id="subscriptionList">
+    @Html.Partial("_SubscriptionList", Model)
+</div>
+
+
+
+
+
+

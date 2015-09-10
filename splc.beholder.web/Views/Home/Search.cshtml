@@ -1,0 +1,11 @@
+﻿
+@model IEnumerable<splc.domain.Models.BeholderPerson>
+@using(Html.BeginForm("Index","Person"))
+{
+    //@Html.TextBoxFor(m => m.)
+    ViewBag.Title = "Search";
+    <h2>Search</h2>
+    <input type="text" name="searchTerm" class="search-query"/>
+    <input type="submit" class="btn" value="Search"  />
+}
+

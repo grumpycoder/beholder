@@ -1,0 +1,21 @@
+@model EventComment
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(m => m.EventId)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.Id)
+
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <div class="form-group">
+            @*@Html.BootstrapLabelFor(m => m.Comment)*@
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.Comment)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.Comment)</span>
+            </div>
+        </div>
+
+    </fieldset>
+}

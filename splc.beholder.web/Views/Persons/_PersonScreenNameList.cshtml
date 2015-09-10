@@ -1,0 +1,52 @@
+﻿@model IEnumerable<PersonScreenName>
+@{
+    const string viewItem = "Screen Names";
+    var personId = ViewBag.PersonId; 
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    No Known Screen Names
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    <strong>@item.ScreenName</strong><br />
+                    @(item.PrimaryStatus != null ? item.PrimaryStatus.Name : "[Unknown]")
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditPersonScreenName", "Persons", new { id = item.Id })" 
+                               class="btnEdit" 
+                               data-title="Update Screen Name" 
+                               data-target="#personScreenNames"
+                               data-refresh="true" 
+                               data-action="@Url.Action("GetPersonScreenNames", "Persons", new { id = personId})"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a href="@Url.Action("DeletePersonScreenName", "Persons", new { id = item.Id })" 
+                               class="btnDelete" 
+                               data-title="Delete Screen Name" 
+                               data-target="#personScreenNames"
+                               data-refresh="true" 
+                               data-action="@Url.Action("GetPersonScreenNames", "Persons", new { id = personId })"><i class="glyphicon glyphicon-trash"></i></a>
+
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreatePersonScreenName", "Persons", new {personId = personId})" 
+           class="btnNew" 
+           data-refresh="true" 
+           data-title="New Screen Name" 
+           data-target="#personScreenNames"
+           data-action="@Url.Action("GetPersonScreenNames", "Persons", new { id = personId })"><i class="glyphicon glyphicon-plus"></i></a>
+    </div>
+</div>

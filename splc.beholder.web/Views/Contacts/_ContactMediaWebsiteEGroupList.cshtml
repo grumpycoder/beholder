@@ -1,0 +1,53 @@
+﻿@model IEnumerable<splc.domain.Models.ContactMediaWebsiteEGroupRel>
+
+<table class="table table-bordered">
+    <caption>
+        @(ViewData["Controller"] == "Contacts" ? string.Format("WebsiteEGroups ({0})", Model.Count().ToString()) : string.Format("Contacts ({0})", Model.Count().ToString()))
+    </caption>
+    
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",ViewData["Controller"] == "MediaWebsiteEGroups" ? "Contact Relationships" : "WebsiteEGroups")</td>
+        </tr>
+    }
+    @foreach (var contactMediaWebsiteEGroupRel in Model)
+    {
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditContactMediaWebsiteEGroup", "Contacts", new { id = contactMediaWebsiteEGroupRel.Id, source = ViewData["Controller"].ToString()})" 
+                    class="btnEdit" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetContactMediaWebsiteEGroups", "Contacts", new { mediaWebsiteEGroupId =  ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"] , contactId = ViewData["ContactId"] == null ? -1 : (int)ViewData["ContactId"] })"><i class="icon-pencil icon-large"></i></a>
+                <a href="@Url.Action("DeleteContactMediaWebsiteEGroup", "Contacts", new { id = contactMediaWebsiteEGroupRel.Id})" 
+                    class="btnDelete" 
+                    data-title="Delete Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetContactMediaWebsiteEGroups", "Contacts", new { mediaWebsiteEGroupId =  ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"]  , contactId = ViewData["ContactId"] == null ? -1 : (int)ViewData["ContactId"] })"><i class="icon-trash icon-large"></i></a>
+            </td>
+            @if (ViewData["Controller"].ToString() == "Contacts")
+            {
+                <td>
+                    @Html.ActionLink(contactMediaWebsiteEGroupRel.MediaWebsiteEGroup.Name, "Details", "Contacts", new { id = contactMediaWebsiteEGroupRel.MediaWebsiteEGroup.Id }, null)
+                </td>
+                <td>@Html.DisplayFor(model => contactMediaWebsiteEGroupRel.MediaWebsiteEGroup.MovementClass.Name)</td>
+            }
+            else
+            {
+
+                <td>@Html.ActionLink(string.Format("{0} {1} {2} {3}", contactMediaWebsiteEGroupRel.Contact.CommonPerson.Prefix == null ? "" : contactMediaWebsiteEGroupRel.Contact.CommonPerson.Prefix.Name, contactMediaWebsiteEGroupRel.Contact.CommonPerson.FName, contactMediaWebsiteEGroupRel.Contact.CommonPerson.MName, contactMediaWebsiteEGroupRel.Contact.CommonPerson.LName), "Details", "Contact", new { id = contactMediaWebsiteEGroupRel.Contact.Id }, null)</td>
+                <td>@Html.DisplayFor(model => contactMediaWebsiteEGroupRel.Contact.ContactType.Name)</td>
+            }
+        </tr>
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateContactMediaWebsiteEGroup", "Contacts", new { contactId = ViewData["ContactId"] == null ? -1 : (int)ViewData["ContactId"]  , mediaWebsiteEGroupId = ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"]})" 
+                class="btnNew" 
+                data-title="New Relationship" 
+                data-refresh="true" 
+                data-action="@Url.Action("GetContactMediaWebsiteEGroups", "Contacts", new {  contactId = ViewData["ContactId"] == null ? -1 : ViewData["ContactId"], mediaWebsiteEGroupId = ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>

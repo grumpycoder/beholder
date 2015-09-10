@@ -1,0 +1,97 @@
+﻿@model MediaCorrespondenceVehicleRel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.MediaCorrespondenceId, new { @required = "required", @data_val_required = "Correspondence is required." })
+    @Html.HiddenFor(model => model.VehicleId, new { @required="required", @data_val_required="Vehicle is required."})
+
+    <fieldset>
+
+        @if (ViewBag.Controller == "Vehicles")
+        {
+            @Html.HiddenFor(model => model.MediaCorrespondence.Id)
+            <div class="form-group" id="mediaCorrespondenceGroup">
+                @Html.BootstrapLabelFor(model => model.MediaCorrespondence)
+                <div class="col-sm-8">
+                    @if (Model.Id == 0)
+                    {
+                        @*this is for the autocomplete search box for person*@
+                        <div class="ui-widget">
+                            <select id="combobox_corr" data-url="@Url.Action("GetMediaCorrespondenceList","MediaCorrespondences")" data-id="mediaCorrespondenceCombo" data-hidden-field="MediaCorrespondenceId"></select>
+                        </div>
+                        <span class="help-block">@Html.ValidationMessageFor(model => model.MediaCorrespondenceId)</span>
+                    }
+                    else
+                    {
+                        @*<input readonly="true" class="text-box single-line" type="text" value="@Model.MediaCorrespondence.CorrespondenceName" />*@
+                        <input type="text" class="disabled form-control" readonly="true" value="@Model.MediaCorrespondence.CorrespondenceName" style="width: 100%;" />
+                    }
+                </div>
+            </div>
+        }
+
+        @if (ViewBag.Controller == "MediaCorrespondences")
+        {
+            @Html.HiddenFor(model => model.Vehicle.Id)
+            <div class="form-group" id="vehicleGroup">
+                @Html.BootstrapLabelFor(m => m.Vehicle)
+                <div class="col-sm-8">
+                    @if (Model.Id == 0)
+                    {
+                        @*this is for the autocomplete search box for person*@
+                        <div class="ui-widget">
+                            <select id="combobox_vehicle" data-url="@Url.Action("GetVehicleList", "Vehicles")" data-id="vehiclesCombo" data-hidden-field="VehicleId"></select>
+                        </div>
+                        <span class="help-block">@Html.ValidationMessageFor(model => model.VehicleId)</span>
+                    }
+                    else
+                    {
+                        @*<input readonly="true" class="text-box single-line" type="text" value="@string.Format("{0} {1} {2}-{3}", @Model.Vehicle.VehicleColorId == null ? "Color??" : @Model.Vehicle.VehicleColor.Name, @Model.Vehicle.VehicleMakeId == null ? "Make??" : @Model.Vehicle.VehicleMake.Name, @Model.Vehicle.VehicleModelId == null ? "Model??" : @Model.Vehicle.VehicleModel.Name, @Model.Vehicle.VIN == null ? "Unknown VIN" : @Model.Vehicle.VIN)" />*@
+                        <input type="text" class="disabled form-control" readonly="true" value="@Model.Vehicle" style="width: 100%;" />
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.RelationshipTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RelationshipTypeId, ((IEnumerable<RelationshipType>)ViewBag.PossibleRelationshipTypes).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.RelationshipTypeId)
+                    } : null), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Relationship Type is required." })
+                <div class="help-block">@Html.ValidationMessageFor(model => model.RelationshipTypeId)</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateStart)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateStart)
+                <div class="help-block">@Html.ValidationMessageFor(m => m.DateStart)</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateEnd)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateEnd)
+                <div class="help-block">@Html.ValidationMessageFor(m => m.DateEnd)</div>
+            </div>
+        </div>
+
+    </fieldset>
+}
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+        if ($('#VehicleId').val() == -1) { $('#VehicleId').val(null); }
+
+        if ($('#MediaCorrespondenceId').val() == -1) { $('#MediaCorrespondenceId').val(null); }
+    });
+</script>

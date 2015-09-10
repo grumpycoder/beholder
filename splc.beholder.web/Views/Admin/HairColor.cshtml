@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.HairColor>
+
+@{
+    ViewBag.Title = "Hair Colors";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_HairColorList", Model)

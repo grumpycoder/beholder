@@ -1,0 +1,27 @@
+﻿@model NewsSource
+
+<div class="span4 card">
+    <div class="title">
+        @Html.ActionLink(string.Format("{0}", Model.NewsSourceName), "Details", "NewsSources", new { id = Model.Id }, null)
+    </div>
+    <div>
+@*        @if (Model.Image != null)
+        {
+            <div><img src="@Url.Action("ShowImage", "NewsSources", new { Id = Model.Image.Id })" alt="media image" class="person-thumbnail" /></div>
+        }
+        else
+        {
+            *@<div>
+                <img src="~/content/img/unknown-person.png" class="person-thumbnail" alt="no image" />
+            </div>
+@*        }*@
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>Type</td>
+                <td>@(Model.NewsSourceType == null ? "Unknown" : Model.NewsSourceType.Name)</td>
+            </tr>
+        </table>
+    </div>    
+</div>

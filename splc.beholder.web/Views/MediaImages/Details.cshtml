@@ -1,0 +1,304 @@
+@model MediaImage
+
+@{
+    ViewBag.Title = string.Format("Details - {0}", Model.ImageTitle);
+    var page = Session["page"] ?? Request["page"];
+    var pageSize = Session["pageSize"] ?? Request["pageSize"];
+    var imagetitle = Session["imagetitle"] ?? Request["imagetitle"];
+    var activeyear = Session["activeyear"] ?? Request["activeyear"];
+    var location = Session["location"] ?? Request["location"];
+    var comment = Session["comment"] ?? Request["comment"];
+    var artist = Session["artist"] ?? Request["artist"];
+    var movementclassid = Session["movementclassid"] ?? Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+}
+
+<h2 class="title-bar">@string.Format("{0}", Model.ImageTitle ?? "Unknown")</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page, pageSize, imagetitle, activeyear, location, comment, artist, movementclassid, movementclassid_string })
+        </span>
+        <span class="pull-right">
+            @Html.ActionLink("Edit", "Edit", "MediaImages", new { id = Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "RemoveImage", "MediaImages", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+</div>
+
+<div class="row">
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+                @if (Model.Image == null)
+                {
+                    <img src="~/Content/images/image_unavailable.jpg" alt="" height="270" width="500" />
+                }
+                else
+                {
+                    <img src="@Url.Action("ShowImage", "MediaImages", new { Model.Image.Id })" alt="media image" class="thumbnail-img" height="270" width="500" />
+                }
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Confidentiality Type</td>
+                            <td>@(Model.ConfidentialityType == null ? "None" : Model.ConfidentialityType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Movement Class</td>
+                            <td>@(Model.MovementClass == null ? "Unknown" : Model.MovementClass.Name)</td>
+                        </tr>
+
+                        <tr>
+                            <td>Date Published</td>
+                            <td>@String.Format("{0:d}", Model.DatePublished)</td>
+                        </tr>
+                        <tr>
+                            <td>Contact Owner</td>
+                            <td>@Model.ContactOwner</td>
+                        </tr>
+                        <tr>
+                            <td>Summary</td>
+                            <td>@Model.Summary</td>
+                        </tr>
+                        <tr>
+                            <td>City</td>
+                            <td>@Model.City</td>
+                        </tr>
+                        <tr>
+                            <td>County</td>
+                            <td>@Model.County</td>
+                        </tr>
+                        <tr>
+                            <td>BatchSortOrder</td>
+                            <td>@Model.BatchSortOrder</td>
+                        </tr>
+                        <tr>
+                            <td>DateTaken</td>
+                            <td>@String.Format("{0:d}", Model.DateTaken)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Miscellaneous</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Image Title</td>
+                            <td>@Model.ImageTitle</td>
+                        </tr>
+                        <tr>
+                            <td>Photographer/Artist</td>
+                            <td>@Model.PhotographerArtist</td>
+                        </tr>
+                        <tr>
+                            <td>Image Type</td>
+                            <td>@(Model.ImageType == null ? "None" : Model.ImageType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Media Type</td>
+                            <td>@(Model.MediaType == null ? "None" : Model.MediaType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>ImageFileName</td>
+                            <td>@Model.ImageFileName</td>
+                        </tr>
+                        <tr>
+                            <td>Roll Frame Number</td>
+                            <td>@Model.RollFrameNumber</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.CatalogId).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.CatalogId).ToString()</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Renewal Information</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>News Source</td>
+                            <td>@Html.DisplayTextFor(_ => Model.NewsSource).ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>State</td>
+                            <td>@Html.DisplayTextFor(_ => Model.State).ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>Renewal Permission Type</td>
+                            <td>@(Model.RenewalPermmisionType == null ? "None" : Model.RenewalPermmisionType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Date Renewal Permission</td>
+                            <td>@String.Format("{0:d}", Model.DateRenewalPermission)</td>
+                        </tr>
+                        <tr>
+                            <td>Renewal Permission</td>
+                            <td>@Model.RenewalPermission</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="personMediaImages">
+                @Html.Partial("../Persons/_PersonMediaImageList", Model.PersonMediaImageRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterMediaImages">
+                @Html.Partial("../Chapters/_ChapterMediaImageList", Model.ChapterMediaImageRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationMediaImages">
+                @Html.Partial("../Organizations/_OrganizationMediaImageList", Model.OrganizationMediaImageRels)
+            </div>
+        </li>
+        <li>
+            <div id="contactMediaImages">
+                @Html.Partial("../Contacts/_ContactMediaImageList", Model.ContactMediaImageRels)
+            </div>
+        </li>
+        <li>
+            <div id="eventMediaImages">
+                @Html.Partial("../Events/_EventMediaImageList", Model.EventMediaImageRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaImageMediaAudioVideos">
+                @Html.Partial("../MediaImages/_MediaImageMediaAudioVideoList", Model.MediaImageMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaWebsiteEGroupMediaImages">
+                @Html.Partial("../MediaImages/_MediaImageMediaWebsiteEGroupList", Model.MediaImageMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaImageVehicles">
+                @Html.Partial("../MediaImages/_MediaImageVehicleList", Model.MediaImageVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceMediaImages">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceMediaImageList", Model.MediaCorrespondenceMediaImageRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaPublishedMediaImages">
+                @Html.Partial("../MediaPublisheds/_MediaPublishedMediaImageList", Model.MediaPublishedMediaImageRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaImageSubscriptions">
+                @Html.Partial("../MediaImages/_MediaImageSubscriptionList", Model.MediaImageSubscriptionRels)
+            </div>
+        </li>
+    </ul>
+
+</div>
+
+<div class="row">
+    <div id="mediaImageMediaImages">
+        @Html.Partial("../MediaImages/_MediaImageMediaImageList", Model.MediaImageMediaImageRels)
+    </div>
+</div>
+
+<div class="row">
+    <div id="mediaImageComments">
+        @Html.Partial("../Comments/_MediaImageCommentList", Model.MediaImageComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "MediaImageId", Model.Id } })
+    </div>
+</div>
+
+<script>
+
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#PersonId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundPersonList() {
+        if ($("#PersonId").data("kendoComboBox").value() === '-1') {
+            $("#PersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroupId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        if ($("#MediaWebsiteEGroupId").data("kendoComboBox").value() === '-1') {
+            $("#MediaWebsiteEGroupId").data("kendoComboBox").text('');
+        }
+    };
+
+
+    function onAdditionalDataContactList() {
+        return {
+            term: $("#ContactId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundContactList() {
+        if ($("#ContactId").data("kendoComboBox").value() === '-1') {
+            $("#ContactId").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

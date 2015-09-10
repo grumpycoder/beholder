@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.Suffix>
+
+@{
+    ViewBag.Title = "Suffix";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_SuffixList", Model)

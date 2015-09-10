@@ -1,0 +1,138 @@
+@model Caseiro.Mvc.PagedList.PagedList<MediaPublished>
+
+@{
+    ViewBag.Title = "Published Items";
+
+    var docsearch = Session["docsearch"] ?? Request["docsearch"];
+    var publishedname = Session["publishedname"] ?? Request["publishedname"];
+    var location = Session["location"] ?? Request["location"];
+    var datefrom = Session["datefrom"] ?? Request["datefrom"];
+    var dateto = Session["dateto"] ?? Request["dateto"];
+    var publishedtypeid = Session["publishedtypeid"] ?? Request["publishedtypeid"];
+    var stateid = Session["stateid"] ?? Request["stateid"];
+
+}
+<style type="text/css">
+    .panel-group .panel {
+        overflow: visible; /*This is the issue*/
+    }
+</style>
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-11 col-lg-11">
+            @using (Html.BeginForm("Index", "MediaPublisheds", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+                <input type="text" id="publishedname" name="publishedname" class="form-control" placeholder="Published Name" value="@publishedname" />
+
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <small>More search options</small>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+
+                                <table class="table table-condensed table-responsive table-no-border">
+                                    <tr>
+                                        <td><label class="control-label">City</label></td>
+                                        <td><label class="control-label">State</label></td>
+                                        <td><label class="control-label">Media Published Date Range</label></td>
+                                        <td><label class="control-label">Document Search Term</label></td>
+                                        <td><label class="control-label">Category Types</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" id="location" name="location" placeholder="City" class="form-control" value="@(location)" /></td>
+                                        <td>
+                                            <select data-placeholder="Choose States..." name="stateid" id="stateid" multiple class="chosen-select form-control" style="width:350px;">
+                                                @foreach (var item in (IEnumerable<State>)ViewBag.PossibleStates)
+                                                {
+                                                    var selectedValue = false;
+                                                    if (@stateid != null)
+                                                    {
+                                                        foreach (var i in (List<int>)stateid)
+                                                        {
+                                                            if (i == item.Id) { selectedValue = true; break; }
+                                                        }
+                                                    }
+                                                    if (selectedValue)
+                                                    {
+                                                        <option value="@item.Id" selected="selected">
+                                                            @item.StateCode
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Id">
+                                                            @item.StateCode
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="input-daterange input-group" id="datepicker">
+                                                <input type="text" class="input-sm form-control" name="datefrom" value="@datefrom" />
+                                                <span class="input-group-addon">to</span>
+                                                <input type="text" class="input-sm form-control" name="dateto" value="@dateto" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="docsearch" id="docsearch" placeholder="Document Search Term" value="@docsearch" class="form-control" />
+                                        </td>
+                                        <td>
+                                            <select data-placeholder="Choose Categories..." name="publishedtypeid" multiple class="chosen-select">
+                                                @foreach (var item in (IEnumerable<PublishedType>)ViewBag.PossiblePublishedTypes)
+                                                {
+                                                    var selectedValue = false;
+                                                    if (publishedtypeid != null)
+                                                    {
+                                                        foreach (var i in (List<int>)publishedtypeid)
+                                                        {
+                                                            if (i == item.Id) { selectedValue = true; break; }
+                                                        }
+                                                    }
+                                                    if (selectedValue)
+                                                    {
+                                                <option value="@item.Id" selected="selected">
+                                                    @item.Name
+                                                </option>
+                                                    }
+                                                    else
+                                                    {
+                                                <option value="@item.Id">
+                                                    @item.Name
+                                                </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "MediaPublisheds", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+<div id="publishedList">
+    @Html.Partial("_MediaPublishedList", Model)
+</div>
+

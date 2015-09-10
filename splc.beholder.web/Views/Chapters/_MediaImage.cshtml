@@ -1,0 +1,17 @@
+﻿@model ICollection<splc.domain.Models.ChapterMediaImageRel>
+
+                <div id="Carousel">
+                    <ul id="slider">
+                        @foreach (var images in Model)
+                        {
+                            foreach (var image in images.MediaImage.Images)
+                            {
+                                <li>
+                                    <img src="@Url.Action("ShowImage", "MediaImages", new { Id = image.Id })"  />
+                                    <br/>
+                                    @images.MediaImage.ImageTitle
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>

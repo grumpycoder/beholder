@@ -1,0 +1,271 @@
+@model Chapter
+@{
+
+    var page = Session["page"];
+    var pageSize = Session["pageSize"];
+    var chaptername = Session["chaptername"];
+    var activeyear = Session["activeyear"];
+    var activestatusid = Session["activestatusid"] ?? Request["activestatusid"];
+    var location = Session["location"];
+    var movementclassid = Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+
+    var personId = ViewBag.PersonId;
+    var beholderPersonId = ViewBag.BeholderPersonId;
+
+    ViewBag.Title = string.Format("Details - {0}", Model.ChapterName);
+}
+
+<h2 class="title-bar">@Model.ChapterName</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, activeyear, activestatusid, location })
+        </span>
+        <span class="pull-right">
+            @Html.ActionLink("Edit", "Edit", "Chapters", new { id = Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "RemoveChapter", "Chapters", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+</div>
+
+<div class="row">
+
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+                @if (Model.ChapterMediaImageRels.Count > 0)
+                {
+                <img src="@Url.Action("ShowPrimaryImage", "Chapters", new { Model.Id })" alt="org image" class="thumbnail-img" height="270" width="500" />
+                }
+                else
+                {
+                <img src="~/Content/images/image_unavailable.jpg" alt="" height="270" width="500" />
+                }
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Chapter Desc</td>
+                            <td>@(Model.ChapterDesc ?? "None")</td>
+                        </tr>
+                        <tr>
+                            <td>Confidentiality Type</td>
+                            <td>@(Model.ConfidentialityType == null ? "None" : Model.ConfidentialityType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Movement Class</td>
+                            <td>@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Organization Type</td>
+                            <td>@(Model.ChapterType == null ? "None" : Model.ChapterType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Active Year</td>
+                            <td>@Model.ActiveYear</td>
+                        </tr>
+                        <tr>
+                            <td>Formed Date</td>
+                            <td>@String.Format("{0:d}", Model.FormedDate)</td>
+                        </tr>
+                        <tr>
+                            <td>Disband Date</td>
+                            <td>@String.Format("{0:d}", Model.DisbandDate)</td>
+                        </tr>
+                        <tr>
+                            <td>Headquarters</td>
+                            <td>@Model.IsHeadquarters</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Approval</td>
+                            <td>@(Model.ApprovalStatus == null ? "None" : Model.ApprovalStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>@(Model.ActiveStatus == null ? "None" : Model.ActiveStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ActiveYear).ToString()</td>
+                            <td>@(Model.ActiveYear)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div id="chapterAliases">
+                @Html.Partial("../Aliases/_ChapterAliasList", Model.AliasChapterRels.Where(x => x.DateDeleted == null))
+            </div>
+        </li>
+        <li>
+            <div id="chapterContactInfo">
+                @Html.Partial("../Chapters/_ChapterContactInfoList", Model.ChapterContactInfoRels.Where(x => x.DateDeleted == null))
+            </div>
+        </li>
+        <li>
+            <div id="chapterAddresses">
+                @Html.Partial("../Addresses/_ChapterAddressList", Model.AddressChapterRels.Where(x => x.DateDeleted == null))
+            </div>
+        </li>
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="chapterPersons">
+                @Html.Partial("../Chapters/_ChapterPersonList", Model.ChapterPersonRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterChapters">
+                @Html.Partial("../Chapters/_ChapterChapterList", Model)
+            </div>
+        </li>
+        <li>
+            <div id="chapterOrganizations">
+                @Html.Partial("../Chapters/_ChapterOrganizationList", Model.ChapterOrganizationRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterContacts">
+                @Html.Partial("../Chapters/_ChapterContactList", Model.ChapterContactRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterEvents">
+                @Html.Partial("../Chapters/_ChapterEventList", Model.ChapterEventRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterMediaAudioVideos">
+                @Html.Partial("../Chapters/_ChapterMediaAudioVideoList", Model.ChapterMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterMediaWebsiteEGroups">
+                @Html.Partial("../Chapters/_ChapterMediaWebsiteEGroupList", Model.ChapterMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterVehicles">
+                @Html.Partial("../Chapters/_ChapterVehicleList", Model.ChapterVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterMediaCorrespondences">
+                @Html.Partial("../Chapters/_ChapterMediaCorrespondenceList", Model.ChapterMediaCorrespondenceRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterMediaPublisheds">
+                @Html.Partial("../Chapters/_ChapterMediaPublishedList", Model.ChapterMediaPublishedRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterSubscriptions">
+                @Html.Partial("../Chapters/_ChapterSubscriptionList", Model.ChapterSubscriptionRels)
+            </div>
+        </li>
+    </ul>
+
+</div>
+
+
+<div class="row">
+    <div id="chapterMediaImages">
+        @Html.Partial("../Chapters/_ChapterMediaImageList", Model.ChapterMediaImageRels)
+    </div>
+</div>
+
+<div class="row">
+    <div id="chapterComments">
+        @Html.Partial("../Comments/_ChapterCommentList", Model.ChapterComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "ChapterId", Model.Id } })
+    </div>
+</div>
+
+<div class="row">
+    <div id="chapterStatusHistories">
+        @Html.Partial("../Chapters/_ChapterStatusHistoryList", Model.ChapterStatusHistories.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "ChapterId", Model.Id } })
+    </div>
+</div>
+
+
+<script>
+    
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#BeholderPersonId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundPersonList() {
+        if ($("#BeholderPersonId").data("kendoComboBox").value() === '-1') {
+            $("#BeholderPersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#Chapter2Id").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#Chapter2Id").data("kendoComboBox").value() === '0') {
+            $("#Chapter2Id").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroupId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        if ($("#MediaWebsiteEGroupId").data("kendoComboBox").value() === '-1') {
+            $("#MediaWebsiteEGroupId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataContactList() {
+        return {
+            term: $("#ContactId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundContactList() {
+        if ($("#ContactId").data("kendoComboBox").value() === '-1') {
+            $("#ContactId").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

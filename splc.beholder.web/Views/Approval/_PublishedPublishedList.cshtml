@@ -1,0 +1,70 @@
+﻿@model IEnumerable<MediaPublishedMediaPublishedRel>
+
+<h2>Published Item Relationships</h2>
+<table class="table table-hover">
+    <tr>
+        <th>
+            Published Item
+        </th>
+        <th>
+            Published Item
+        </th>
+        <th>
+            Date Start
+        </th>
+        <th>
+            Date End
+        </th>
+        <th>
+            Relationship Type
+        </th>
+        <th>
+            Primary Status
+        </th>
+        <th>
+            Approval Status
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.MediaPublished.Name
+            </td>
+            <td>
+                @item.MediaPublished2.Name
+            </td>
+            <td>
+                @item.DateStart
+            </td>
+            <td>
+                @item.DateEnd
+            </td>
+            <td>
+                @(item.RelationshipType == null ? "Unknown" : item.RelationshipType.Name)
+            </td>
+            <td>
+                @(item.PrimaryStatusId == null ? "Unknown" : item.PrimaryStatus.Name)
+            </td>
+            <td>
+                @item.ApprovalStatus.Name
+            </td>
+            <td class="nowrap">
+                <a href="@Url.Action("ApprovePublishedPublished", "Approval", new { id = item.Id })"
+                   class="btn btnApprove"
+                   data-title="Edit Relationship"
+                   data-refresh="true"
+                   data-action="@Url.Action("GetPublishedPublishedApprovals", "Approval")">Approve</a>
+                <a href="@Url.Action("RejectPublishedPublished", "Approval", new { id = item.Id })"
+                   class="btn btnApprove"
+                   data-title="Edit Relationship"
+                   data-refresh="true"
+                   data-action="@Url.Action("GetPublishedPublishedApprovals", "Approval")">Disapprove</a>
+
+            </td>
+        </tr>
+    }
+
+</table>

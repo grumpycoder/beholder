@@ -1,0 +1,77 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<Event>
+
+@{
+    var pageSize = Request["pageSize"];
+    var eventname = Request["eventname"];
+    var datefrom = Request["datefrom"];
+    var dateto = Request["dateto"];
+    var activeyear = Request["activeyear"];
+    var activestatusid = Request["activestatusid"];
+    var approvalstatusid = Request["approvalstatusid"];
+    var webincidenttypeid = Request["webincidenttypeid"];
+
+    var eventtypeid = Request["eventtypeid"];
+
+    var eventtypeid_string = "";
+    if ((Session["eventtypeid"] ?? Request["eventtypeid"]) != null)
+    {
+        eventtypeid_string = string.Join(",", (List<int>)(Session["eventtypeid"] ?? Request["eventtypeid"]));
+    }
+    
+}
+@if (!Model.Any())
+{
+    <h3>No Events found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, activeyear, activestatusid, approvalstatusid, eventname, datefrom, dateto, eventtypeid, eventtypeid_string }))
+</div>
+
+<div id="eventList">
+    <table class="table table-hover table-responsive">
+        <tr>
+            <th></th>
+            <th>Event Name</th>
+            <th>Event Date</th>
+            <th>Active Year</th>
+            <th>Religion</th>
+            <th>Movement Class</th>
+            <th>Active Status</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("Edit", "Events", new { id = item.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("RemoveEvent", "Events", new { id = item.Id })"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Details", "Events", new { id = item.Id })"><span class="glyphicon glyphicon-info-sign"></span></a>
+                </td>
+                <td>
+                    @item.EventName
+                </td>
+                <td>
+                    @(item.EventDate == null ? "None" : String.Format("{0:d}", item.EventDate))
+                </td>
+                <td>
+                    @item.ActiveYear
+                </td>
+                <td>
+                    @(item.Religion ?? "Unknown")
+                </td>
+                <td>
+                    @(item.MovementClass != null ? item.MovementClass.Name : "Unknown")
+                </td>
+                <td>
+                    @(item.ActiveStatus != null ? item.ActiveStatus.Name : "Unknown")
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, activeyear, activestatusid, approvalstatusid, eventname, datefrom, dateto, eventtypeid, eventtypeid_string }))
+</div>

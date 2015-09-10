@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.OrganizationType>
+
+@{
+    ViewBag.Title = "Organization Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_OrganizationTypeList", Model)

@@ -1,0 +1,53 @@
+@model splc.domain.Models.AliasOrganizationRel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>AliasOrganizationRel</legend>
+
+    <div class="display-label">FirstKnownUseDate</div>
+    <div class="display-field">@String.Format("{0:g}", Model.FirstKnownUseDate)</div>
+
+    <div class="display-label">LastKnownUseDate</div>
+    <div class="display-field">@String.Format("{0:g}", Model.LastKnownUseDate)</div>
+
+    <div class="display-label">Comments</div>
+    <div class="display-field">@Model.Comments</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateCreated)</div>
+
+    <div class="display-label">CreatedUserId</div>
+    <div class="display-field">@Model.CreatedUserId</div>
+
+    <div class="display-label">DateModified</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateModified)</div>
+
+    <div class="display-label">ModifiedUserId</div>
+    <div class="display-field">@Model.ModifiedUserId</div>
+
+    <div class="display-label">DateDeleted</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateDeleted)</div>
+
+    <div class="display-label">DeletedUserId</div>
+    <div class="display-field">@Model.DeletedUserId</div>
+
+    <div class="display-label">Organization</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.Organization).ToString()</div>
+
+    <div class="display-label">PrimaryStatus</div>
+    <div class="display-field">@(Model.PrimaryStatus == null ? "None" : Model.PrimaryStatus.Name)</div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+
+

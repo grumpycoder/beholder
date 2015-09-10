@@ -1,0 +1,142 @@
+@using System.Activities.Statements
+@model Chapter
+@{
+    ViewBag.Title = "Details - " + Model.ChapterName;
+    var searchterm = Session["searchterm"] ?? Request["searchterm"];
+}
+<h2 class="title-bar">@Model.ChapterName</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", "Searches", new { page = Session["page"], searchterm }, null)
+        </span>
+    </div>
+</div>
+
+<p>
+    Alias:
+    @if (Model.AliasChapterRels.Any())
+    {
+        var aliasList = Model.AliasChapterRels.Select(alias => alias.Alias.AliasName).ToList();
+        <text>@String.Join(",", aliasList)</text>
+    }
+    else
+    {
+        <text>No known alias's</text>
+    }
+</p>
+
+<h3>Details</h3>
+<div class="row">
+
+    <div class="col-sm-4 col-md-4">
+        <table class="table table-bordered table-condensed">
+            <tr>
+                <td>Confidentiality Type</td>
+                <td>@(Model.ConfidentialityType == null ? "None" : Model.ConfidentialityType.Name)</td>
+            </tr>
+            <tr>
+                <td>Movement Class</td>
+                <td>@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</td>
+            </tr>
+            <tr>
+                <td>Organization Type</td>
+                <td>@(Model.ChapterType == null ? "None" : Model.ChapterType.Name)</td>
+            </tr>
+            <tr>
+                <td>Active Year</td>
+                <td>@Model.ActiveYear</td>
+            </tr>
+            <tr>
+                <td>Formed Date</td>
+                <td>@String.Format("{0:d}", Model.FormedDate)</td>
+            </tr>
+            <tr>
+                <td>Disband Date</td>
+                <td>@String.Format("{0:d}", Model.DisbandDate)</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<h3>Associations</h3>
+<div class="row">
+    <div id="organizationPersons" class="col-sm-4 col-md-4">
+        <h4>Persons</h4>
+        @if (Model.ChapterPersonRels.Any())
+        {
+            <table class="table table-condensed">
+                <tr>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                </tr>
+                @foreach (var item in Model.ChapterPersonRels)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(item.BeholderPerson.CommonPerson.FullName, "DetailsLite", "Persons", new { id = item.BeholderPersonId }, null)</td>
+                        <td>@(item.DateStart == null ? "Unknown" : item.DateStart.ToString())</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <text>No Known Members</text>
+        }
+    </div>
+    <div id="organizationChapters" class="col-sm-4 col-md-4">
+        <h4>Organizations</h4>
+        @if (Model.ChapterOrganizationRels.Any())
+        {
+            <table class="table table-condensed">
+                <tr>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                </tr>
+                @foreach (var item in Model.ChapterOrganizationRels)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.Organization.OrganizationName, "DetailsLite", "Organizations", new { id = item.OrganizationId }, null)
+                            @*@item.Organization.OrganizationName*@
+                        </td>
+                        <td>@(item.DateStart == null ? "Unknown" : item.DateStart.ToString())</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <text>No known Organizations</text>
+        }
+    </div>
+</div>
+
+<h3>Articles/Publications</h3>
+<div class="row">
+    <div class="col-sm-8 col-md-10">
+        @if (!Model.ChapterMediaPublishedRels.Any())
+        {
+            <text>No publications</text>
+        }
+
+        @foreach (var pub in Model.ChapterMediaPublishedRels.OrderByDescending(x => x.MediaPublished.DatePublished))
+        {
+            <p>
+                @if (pub.MediaPublished.MediaPublishedContexts != null)
+                {
+                    <strong>
+                        @*<a href="@Url.Action("Download", "MediaPublisheds", new { Id = pub.MediaPublished.MediaPublishedContextId })" target="_blank">
+                            @string.Format("{0} ({1:d})", pub.MediaPublished.Name, pub.MediaPublished.DatePublished)
+                        </a>*@
+                        <a href="@Url.Action("Download", "MediaPublisheds", new { Id = pub.MediaPublished.MediaPublishedContextId ?? pub.MediaPublished.MediaPublishedContexts.FirstOrDefault().Id })" target="_blank">
+                            @string.Format("{0} ({1:d})", pub.MediaPublished.Name, pub.MediaPublished.DatePublished)
+                        </a>
+                    </strong><br />
+                    @(String.IsNullOrEmpty(pub.MediaPublished.Summary) ? "No Summary" : pub.MediaPublished.Summary);
+                }
+            </p>
+        }
+    </div>
+</div>
+

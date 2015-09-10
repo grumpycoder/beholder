@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.EventDocumentationType>
+
+@{
+    ViewBag.Title = "Event Documentation Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_EventDocumentationTypeList", Model)

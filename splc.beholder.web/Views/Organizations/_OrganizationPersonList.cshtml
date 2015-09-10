@@ -1,0 +1,72 @@
+﻿@using splc.domain.Models; 
+@model IEnumerable<OrganizationPersonRel>
+@{
+
+    //This is the entity that you are coming from.
+    var viewItem = ViewBag.Controller == "Persons" ? "Organizations" : "People";
+
+    var source = ViewBag.Controller == "Persons" ? "Persons" : "Organizations";
+    //if controller is Person, then need to show Organizations that are related to it.
+    var displayEntity = ViewBag.Controller == "Persons" ? "Organizations" : "People";
+    var showPerson = ViewBag.Controller == "Organizations";
+    var showOrganization = !showPerson;
+
+    var organizationId = ViewBag.OrganizationId ?? -1;
+    var beholderPersonId = ViewBag.BeholderPersonId ?? -1;
+    var personId = ViewBag.PersonId ?? -1;
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showPerson)
+                    {
+                        @Html.ActionLink(string.Format("{0} {1} {2} {3}", item.BeholderPerson.CommonPerson.Prefix == null ? "" : item.BeholderPerson.CommonPerson.Prefix.Name, item.BeholderPerson.CommonPerson.FName, item.BeholderPerson.CommonPerson.MName, item.BeholderPerson.CommonPerson.LName), "Details", "Persons", new { id = item.BeholderPerson.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.BeholderPerson.MovementClass.Name)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Organization.OrganizationName, "Details", "Organizations", new { item.Organization.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Organization.MovementClass.Name)
+                    }
+
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            
+                            <a href="@Url.Action("EditOrganizationPerson", "Organizations",
+                                         new { item.Id, source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#organizationPersons"
+                               data-action="@Url.Action("GetOrganizationPersons", "Organizations", new { organizationId, personId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteOrganizationPerson", "Organizations", new { item.Id })" class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true"
+                               data-target="#organizationPersons" 
+                               data-action="@Url.Action("GetOrganizationPersons", "Organizations", new { organizationId, personId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateOrganizationPerson", "Organizations", new {organizationId, personId })" class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#organizationPersons"
+           data-action="@Url.Action("GetOrganizationPersons", "Organizations", new { organizationId, personId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+﻿@model OrganizationMediaWebsiteEGroupRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+<h2 class="page-title small">Edit Organization/Website-EGroup Relationship</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditOrganizationMediaWebsiteEGroup", Model)
+    <input type="submit" value="Create Relationship" class="btn btn-primary pull-right" />
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

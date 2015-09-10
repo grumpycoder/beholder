@@ -1,0 +1,66 @@
+@using splc.beholder.web.Helpers
+@model PersonScreenName
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+        @Html.ValidationSummary(true)
+
+        @* This partial view defines form fields that will appear when creating and editing entities *@
+        @Html.HiddenFor(m => m.BeholderPersonId)
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.CreatedUserId)
+
+        <fieldset>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.PrimaryStatusId)
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.PrimaryStatusId, ((IEnumerable<PrimaryStatus>)ViewBag.PossiblePrimaryStatus).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.PrimaryStatusId)
+                    } : null), "Choose...", new { @class = "form-control" })
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.PrimaryStatusId)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.ScreenName)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.ScreenName)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.ScreenName)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.UsedAt)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.UsedAt)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.UsedAt)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.FirstKnownUseDate)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.FirstKnownUseDate)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.FirstKnownUseDate)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.LastKnownUseDate)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.LastKnownUseDate)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.LastKnownUseDate)</span>
+                </div>
+            </div>
+        </fieldset>
+
+}
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+    });
+</script>

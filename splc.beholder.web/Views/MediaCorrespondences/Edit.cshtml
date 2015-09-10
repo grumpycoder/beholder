@@ -1,0 +1,31 @@
+@model MediaCorrespondence
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="title-bar">@Model.CorrespondenceName</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.Partial("_CreateOrEdit", Model)
+    <br />
+    <div class="row">
+        <div>
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "Details", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </div>
+    </div>
+}
+
+
+<script>
+    function onSuccess(result) {
+        if(result.url){
+            window.location.href = result.url;
+        }
+    }
+</script>

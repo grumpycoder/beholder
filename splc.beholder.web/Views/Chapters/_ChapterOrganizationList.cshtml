@@ -1,0 +1,64 @@
+﻿@model IEnumerable<ChapterOrganizationRel>
+@{
+    var viewItem = (string) ViewData["Controller"] == "Chapters" ? "Organizations" : "Chapters";
+    var source = ViewData["Controller"].ToString(); 
+    var showOrganization = ViewBag.Controller == "Chapters";
+
+    var organizationId = ViewBag.OrganizationId; 
+    var chapterId = ViewBag.ChapterId; 
+
+}   
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (source == "Chapters")
+                    {
+                        @Html.ActionLink(item.Organization.OrganizationName, "Details", "Organizations", new { id = item.Organization.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Organization.MovementClass.Name)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Chapter.ChapterName, "Details", "Chapters", new { id = item.Chapter.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Chapter.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditChapterOrganization", "Chapters", new { id = item.Id, source = @source})" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#chapterOrganizations"
+                               data-action="@Url.Action("GetChapterOrganizations", "Chapters", new { chapterId = @chapterId, organizationId = @organizationId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteChapterOrganization", "Chapters", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-target="#chapterOrganizations" 
+                               data-refresh="true" 
+                               data-action="@Url.Action("GetChapterOrganizations", "Chapters", new { chapterId = @chapterId, organizationId = @organizationId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateChapterOrganization", "Chapters", new { chapterId = @chapterId, organizationId = @organizationId})" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#chapterOrganizations"
+           data-action="@Url.Action("GetChapterOrganizations", "Chapters", new { chapterId = @chapterId, organizationId = @organizationId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+

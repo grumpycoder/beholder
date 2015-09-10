@@ -1,0 +1,152 @@
+﻿@model Subscription
+@{
+    const string viewItem = "Subscriptions";
+    var subscriptionId = (int) ViewData["SubscriptionId"];
+    var count = Model.SubscriptionSubscriptionRels.Count() + Model.SubscriptionSubscriptionRels2.Count(); 
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", @count)</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (@count == 0)
+            {
+                <li class="list-group-item">
+                    No Known Published Items Relationships
+                </li>
+            }
+            @foreach (var item in @Model.SubscriptionSubscriptionRels)
+            {
+                <li class="list-group-item">
+                    @if (@subscriptionId == item.Subscription2Id)
+                    {
+                        @Html.ActionLink(item.Subscription.PublicationName, "Details", "Subscriptions", new { id = item.Subscription.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Subscription.SubscriptionRate)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Subscription2.PublicationName, "Details", "Subscriptions", new { id = item.Subscription2.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Subscription2.SubscriptionRate)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditSubscriptionSubscription", "Subscriptions", new { id = item.Id})"
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#subscriptionSubscriptions"
+                               data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new { subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteSubscriptionSubscription", "Subscriptions", new { id = item.Id})"
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#subscriptionSubscriptions"
+                               data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new { subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+            }
+
+            @foreach (var item in @Model.SubscriptionSubscriptionRels2)
+            {
+                <li class="list-group-item">
+                    @if (@subscriptionId == item.Subscription2Id)
+                    {
+                        @Html.ActionLink(item.Subscription.PublicationName, "Details", "Subscriptions", new { id = item.Subscription.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Subscription.SubscriptionRate)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Subscription2.PublicationName, "Details", "Subscriptions", new { id = item.Subscription2.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Subscription2.SubscriptionRate)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditSubscriptionSubscription", "Subscriptions", new { id = item.Id})"
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#subscriptionSubscriptions"
+                               data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new { subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteSubscriptionSubscription", "Subscriptions", new { id = item.Id})"
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#subscriptionSubscriptions"
+                               data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new { subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateSubscriptionSubscription", "Subscriptions", new { subscriptionId = @subscriptionId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#subscriptionSubscriptions"
+           data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new {  subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+@*<table class="table table-bordered">
+        <caption>
+            @string.Format("Publisheds ({0})", (Model.SubscriptionSubscriptionRels.Count() + Model.SubscriptionSubscriptionRels2.Count()).ToString())
+        </caption>
+
+        @if (Model.SubscriptionSubscriptionRels.Count() + Model.SubscriptionSubscriptionRels2.Count() == 0)
+        {
+            <tr>
+                <td>No Known Published Items Relationships</td>
+            </tr>
+        }
+
+        @foreach (var subscriptionSubscriptionRel in Model.SubscriptionSubscriptionRels)
+        {
+            //string controller = ViewData["Controller"].ToString();
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditSubscriptionSubscription", "Subscriptions", new { id = subscriptionSubscriptionRel.Id})" class="btnEdit" data-title="Edit Relationship" data-refresh="true"
+    data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new { subscriptionId = (int)ViewData["SubscriptionId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteSubscriptionSubscription", "Subscriptions", new { id = subscriptionSubscriptionRel.Id})" class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new { subscriptionId = (int)ViewData["SubscriptionId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+                @if ((int)ViewData["SubscriptionId"] == subscriptionSubscriptionRel.Subscription2Id)
+                {
+                    <td>@Html.ActionLink(subscriptionSubscriptionRel.Subscription.PublicationName, "Details", "Subscriptions", new { id = subscriptionSubscriptionRel.SubscriptionId}, null)</td>
+                    <td>@Html.DisplayFor(model => subscriptionSubscriptionRel.Subscription.SubscriptionRate)</td>
+                }
+                else
+                {
+                    <td>@Html.ActionLink(subscriptionSubscriptionRel.Subscription2.PublicationName, "Details", "Subscriptions", new { id = subscriptionSubscriptionRel.Subscription2Id }, null)</td>
+                    <td>@Html.DisplayFor(model => subscriptionSubscriptionRel.Subscription2.SubscriptionRate)</td>
+                }
+            </tr>
+        }
+        @foreach (var subscriptionSubscriptionRel in Model.SubscriptionSubscriptionRels2)
+        {
+            //string controller = ViewData["Controller"].ToString();
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditSubscriptionSubscription", "Subscriptions", new { id = subscriptionSubscriptionRel.Id})" class="btnEdit" data-title="Edit Relationship" data-refresh="true" data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new { subscriptionId = (int)ViewData["SubscriptionId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteSubscriptionSubscription", "Subscriptions", new { id = subscriptionSubscriptionRel.Id})" class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new { subscriptionId = (int)ViewData["SubscriptionId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+                @if ((int)ViewData["SubscriptionId"] == subscriptionSubscriptionRel.Subscription2Id)
+                {
+                    <td>@Html.ActionLink(subscriptionSubscriptionRel.Subscription.PublicationName, "Details", "Subscriptions", new { id = subscriptionSubscriptionRel.SubscriptionId}, null)</td>
+                    <td>@Html.DisplayFor(model => subscriptionSubscriptionRel.Subscription.SubscriptionRate)</td>
+                }
+                else
+                {
+                    <td>@Html.ActionLink(subscriptionSubscriptionRel.Subscription2.PublicationName, "Details", "Subscriptions", new { id = subscriptionSubscriptionRel.Subscription2Id }, null)</td>
+                    <td>@Html.DisplayFor(model => subscriptionSubscriptionRel.Subscription2.SubscriptionRate)</td>
+                }
+            </tr>
+        }
+        <tr>
+            <td colspan="3">
+                <a href="@Url.Action("CreateSubscriptionSubscription", "Subscriptions", new { subscriptionId = (int)ViewData["SubscriptionId"]})" class="btnNew" data-title="New Relationship" data-refresh="true"
+    data-action="@Url.Action("GetSubscriptionSubscriptions", "Subscriptions", new {  subscriptionId = (int)ViewData["SubscriptionId"]})"><i class="icon-plus-sign icon-large"></i></a>
+            </td>
+        </tr>
+    </table>*@

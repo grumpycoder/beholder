@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.RenewalPermmisionType>
+
+@{
+    ViewBag.Title = "Renewal Permission Type";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_RenewalPermissionTypeList", Model)

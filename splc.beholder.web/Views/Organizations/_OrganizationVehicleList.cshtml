@@ -1,0 +1,117 @@
+﻿@using splc.domain.Models; 
+@model IEnumerable<OrganizationVehicleRel>
+@{
+    var viewItem = ViewBag.Controller == "Organizations" ? "Vehicles" : "Organizations";
+    var source = ViewBag.Controller == "Organizations" ? "Organizations" : "Vehicles";
+    var vehicleId = ViewData["VehicleId"] == null ? -1 : (int) ViewData["VehicleId"];
+    var organizationId = ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"]; 
+    var showPerson = ViewBag.Controller == "Vehicles";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showPerson){
+                        @Html.ActionLink(item.Organization.OrganizationName, "Details", "Organizations", new { id = item.Organization.Id }, null)<br/> 
+                        @Html.DisplayFor(model => item.Organization.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(string.Format("{0}", item.Vehicle), "Details", "Vehicles", new { id = item.Vehicle.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Vehicle.VIN)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditOrganizationVehicle", "Organizations", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#organizationVehicles"
+                               data-action="@Url.Action("GetOrganizationVehicles", "Organizations", new { vehicleId = @vehicleId, organizationId = @organizationId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteOrganizationVehicle", "Organizations", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#organizationVehicles"
+                               data-action="@Url.Action("GetOrganizationVehicles", "Organizations", new { vehicleId = @vehicleId, organizationId = @organizationId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateOrganizationVehicle", "Organizations", new { vehicleId = @vehicleId, organizationId = @organizationId })" 
+           class="btnNew" data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#organizationVehicles"
+           data-action="@Url.Action("GetOrganizationVehicles", "Organizations", new { vehicleId = @vehicleId, organizationId = @organizationId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+
+
+
+@*<table class="table table-bordered">
+    <caption>
+        @((string) ViewData["Controller"] == "Vehicles" ? string.Format("Organizations ({0})", Model.Count()) : string.Format("Vehicles ({0})", Model.Count()))
+    </caption>
+    
+    @if (!Model.Any())
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",(string) ViewData["Controller"] == "Organizations" ? "Vehicles" : "Organization Relationships")</td>
+        </tr>
+    }
+    @foreach (var organizationVehicleRel in Model)
+    {
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditOrganizationVehicle", "Organizations", new { id = organizationVehicleRel.Id, source = ViewData["Controller"].ToString()})" 
+                    class="btnEdit" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetOrganizationVehicles", "Organizations", new { vehicleId =  ViewData["VehicleId"] == null ? -1 : (int)ViewData["VehicleId"] , organizationId = ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"] })"><i class="icon-pencil icon-large"></i></a>
+                <a href="@Url.Action("DeleteOrganizationVehicle", "Organizations", new { id = organizationVehicleRel.Id})" 
+                    class="btnDelete" 
+                    data-title="Delete Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetOrganizationVehicles", "Organizations", new { vehicleId =  ViewData["VehicleId"] == null ? -1 : (int)ViewData["VehicleId"]  , organizationId = ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"] })"><i class="icon-trash icon-large"></i></a>
+            </td>
+            @if (ViewData["Controller"].ToString() == "Organizations")
+            {
+                <td>
+                    @Html.ActionLink(string.Format("{0} {1} {2}", organizationVehicleRel.Vehicle.VehicleColorId == null ? "Color??" : organizationVehicleRel.Vehicle.VehicleColor.Name, organizationVehicleRel.Vehicle.VehicleMakeId == null ? "Make??" : organizationVehicleRel.Vehicle.VehicleMake.Name, organizationVehicleRel.Vehicle.VehicleModelId == null ? "Model??" : organizationVehicleRel.Vehicle.VehicleModel.Name), "Details", "Vehicles", new { id = organizationVehicleRel.Vehicle.Id }, null)
+                </td>
+                <td>@Html.DisplayFor(model => organizationVehicleRel.Vehicle.VIN)</td>
+            }
+            else
+            {
+                <td>
+                    @Html.ActionLink(organizationVehicleRel.Organization.OrganizationName, "Details", "Organizations", new { id = organizationVehicleRel.Organization.Id }, null)
+                </td>
+                <td>@Html.DisplayFor(model => organizationVehicleRel.Organization.MovementClass.Name)</td>
+            }
+        </tr>
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateOrganizationVehicle", "Organizations", 
+            new { vehicleId = ViewData["VehicleId"] == null ? -1 : (int)ViewData["VehicleId"]  , organizationId = ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"]})" 
+                class="btnNew" data-title="New Relationship" 
+                data-refresh="true" 
+                data-action="@Url.Action("GetOrganizationVehicles", "Organizations", new {  vehicleId = ViewData["VehicleId"] == null ? -1 : ViewData["VehicleId"], organizationId = ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"]})">
+                <i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>*@

@@ -1,0 +1,138 @@
+@model Address
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.Address1)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Address1)
+    @Html.ValidationMessageFor(model => model.Address1)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.Address2)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Address2)
+    @Html.ValidationMessageFor(model => model.Address2)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.City)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.City)
+    @Html.ValidationMessageFor(model => model.City)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.County)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.County)
+    @Html.ValidationMessageFor(model => model.County)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.Country)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Country)
+    @Html.ValidationMessageFor(model => model.Country)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.Zip5)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Zip5)
+    @Html.ValidationMessageFor(model => model.Zip5)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.Zip4)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Zip4)
+    @Html.ValidationMessageFor(model => model.Zip4)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.Longitude)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Longitude)
+    @Html.ValidationMessageFor(model => model.Longitude)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.Latitude)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Latitude)
+    @Html.ValidationMessageFor(model => model.Latitude)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.DateCreated)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateCreated)
+    @Html.ValidationMessageFor(model => model.DateCreated)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.CreatedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.CreatedUserId)
+    @Html.ValidationMessageFor(model => model.CreatedUserId)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.DateModified)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateModified)
+    @Html.ValidationMessageFor(model => model.DateModified)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.ModifiedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.ModifiedUserId)
+    @Html.ValidationMessageFor(model => model.ModifiedUserId)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.DateDeleted)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateDeleted)
+    @Html.ValidationMessageFor(model => model.DateDeleted)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.DeletedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DeletedUserId)
+    @Html.ValidationMessageFor(model => model.DeletedUserId)
+</div>
+
+<div class="editor-label">
+    State
+</div>
+<div class="editor-field">
+@* ReSharper disable SpecifyACultureInStringConversionExplicitly *@
+    @Html.DropDownListFor(model => model.StateId, ((IEnumerable<State>)ViewBag.PossibleStates).Select(option => new SelectListItem {
+        Text = Html.DisplayTextFor(_ => option).ToString(), 
+        Value = option.Id.ToString(),
+        Selected = (Model != null) && (option.Id == Model.StateId)
+    }), "Choose...", new { @class = "form-control" })
+@* ReSharper restore SpecifyACultureInStringConversionExplicitly *@
+    @Html.ValidationMessageFor(model => model.StateId)
+</div>

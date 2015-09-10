@@ -1,0 +1,63 @@
+﻿@model IEnumerable<PersonMediaPublishedRel>
+@{
+    var viewItem = ViewBag.Controller == "Persons" ? "Published Items" : "People";
+    var source = ViewBag.Controller == "Persons" ? "Persons" : "MediaPublisheds";
+    var mediaPublishedId =  ViewData["MediaPublishedId"] == null ? -1 : (int)ViewData["MediaPublishedId"];
+    var personId = ViewData["PersonId"] ?? -1; 
+    var showPerson = ViewBag.Controller == "MediaPublisheds";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showPerson){
+                        @Html.ActionLink(string.Format("{0}", item.BeholderPerson.CommonPerson.FullName), "Details", "Persons", new { id = item.BeholderPerson.Id }, null)<br />
+                        @Html.DisplayFor(model => item.BeholderPerson.MovementClass.Name)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.MediaPublished.Name ?? "Unknown" , "Details", "MediaPublisheds", new { id = item.MediaPublished.Id }, null)<br />
+                        @Html.DisplayFor(model => item.MediaPublished.MovementClass.Name)
+
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditPersonMediaPublished", "Persons", new { id = item.Id, source = @source})" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#personMediaWebsiteEGroups"
+                               data-action="@Url.Action("GetPersonMediaPublisheds", "Persons", new { personId = @personId, mediaPublishedId = @mediaPublishedId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeletePersonMediaPublished", "Persons", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#personMediaPublisheds"
+                               data-action="@Url.Action("GetPersonMediaPublisheds", "Persons", new { personId = @personId, mediaPublishedId = @mediaPublishedId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreatePersonMediaPublished", "Persons", new { personId = @personId, mediaPublishedId = @mediaPublishedId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#personMediaPublisheds"
+           data-action="@Url.Action("GetPersonMediaPublisheds", "Persons", new { personId = @personId, mediaPublishedId = @mediaPublishedId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+

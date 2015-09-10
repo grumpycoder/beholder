@@ -1,0 +1,17 @@
+﻿@model SubscriptionComment
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Comment</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditSubscriptionComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+
+<div>
+    @Html.ActionLink("Back", "Details", "Subscriptions", new { id = Model.SubscriptionId }, null)
+</div>

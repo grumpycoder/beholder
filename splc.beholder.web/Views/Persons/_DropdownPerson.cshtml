@@ -1,0 +1,59 @@
+﻿@model DropdownPersons
+
+@Html.BootstrapLabelFor(m => m)
+<div class="col-sm-8">
+    <input id="searchPerson" name="searchTerm" type="text" />
+@*    <form action="Person/GetDropdown"
+    @Html.DropDownListFor(m => m.Id,
+                new SelectList(Model.DropDownPersons, "Id", "DisplayName")),
+                new {
+                        @class = "dropdown-list",
+                        data_filter_url = Url.Content("~/Person/GetDropdown/"),
+                        data_update_container = ".dropdown-container",
+                        data_update_id = "#SecondItemID"
+                })
+    @Html.ValidationMessageFor(model => model.DropDownPersons)*@
+</div>
+<script>
+    $(function () {
+        $("#searchPerson").autocomplete({
+            source: "/Search/AutocompleteSuggestions",
+            minLength: 3,
+            select: function (event, ui) {
+                if (ui.item) {
+                    $("#searchTerm").val(ui.item.value);
+                    $("form").submit();
+                }
+            }
+        });
+    });
+
+    $('.dropdown-list').on('change', function (e) {
+
+        // Retrieve the filter url from the data-filter-url attribute
+        var filterUrl = $(this).attr('data-filter-url');
+
+        // Grab the id of the selected item
+        var selectedId = $(this).val();
+
+        // Grab the container that should be updated
+        var updateContainer = $(this).attr('data-update-container');
+
+        // Grab the id of new dropdown
+        var dataUpdateId = $(this).attr('data-update-id');
+
+        var completeUrl = filterUrl + selectedId;
+
+        $.get(completeUrl, function (r) {
+
+            // Load Partial View using the URL from the data-filter-url attribute
+            $(updateContainer).html(r);
+
+            // This would be used if you wanted to trigger the new dropdown to filter another
+            if (dataUpdateId != null) {
+                // Trigger the change event after it is loaded
+                $(dataUpdateId).trigger('change');
+            }
+        });
+    });
+</script>

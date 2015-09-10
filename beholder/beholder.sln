@@ -1,0 +1,63 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "splc.beholder.web", "..\splc.beholder.web\splc.beholder.web.csproj", "{F3351802-B1D4-4A47-957A-D593729CF7E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "splc.data", "..\splc.data\splc.data.csproj", "{5AA2A25D-6AA1-474E-AD42-EBE171545D34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "splc.domain", "..\splc.domain\splc.domain.csproj", "{C1B01921-9073-44B9-890E-948BDC9DF72D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{1EE0A564-8723-4C3E-93AE-243619BA9190}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foolproof", "..\FoolproofValidation\Foolproof\Foolproof.csproj", "{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Stage|Any CPU = Stage|Any CPU
+		Test|Any CPU = Test|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F3351802-B1D4-4A47-957A-D593729CF7E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3351802-B1D4-4A47-957A-D593729CF7E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3351802-B1D4-4A47-957A-D593729CF7E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3351802-B1D4-4A47-957A-D593729CF7E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3351802-B1D4-4A47-957A-D593729CF7E4}.Stage|Any CPU.ActiveCfg = Stage|Any CPU
+		{F3351802-B1D4-4A47-957A-D593729CF7E4}.Stage|Any CPU.Build.0 = Stage|Any CPU
+		{F3351802-B1D4-4A47-957A-D593729CF7E4}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{F3351802-B1D4-4A47-957A-D593729CF7E4}.Test|Any CPU.Build.0 = Test|Any CPU
+		{5AA2A25D-6AA1-474E-AD42-EBE171545D34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AA2A25D-6AA1-474E-AD42-EBE171545D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AA2A25D-6AA1-474E-AD42-EBE171545D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AA2A25D-6AA1-474E-AD42-EBE171545D34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AA2A25D-6AA1-474E-AD42-EBE171545D34}.Stage|Any CPU.ActiveCfg = Stage|Any CPU
+		{5AA2A25D-6AA1-474E-AD42-EBE171545D34}.Stage|Any CPU.Build.0 = Stage|Any CPU
+		{5AA2A25D-6AA1-474E-AD42-EBE171545D34}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{5AA2A25D-6AA1-474E-AD42-EBE171545D34}.Test|Any CPU.Build.0 = Test|Any CPU
+		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Stage|Any CPU.ActiveCfg = Stage|Any CPU
+		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Stage|Any CPU.Build.0 = Stage|Any CPU
+		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Test|Any CPU.ActiveCfg = Test|Any CPU
+		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Test|Any CPU.Build.0 = Test|Any CPU
+		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Stage|Any CPU.ActiveCfg = Release|Any CPU
+		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Stage|Any CPU.Build.0 = Release|Any CPU
+		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Test|Any CPU.ActiveCfg = Release|Any CPU
+		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Test|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

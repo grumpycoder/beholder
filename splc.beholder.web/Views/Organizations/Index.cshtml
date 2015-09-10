@@ -1,0 +1,111 @@
+@using splc.domain.Models;
+@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<Organization>
+
+@{
+    ViewBag.Title = "Organizations";
+
+    var organizationname = Request["organizationname"];
+    var activeyear = Request["activeyear"];
+    var activestatusid = Request["activestatusid"];
+    var movementclassid = Session["movementclassid"] ?? Request["movementclassid"];
+
+
+}
+<style type="text/css">
+    .panel-group .panel {
+        overflow: visible; /*This is the issue*/
+    }
+</style>
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-11 col-lg-11">
+            @using (Html.BeginForm("Index", "Organizations", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+                <input type="text" id="organizationname" name="organizationname" placeholder="Organization Name" class="form-control" value="@(organizationname)" />
+
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <small>More search options</small>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                
+                                <table class="table table-condensed table-responsive table-no-border">
+                                    <tr>
+                                        <td>@Html.BootstrapLabel("Active Year")</td>
+                                        <td>@Html.BootstrapLabel("Active Status")</td>
+                                        <td>@Html.BootstrapLabel("Movements")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" id="activeyear" name="activeyear" placeholder="Active Year" class="form-control" value="@(activeyear)" /></td>
+                                        <td>@Html.DropDownList("activestatusid", ((IEnumerable<ActiveStatus>)ViewBag.PossibleActiveStatus).Select(option => new SelectListItem
+                                        {
+                                            Text = (option == null ? "None" : option.Name),
+                                            Value = option.Id.ToString(),
+                                            Selected = false
+                                        }), "Active Status", new { @class = "chosen-select" })</td>
+                                        <td>
+                                            <select data-placeholder="Choose Movements..." name="movementclassid" multiple class="chosen-select form-control" style="width:350px;">
+                                                @foreach (var item in (IEnumerable<MovementClass>)ViewBag.PossibleMovementClasses)
+                                                {
+                                                    var selectedValue = false;
+                                                    if (movementclassid != null)
+                                                    {
+                                                        foreach (var i in (List<int>)movementclassid)
+                                                        {
+                                                            if (i == item.Id) { selectedValue = true; break; }
+                                                        }
+                                                    }
+                                                    if (selectedValue)
+                                                    {
+                                                        <option value="@item.Id" selected="selected">
+                                                            @item.Name
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Id">
+                                                            @item.Name
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+
+                                    </tr>
+                                </table>
+
+                             
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "Organizations", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+<div id="organizationList">
+    @Html.Partial("_OrganizationList", Model)
+</div>
+

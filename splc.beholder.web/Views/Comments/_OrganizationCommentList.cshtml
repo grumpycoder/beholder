@@ -1,0 +1,59 @@
+﻿@model IEnumerable<OrganizationComment>
+@{
+    const string viewItem = "Comments";
+}
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <table class="table table-condensed table-hover">
+            <tr>
+                <td></td>
+                <td>Date</td>
+                <td>User</td>
+                <td>Comment</td>
+            </tr> 
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="4">No Comments</td>
+                </tr>
+            }           
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="nowrap">
+                        <a href="@Url.Action("EditOrganizationComment", "Comments", new {id = item.Id})" 
+                           class="btnEdit" 
+                           data-title="Update Comment" 
+                           data-refresh="true" 
+                           data-target="#organizationComments"
+                           data-action="@Url.Action("GetOrganizationComments", "Comments", new { id = item.OrganizationId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                       <a href="@Url.Action("DeleteOrganizationComment", "Comments", new {id = item.Id})" 
+                          class="btnDelete" 
+                          data-title="Delete Comment" 
+                          data-refresh="true" 
+                          data-target="#organizationComments"
+                          data-action="@Url.Action("GetOrganizationComments", "Comments", new { id = item.OrganizationId })"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                    <td>
+                        @(item.DateModified == null ? "Unknown" : @String.Format("{0:d}", item.DateModified))
+                    </td>
+                    <td>
+                        @(item.ModifiedUser == null ? "Unknown" : item.ModifiedUser.UserName)
+                    </td>
+                    <td>
+                        @item.Comment
+                    </td>
+                </tr>
+            }            
+        </table>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateOrganizationComment", "Comments", new { organizationId = ViewData["OrganizationId"] ?? Model.FirstOrDefault().OrganizationId})" 
+           class="btnNew" 
+           data-title="New Event Comment" 
+           data-refresh="true" 
+           data-target="#organizationComments"
+           data-action="@Url.Action("GetOrganizationComments", "Comments", new { id = ViewData["OrganizationId"]  ?? Model.FirstOrDefault().OrganizationId})"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

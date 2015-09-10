@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.EyeColor>
+
+@{
+    ViewBag.Title = "Eye Colors";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_EyeColorList", Model)

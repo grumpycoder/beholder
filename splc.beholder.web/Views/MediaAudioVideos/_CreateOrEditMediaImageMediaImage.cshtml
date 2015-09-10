@@ -1,0 +1,109 @@
+﻿@model splc.domain.Models.MediaImageMediaImageRel
+
+@using (Html.BeginForm())
+{
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.MediaImageId, new { id = "MediaImageId" })
+    @Html.HiddenFor(model => model.MediaImage2Id, new { id = "MediaImage2Id" })
+  
+    <fieldset>
+        <legend>MediaImage Relationship</legend>
+
+            <div class="control-group">
+                @Html.LabelFor(model => model.PrimaryStatus, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.PrimaryStatusId, ((IEnumerable<splc.domain.Models.PrimaryStatus>)ViewBag.PossiblePrimaryStatuses).Select(option => new SelectListItem
+               {
+                   Text = (option == null ? "None" : option.Name),
+                   Value = option.Id.ToString(),
+                   Selected = (Model != null) && (option.Id == Model.PrimaryStatusId)
+               }), "Choose...")
+                    @Html.ValidationMessageFor(model => model.PrimaryStatusId)
+                </div>
+            </div>
+
+            @if (Model.Id == 0)
+            {
+                @Html.HiddenFor(model => model.MediaImage2.Id)
+                <div class="control-group" id="mediaImageGroup">
+                    @Html.LabelFor(m => m.MediaImage2, new { @class = "control-label" })
+                    <div class="controls" >
+                        @*this is for the autocomplete search box for person*@
+                        <div class="ui-widget">
+                            <select id="combobox_mediaImages" data-url="@Url.Action("GetMediaImageList", "MediaImages")" data-id="mediaImagesCombo" data-hidden-field="MediaImage2Id"></select>
+                        </div>
+@*                            <div>
+                            <img src="@Url.Action("ShowImage", "MediaImages", new { Id = Model.MediaImage.Image.Id })"  />
+                        </div>*@
+                        @Html.ValidationMessageFor(model => model.MediaImage2Id)
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                @Html.HiddenFor(model => model.MediaImage.Id)
+                @Html.LabelFor(model => model.MediaImage, new { @class = "control-label" })
+                <div class="controls" >
+                        <input readonly="true" class="text-box single-line" type="text" value="@Model.MediaImage.ImageTitle" />
+                </div>
+
+                @Html.HiddenFor(model => model.MediaImage2.Id)
+                @Html.LabelFor(model => model.MediaImage2, new { @class = "control-label" })
+                <div class="controls" >
+                        <input readonly="true" class="text-box single-line" type="text" value="@Model.MediaImage2.ImageTitle" />
+                </div>
+                         
+            }
+
+            <div class="control-group">
+                @Html.LabelFor(m => m.RelationshipType, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.RelationshipTypeId, ((IEnumerable<splc.domain.Models.RelationshipType>)ViewBag.PossibleRelationshipTypes).Select(option => new SelectListItem
+               {
+                   Text = (option == null ? "None" : option.Name),
+                   Value = option.Id.ToString(),
+                   Selected = (Model != null) && (option.Id == Model.RelationshipTypeId)
+               }), "Choose...")
+                    @Html.ValidationMessageFor(model => model.RelationshipTypeId)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(m => m.DateStart, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.EditorFor(m => m.DateStart)
+                    @Html.ValidationMessageFor(m => m.DateStart)
+                </div>
+            </div>
+
+            <div class="control-group">
+                @Html.LabelFor(m => m.DateEnd, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.EditorFor(m => m.DateEnd)
+                    @Html.ValidationMessageFor(m => m.DateEnd)
+                </div>
+            </div>
+
+
+            <div class="control-group">
+                @Html.LabelFor(m => m.ApprovalStatus, new { @class = "control-label" })
+                <div class="controls">
+                    @Html.DropDownListFor(model => model.ApprovalStatusId, ((IEnumerable<splc.domain.Models.ApprovalStatus>)ViewBag.PossibleApprovalStatus).Select(option => new SelectListItem
+               {
+                   Text = (option == null ? "None" : option.Name),
+                   Value = option.Id.ToString(),
+                   Selected = (Model != null) && (option.Id == Model.ApprovalStatusId)
+               }), "Choose...")
+                    @Html.ValidationMessageFor(model => model.ApprovalStatusId)
+            </div>
+        </div>
+    </fieldset>  
+}
+
+<script type="text/javascript">
+    $(function () {
+        initControls();
+    });
+</script>

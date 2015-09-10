@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ChapterMediaAudioVideoRel>
+@{
+    var viewItem = ViewBag.Controller == "Chapters" ? "Audio Videos" : "Chapters";
+    var source = ViewBag.Controller == "Chapters" ? "Chapters" : "MediaAudioVideos";
+    var mediaAudioVideoId =  ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"];
+    var chapterId = ViewData["ChapterId"] ?? -1;
+    var showChapter = ViewBag.Controller == "MediaAudioVideos";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showChapter){
+                        @Html.ActionLink(item.Chapter.ChapterName, "Details", "Chapters", new { id = item.Chapter.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Chapter.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(item.MediaAudioVideo.Title, "Details", "MediaAudioVideos", new { id = item.MediaAudioVideo.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaAudioVideo.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditChapterMediaAudioVideo", "Chapters", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#chapterMediaAudioVideos"
+                               data-action="@Url.Action("GetChapterMediaAudioVideos", "Chapters", new { chapterId = @chapterId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteChapterMediaAudioVideo", "Chapters", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#chapterMediaAudioVideos"
+                               data-action="@Url.Action("GetChapterMediaAudioVideos", "Chapters", new { chapterId = @chapterId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateChapterMediaAudioVideo", "Chapters", new { chapterId = @chapterId, mediaAudioVideoId = @mediaAudioVideoId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#chapterMediaAudioVideos"
+           data-action="@Url.Action("GetChapterMediaAudioVideos", "Chapters", new { chapterId = @chapterId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+

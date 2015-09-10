@@ -1,0 +1,148 @@
+@model Caseiro.Mvc.PagedList.PagedList<Event>
+@{
+    ViewBag.Title = "Events";
+
+    var eventname = Session["eventname"] ?? Request["eventname"];
+    var datefrom = Session["datefrom"] ?? Request["datefrom"];
+    var dateto = Session["dateto"] ?? Request["dateto"];
+    var eventtypeid = Session["eventtypeid"] ?? Request["eventtypeid"];
+    var activeyear = Session["activeyear"] ?? Request["activeyear"];
+    var activestatusid = Session["activestatusid"] ?? Request["activestatusid"];
+    var approvalstatusid = Session["approvalstatusid"] ?? Request["approvalstatusid"];
+    
+    var array = ((IEnumerable<MovementClass>)ViewBag.PossibleMovementClasses).Select(option => new SelectListItem
+                    {
+                        Text = (option == null ? "None" : option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = false//(!string.IsNullOrWhiteSpace("movementclassid")) && (option.Id == Convert.ToInt32("movementclassid"))
+                    });
+
+}
+<style type="text/css">
+    .panel-group .panel {
+        overflow: visible; /*This is the issue*/
+    }
+</style>
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-11 col-lg-11">
+            @using (Html.BeginForm("Index", "Events", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+                <input type="search" id="eventname" name="eventname" class="form-control" placeholder="Event Name" value="@eventname" />
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <small>More search options</small>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Date Range</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-daterange input-group" id="datepicker">
+                                            <input type="text" class="form-control" name="datefrom" value="@string.Format("{0:d}", datefrom)" />
+                                            <span class="input-group-addon">to</span>
+                                            <input type="text" class="form-control" name="dateto" value="@string.Format("{0:d}", dateto)" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Event Types</label>
+                                    <div class="col-sm-8">
+                                        <select data-placeholder="Choose Event Types..." name="eventtypeid" multiple class="chosen-select form-control" style="width:350px;">
+                                            @foreach (var item in (IEnumerable<EventType>)ViewBag.PossibleEventTypes)
+                                            {
+                                                var selectedValue = false;
+                                                if (@Session["eventtypeid"] != null)
+                                                {
+                                                    foreach (var i in (List<int>)@Session["eventtypeid"])
+                                                    {
+                                                        if (i == item.Id) { selectedValue = true; break; }
+                                                    }
+                                                }
+                                                if (selectedValue)
+                                                {
+                                                    <option value="@item.Id" selected="selected">
+                                                        @item.Name
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@item.Id">
+                                                        @item.Name
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">Active Year</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="activeyear" name="activeyear" class="form-control" placeholder="Active Year" value="@activeyear" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        @Html.DropDownList("activestatusid", ((IEnumerable<ActiveStatus>)ViewBag.PossibleActiveStatus).Select(option => new SelectListItem
+                                            {
+                                                Text = (option == null ? "None" : option.Name),
+                                                Value = option.Id.ToString(),
+                                                Selected = false
+                                            }), "Active Status", new { @class = "form-control chosen-select" })
+
+                                        @Html.DropDownList("approvalstatusid", ((IEnumerable<ApprovalStatus>)ViewBag.PossibleApprovalStatus).Select(option => new SelectListItem
+                                            {
+                                                Text = (option == null ? "None" : option.Name),
+                                                Value = option.Id.ToString(),
+                                                Selected = false
+                                            }), "Approval Status", new { @class = "form-control chosen-select" })
+                                    </div>
+
+                                </div>
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "Events", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+
+<div id="eventList">
+    @Html.Partial("_EventList", Model)
+</div>
+
+
+<script>
+    //initPartialControls();
+
+
+</script>

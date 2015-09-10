@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.VehicleColor>
+
+@{
+    ViewBag.Title = "Vehicle Colors";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_VehicleColorList", Model)

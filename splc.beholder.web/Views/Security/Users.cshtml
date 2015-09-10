@@ -1,0 +1,44 @@
+﻿@model IEnumerable<User>
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/Content/Gridmvc.css" rel="stylesheet" />
+<link href="~/Content/gridmvc.datepicker.min.css" rel="stylesheet" />
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateUser", null, new
+   {
+       @class = "btn btn-primary btnNew",
+       data_target = "#userList",
+       data_refresh = "true",
+       data_title = "Create User",
+       data_action = @Url.Action("Users", "Security", new { gridpage = @ViewBag.gridpage })
+   })
+</p>
+<div id="userList" class="col-lg-8 col-sm-8">
+    @Html.Partial("_UserList", Model)
+
+</div>
+<div class ="col-lg-4 col-sm-4" id="user-detail">
+
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/gridmvc.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            pageGrids.usersGrid.onRowSelect(function(e) {
+                $.get("./UserDetail?id=" + e.row.Id, function(data) {
+                    $("#user-detail").html(data);
+                });
+            });
+
+        });
+    </script>
+
+}

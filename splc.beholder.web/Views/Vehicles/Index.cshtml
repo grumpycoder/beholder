@@ -1,0 +1,36 @@
+@model Caseiro.Mvc.PagedList.PagedList<Vehicle>
+@{
+    ViewBag.Title = "Vehicles";
+
+    var searchTerm = Session["searchTerm"] ?? Request["searchTerm"];
+    
+}
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            @using (Ajax.BeginForm("Index", "Vehicles", null, new AjaxOptions
+            {
+                HttpMethod = "POST",
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "vehicleList"
+            }, new {@class = "form-inline"}))
+            {
+
+                <input type="search" id="searchTerm" name="searchTerm" class="form-control" placeholder="Search Vehicles" value="@searchTerm" />
+                <input type="submit" value="Search" class="btn btn-primary" />
+            }
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "Vehicles", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+<div id="vehicleList">
+    @Html.Partial("_VehicleList", Model)
+</div>

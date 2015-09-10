@@ -1,0 +1,95 @@
+@model IEnumerable<splc.domain.Models.Image>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            IMAGE1
+        </th>
+        <th>
+            DateCreated
+        </th>
+        <th>
+            CreatedUserId
+        </th>
+        <th>
+            DateModified
+        </th>
+        <th>
+            ModifiedUserId
+        </th>
+        <th>
+            DateDeleted
+        </th>
+        <th>
+            DeletedUserId
+        </th>
+        <th>
+            OLD_OBJECT_ID
+        </th>
+        <th>
+            ConfidentialityType
+        </th>
+        <th>
+            MediaImage
+        </th>
+        <th>
+            MimeType
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.IMAGE1).ToString()
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateCreated)
+        </td>
+        <td>
+			@item.CreatedUserId
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateModified)
+        </td>
+        <td>
+			@item.ModifiedUserId
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateDeleted)
+        </td>
+        <td>
+			@item.DeletedUserId
+        </td>
+        <td>
+			@item.OLD_OBJECT_ID
+        </td>
+        <td>
+			@(item.ConfidentialityType == null ? "None" : item.ConfidentialityType.Name)
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.MediaImage).ToString()
+        </td>
+        <td>
+			@(item.MimeType == null ? "None" : item.MimeType.Name)
+        </td>
+    </tr>
+}
+
+</table>
+
+

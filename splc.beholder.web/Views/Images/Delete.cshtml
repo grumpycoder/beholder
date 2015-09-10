@@ -1,0 +1,53 @@
+@model splc.domain.Models.Image
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Image</legend>
+
+    <div class="display-label">IMAGE1</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.IMAGE1).ToString()</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateCreated)</div>
+
+    <div class="display-label">CreatedUserId</div>
+    <div class="display-field">@Model.CreatedUserId</div>
+
+    <div class="display-label">DateModified</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateModified)</div>
+
+    <div class="display-label">ModifiedUserId</div>
+    <div class="display-field">@Model.ModifiedUserId</div>
+
+    <div class="display-label">DateDeleted</div>
+    <div class="display-field">@String.Format("{0:g}", Model.DateDeleted)</div>
+
+    <div class="display-label">DeletedUserId</div>
+    <div class="display-field">@Model.DeletedUserId</div>
+
+    <div class="display-label">OLD_OBJECT_ID</div>
+    <div class="display-field">@Model.OLD_OBJECT_ID</div>
+
+    <div class="display-label">ConfidentialityType</div>
+    <div class="display-field">@(Model.ConfidentialityType == null ? "None" : Model.ConfidentialityType.Name)</div>
+
+    <div class="display-label">MediaImage</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.MediaImage).ToString()</div>
+
+    <div class="display-label">MimeType</div>
+    <div class="display-field">@(Model.MimeType == null ? "None" : Model.MimeType.Name)</div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+
+

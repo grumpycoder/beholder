@@ -1,0 +1,53 @@
+@model splc.domain.Models.AliasOrganizationRel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+@Html.HiddenFor(m => m.Id)
+@Html.HiddenFor(m => m.Alias.Id)
+@Html.HiddenFor(m => m.AliasId)
+@Html.HiddenFor(m => m.Alias.CreatedUserId)
+@Html.HiddenFor(m => m.CreatedUserId)
+
+<div class="editor-label">
+    PrimaryStatus
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.PrimaryStatusId, ((IEnumerable<splc.domain.Models.PrimaryStatus>)ViewBag.PossiblePrimaryStatus).Select(option => new SelectListItem {
+        Text = (option == null ? "None" : option.Name), 
+        Value = option.Id.ToString(),
+        Selected = (Model != null) && (option.Id == Model.PrimaryStatusId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.PrimaryStatusId)
+</div>
+
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.FirstKnownUseDate)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.FirstKnownUseDate)
+    @Html.ValidationMessageFor(model => model.FirstKnownUseDate)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.LastKnownUseDate)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.LastKnownUseDate)
+    @Html.ValidationMessageFor(model => model.LastKnownUseDate)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.Comments)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.Comments)
+    @Html.ValidationMessageFor(model => model.Comments)
+</div>
+
+<div class="editor-label">
+    Alias
+</div>
+<div class="editor-field">
+    @Html.TextBoxFor(model => model.Alias.AliasName)
+
+</div>

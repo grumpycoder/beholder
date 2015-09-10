@@ -1,0 +1,86 @@
+@model Event
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>EventIncident</legend>
+
+    <div class="display-label">EventName</div>
+    <div class="display-field">@Model.EventName</div>
+
+    <div class="display-label">EventDate</div>
+    <div class="display-field">@String.Format("{0:d}", Model.EventDate)</div>
+
+    <div class="display-label">ActiveYear</div>
+    <div class="display-field">@Model.ActiveYear</div>
+
+    <div class="display-label">ReportStatusFlag</div>
+    <div class="display-field">@Model.ReportStatusFlag</div>
+
+    <div class="display-label">Religion</div>
+    <div class="display-field">@Model.Religion</div>
+
+    <div class="display-label">Summary</div>
+    <div class="display-field">@Model.Summary</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateCreated)</div>
+
+    <div class="display-label">CreatedUserId</div>
+    <div class="display-field">@Model.CreatedUserId</div>
+
+    <div class="display-label">DateModified</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateModified)</div>
+
+    <div class="display-label">ModifiedUserId</div>
+    <div class="display-field">@Model.ModifiedUserId</div>
+
+    <div class="display-label">RemovalReason</div>
+    <div class="display-field">@Model.RemovalReason</div>
+
+    <div class="display-label">DateDeleted</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateDeleted)</div>
+
+    <div class="display-label">DeletedUserId</div>
+    <div class="display-field">@Model.DeletedUserId</div>
+
+    <div class="display-label">ActiveStatus</div>
+    <div class="display-field">@(Model.ActiveStatus == null ? "None" : Model.ActiveStatus.Name)</div>
+
+    <div class="display-label">ApprovalStatus</div>
+    <div class="display-field">@(Model.ApprovalStatus == null ? "None" : Model.ApprovalStatus.Name)</div>
+
+    <div class="display-label">ConfidentialityType</div>
+    <div class="display-field">@(Model.ConfidentialityType == null ? "None" : Model.ConfidentialityType.Name)</div>
+
+    <div class="display-label">EventDocumentationType</div>
+    <div class="display-field">@(Model.EventDocumentationType == null ? "None" : Model.EventDocumentationType.Name)</div>
+
+    <div class="display-label">MovementClass</div>
+    <div class="display-field">@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</div>
+
+    <div class="display-label">RemovalStatus</div>
+    <div class="display-field">@(Model.RemovalStatus == null ? "None" : Model.RemovalStatus.Name)</div>
+
+    <div class="display-label">WebIncidentType</div>
+    <div class="display-field">@(Model.WebIncidentType == null ? "None" : Model.WebIncidentType.Name)</div>
+
+    <div class="display-label">EventComments</div>
+    <div class="display-field">@(Model.EventComments == null ? "None" : Model.EventComments.Count.ToString())</div>
+
+    <div class="display-label">PersonEventRels</div>
+    <div class="display-field">@(Model.PersonEventRels == null ? "None" : Model.PersonEventRels.Count.ToString())</div>
+</fieldset>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" })) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+
+

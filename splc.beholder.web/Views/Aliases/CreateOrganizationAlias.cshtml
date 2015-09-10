@@ -1,0 +1,17 @@
+﻿@model AliasOrganizationRel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">Create New Alias</h2>
+<div class="row">
+    @Html.Partial("_CreateOrEditOrganizationAlias", Model)
+    <input type="submit" value="Create" class="btn btn-primary pull-right" />
+</div>   
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+

@@ -1,0 +1,25 @@
+﻿@model AddressPersonRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" })) {
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>AddressPersonRel</legend>
+
+        @Html.HiddenFor(model => model.Id)
+		@Html.Partial("_CreateOrEditAddress", Model)
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

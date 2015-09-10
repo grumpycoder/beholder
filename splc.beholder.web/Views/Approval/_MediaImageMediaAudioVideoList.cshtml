@@ -1,0 +1,66 @@
+﻿@model IEnumerable<splc.domain.Models.MediaImageMediaAudioVideoRel>
+
+<h2>Image-Audio Video Relationships</h2>
+<table class="table table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.MediaImageId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MediaAudioVideoId)
+        </th>
+        <th>Date Start
+        </th>
+        <th>Date End
+        </th>
+        <th>Relationship Type
+        </th>
+        <th>Primary Status
+        </th>
+        <th>Approval Status
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MediaImageId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MediaAudioVideoId)
+            </td>
+            <td>
+                @item.DateStart
+            </td>
+            <td>
+                @item.DateEnd
+            </td>
+            <td>
+                @(item.RelationshipType == null ? "Unknown" : item.RelationshipType.Name)
+            </td>
+            <td>
+                @(item.PrimaryStatusId == null ? "Unknown" : item.PrimaryStatus.Name)
+            </td>
+            <td>
+                @item.ApprovalStatus.Name
+            </td>
+            <td class="nowrap">
+                <a href="@Url.Action("ApproveMediaImageMediaAudioVideo", "Approval", new { id = item.Id })" 
+                    class="btn btnApprove" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaImageMediaAudioVideoApprovals", "Approval")">Approve</a>
+
+                <a href="@Url.Action("RejectMediaImageMediaAudioVideo", "Approval", new { id = item.Id })" 
+                    class="btn btnApprove" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaImageMediaAudioVideoApprovals", "Approval")">Disapprove</a>
+
+            </td>
+        </tr>
+    }
+
+</table>

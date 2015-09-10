@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.AudioVideoType>
+
+@{
+    ViewBag.Title = "Audio Video Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_AudioVideoTypeList", Model)

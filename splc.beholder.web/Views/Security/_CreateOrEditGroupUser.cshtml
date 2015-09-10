@@ -1,0 +1,76 @@
+﻿@model GroupUser
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.UserId)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    
+    <fieldset>
+    
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.GroupId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.GroupId)
+            @Html.ValidationMessageFor(model => model.GroupId)
+        </div>
+    
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.DateCreated)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DateCreated)
+            @Html.ValidationMessageFor(model => model.DateCreated)
+        </div>
+    
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.CreatedUserId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreatedUserId)
+            @Html.ValidationMessageFor(model => model.CreatedUserId)
+        </div>
+    
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.DateModified)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DateModified)
+            @Html.ValidationMessageFor(model => model.DateModified)
+        </div>
+    
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.ModifiedUserId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ModifiedUserId)
+            @Html.ValidationMessageFor(model => model.ModifiedUserId)
+        </div>
+    
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.DateDeleted)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DateDeleted)
+            @Html.ValidationMessageFor(model => model.DateDeleted)
+        </div>
+    
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.DeletedUserId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DeletedUserId)
+            @Html.ValidationMessageFor(model => model.DeletedUserId)
+        </div>
+    
+        <p>
+            <input type="submit" value="Create" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

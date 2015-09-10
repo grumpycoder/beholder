@@ -1,0 +1,17 @@
+﻿@model MediaAudioVideoComment
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+<h2 class="page-title small">Edit Comment</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditMediaAudioVideoComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+<div>
+    @Html.ActionLink("Back", "Details", "MediaAudioVideos", new { id = Model.MediaAudioVideoId }, null)
+</div>

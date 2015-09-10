@@ -1,0 +1,97 @@
+﻿@model User
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.ValidationSummary(true)
+
+    @*@Html.HiddenFor(model => model.CreatedUserId)
+    @Html.HiddenFor(model => model.DateCreated)*@
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.PersonId)
+    @*@Html.HiddenFor(model => model.CommonPerson.Id)
+    @Html.HiddenFor(model => model.CommonPerson.CreatedUserId)
+    @Html.HiddenFor(model => model.CommonPerson.DateCreated)*@
+    
+    <fieldset>
+        <div class="form-group">
+            @Html.BootstrapLabel("Username")
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.UserName, null, "Username")
+                <span class="help-block">@Html.ValidationMessageFor(model => model.UserName)</span>
+            </div>
+        </div>
+        @*<div class="form-group">
+            @Html.BootstrapLabel("Prefix")
+            <div class="col-sm-8">
+                @Html.DropDownListFor(m => m.CommonPerson.PrefixId, (SelectList)ViewBag.Prefixes, "Choose Prefix", new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabel("First Name")
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CommonPerson.FName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.FName)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabel("Middle Name")
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CommonPerson.MName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.MName)</span>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.BootstrapLabel("Last Name")
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CommonPerson.LName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.LName)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabel("Suffix")
+            <div class="col-sm-8">
+                @Html.DropDownListFor(m => m.CommonPerson.SuffixId, (SelectList)ViewBag.Suffixes, "Choose Suffix", new { @class = "form-control" })
+            </div>
+        </div>*@
+
+        <div class="form-group" id="personGroup">
+            @Html.BootstrapLabel("Person")
+            <div class="col-sm-8">
+                @*<div class="ui-widget">
+                    <select id="combobox_per" data-url="@Url.Action("GetDropdown", "Persons")" data-id="personCombo" data-hidden-field="PersonId" class="form-control"></select>
+                </div>*@
+                @if (Model.Id == 0)
+                {
+                    @*this is for the autocomplete search box for person*@
+                    <div class="ui-widget">
+                        <select id="combobox_per" data-url="@Url.Action("GetCommonPersonList", "Persons")" data-id="personCombo" data-hidden-field="PersonId" class="form-control"></select>
+                    </div>
+                }
+                else
+                {
+                    @*<input readonly="true" class="text-box single-line form-control" type="text" value="@string.Format("{0} {1} {2} {3}", @Model.BeholderPerson.CommonPerson.Prefix == null ? "" : @Model.BeholderPerson.CommonPerson.Prefix.Name, @Model.BeholderPerson.CommonPerson.FName, @Model.BeholderPerson.CommonPerson.MName, @Model.BeholderPerson.CommonPerson.LName)" />*@
+                    <input type="text" class="disabled form-control" readonly="true" value="@Model.CommonPerson.FullName" style="width: 100%;" />
+                }
+            </div>
+        </div>
+
+                <div class="form-group">
+                    @Html.BootstrapLabel("Disabled")
+                    <div class="col-sm-8">
+                        @Html.EditorFor(model => model.Disabled)
+                        <span class="help-block">@Html.ValidationMessageFor(model => model.Disabled)</span>
+                    </div>
+                </div>
+</fieldset>
+}
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+    });
+</script>

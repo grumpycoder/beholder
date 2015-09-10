@@ -1,0 +1,39 @@
+﻿@model IEnumerable<State>
+<h3>States</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    @foreach (var item in @Model)
+    {
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditState", "Admin", new { id = item.Id })" 
+                    class="btnEdit" 
+                    data-title="Edit State" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("States", "Admin", null)"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("DeleteState", "Admin", new { id = item.Id })" 
+                    class="btnDelete" 
+                    data-title="Delete State" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("States", "Admin", null)"><span class="glyphicon glyphicon-trash"></span></a>
+            </td>
+            <td>@item.StateName</td>
+        </tr>
+
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateState", "Admin", null)" 
+                class="btnNew" 
+                data-refresh="true" 
+                data-title="New State" 
+                data-action="@Url.Action("States", "Admin", null)"><span class="glyphicon glyphicon-plus"></span></a>
+        </td>
+    </tr>
+</table>
+

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Group>
+@using GridMvc.Html    
+
+@{
+        ViewBag.Title = "Users";
+    }
+
+    @helper GridManageItemColumn(long Id)
+{
+    @Html.ActionLink("Edit", "EditGroup", "Security", new { id = Id }, new
+{
+    @class = "btnEdit",
+    data_refresh = "true",
+    data_title = "Edit Group",
+    data_action = @Url.Action("Groups", "Security", new { gridpage = @ViewBag.gridpage })
+})
+        <span> | </span>
+    @Html.ActionLink("Delete", "DeleteGroup", "Security", new { id = Id }, new
+{
+    @class = "btnDelete",
+    data_refresh = "true",
+    data_title = "Delete Group",
+    data_action = @Url.Action("Groups", "Security", new { gridpage = @ViewBag.gridpage })
+})
+}
+
+    @Html.Grid(Model).Named("groupsGrid").Columns(c =>
+{
+    c.Add(m => m.Id, true);
+    c.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(m => GridManageItemColumn(m.Id).ToHtmlString());
+    c.Add(m => m.Name).Sortable(true).Filterable(true);
+    c.Add(m => m.ConfidentialityType.Name).Sortable(true).Filterable(true);
+}).WithPaging(15, 15, "gridpage")
+
+

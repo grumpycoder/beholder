@@ -1,0 +1,16 @@
+﻿@model AddressSubscriptionsRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Address</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditSubscriptionsAddress", Model)
+    <input type="submit" value="Save Address" class="btn btn-primary pull-right" />
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

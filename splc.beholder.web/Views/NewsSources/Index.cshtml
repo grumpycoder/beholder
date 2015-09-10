@@ -1,0 +1,38 @@
+@model Caseiro.Mvc.PagedList.PagedList<NewsSource>
+
+
+@{
+    ViewBag.Title = "News Sources";
+    
+    var searchTerm = Session["searchTerm"] ?? Request["searchTerm"];
+}
+<style type="text/css">
+    .panel-group .panel {
+        overflow: visible; /*This is the issue*/
+    }
+</style>
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            @using (Html.BeginForm("Index", "NewsSources", FormMethod.Get, new {id = "searchForm", @class = "form-inline"}))
+            {
+
+                <input type="search" id="searchTerm" name="searchTerm" class="form-control" placeholder="Search News Sources" value="@searchTerm" />
+                <input type="submit" value="Search" class="btn btn-primary" />
+            }
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "NewsSources", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+<div id="newsSourceList">
+    @Html.Partial("_NewsSourceList", Model)
+</div>

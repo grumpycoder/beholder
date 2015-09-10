@@ -1,0 +1,57 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@using splc.domain.Models
+@model Caseiro.Mvc.PagedList.PagedList<MediaCorrespondence>
+
+@{
+    var pageSize = Session["pageSize"] ?? Request["pageSize"]; 
+    var correspondencename = Session["correspondencename"] ?? Request["correspondencename"];
+    var fromname = Session["fromname"] ?? Request["fromname"];
+    var datefrom = Session["datefrom"] ?? Request["datefrom"];
+    var dateto = Session["dateto"] ?? Request["dateto"];
+    var correspondencetypeid = Session["correspondencetypeid"] ?? Request["correspondencetypeid"];
+
+    var correspondencetypeid_string = "";
+    if ((Session["correspondencetypeid"] ?? Request["correspondencetypeid"]) != null)
+    {
+        correspondencetypeid_string = string.Join(",", (List<int>)(Session["correspondencetypeid"] ?? Request["correspondencetypeid"]));
+    }
+    
+}
+
+
+@if (!Model.Any())
+{
+    <h3>No Correspondence Items found</h3>
+}
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, correspondencename, fromname, datefrom, dateto, correspondencetypeid, correspondencetypeid_string }))
+</div>
+
+<ul class="card-list">
+@foreach (var item in Model)
+{
+    <li>
+        <div class="thumbnail">
+
+            <a href="@Url.Action("Details", "MediaCorrespondences", new { id = item.Id })">
+                <h4 class="title-elliipsis" title="@string.Format("{0}", item.CorrespondenceName)">@string.Format("{0}", item.CorrespondenceName)</h4>
+                <table class="table">
+            <tr>
+                <td>Movement</td>
+                <td>@(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)</td>
+            </tr>
+            <tr>
+                <td>Date Received</td>
+                <td>@(item.DateReceived == null ? "Unknown" : @String.Format("{0:d}", item.DateReceived))</td>
+            </tr>
+                </table>
+            </a>
+        </div>
+    </li>
+}
+</ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, correspondencename, fromname, datefrom, dateto, correspondencetypeid, correspondencetypeid_string }))
+</div>

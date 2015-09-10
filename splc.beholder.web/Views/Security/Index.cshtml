@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Security Administration";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+
+
+@Html.ActionLink("Users", "Users", "Security", null, new { @class = "btn btn-default" })
+@Html.ActionLink("Groups", "Groups", "Security", null, new { @class = "btn btn-default" })
+
+

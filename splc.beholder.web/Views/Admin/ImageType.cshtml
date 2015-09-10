@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.ImageType>
+
+@{
+    ViewBag.Title = "Image Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_ImageTypeList", Model)

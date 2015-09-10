@@ -1,0 +1,16 @@
+﻿@model ChapterComment
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditChapterComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+<div>
+    @Html.ActionLink("Back", "Details", "Chapters", new { id = Model.ChapterId }, null)
+</div>

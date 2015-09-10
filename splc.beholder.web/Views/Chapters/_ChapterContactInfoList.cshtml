@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ChapterContactInfoRel>
+@{
+    const string viewItem = "Contact Information";
+    var chapterId = ViewBag.ChapterId; 
+}
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    No contact information
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    <strong>@item.ContactInfo.Contact</strong><br />
+                    @(item.PrimaryStatus != null ? item.ContactInfoType.Name : "[Unknown]")
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditContactInfo", "Chapters", new { id = item.Id })" 
+                               class="btnEdit" 
+                               data-title="Edit Contact Information" 
+                               data-target="#chapterContactInfo"
+                               data-refresh="true"
+                               data-action="@Url.Action("GetChapterContactInfo", "Chapters", new { id = item.ChapterId })"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a href="@Url.Action("DeleteContactInfo", "Chapters", new { id = item.Id })" 
+                               class="btnDelete" 
+                               data-title="Delete Contact Information" 
+                               data-target="#chapterContactInfo"
+                               data-refresh="true" 
+                               data-action="@Url.Action("GetChapterContactInfo", "Chapters", new { id = item.ChapterId })"><i class="glyphicon glyphicon-trash"></i></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateContactInfo", "Chapters", new { chapterId = @chapterId })" 
+           class="btnNew" 
+           data-refresh="true" 
+           data-title="New Contact Information" 
+           data-target="#chapterContactInfo"
+           data-action="@Url.Action("GetChapterContactInfo", "Chapters", new { id = @chapterId })"><i class="glyphicon glyphicon-plus"></i></a>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+@model Chapter
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2 class="title-bar">@Model.ChapterName</h2>
+<div class="row">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new {  }))
+    {
+        @Html.HiddenFor(model => model.Id)
+        <fieldset>
+            <div class="form-group">
+                @Html.ValidationSummary(true)
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="RemovalReason">Reason</label>
+                @Html.EditorFor(m => m.RemovalReason)
+                @Html.ValidationMessageFor(model => model.RemovalReason)
+            </div>
+          
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @Html.ActionLink("Cancel", "Details", new { id = Model.Id }, new { @class = "btn btn-default" })
+          
+        </fieldset>
+
+    }
+</div>
+
+<script>
+    function onSuccess(result) {
+        if (result.url) {
+            window.location.href = result.url;
+        }
+    }
+</script>

@@ -1,0 +1,8 @@
+﻿@model IEnumerable<ApprovalStatus>
+
+@{
+    ViewBag.Title = "Approval Status";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_ApprovalStatusList", Model)

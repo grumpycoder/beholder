@@ -1,0 +1,23 @@
+@model Organization
+
+@{
+    ViewBag.Title = "Edit Organization";
+}
+
+<h2 class="title-bar">@Model.OrganizationName</h2>
+@using (Html.BeginForm(null, null, FormMethod.Post, new {@class = "form-horizontal"}))
+{
+    <div class="row">
+        @Html.Partial("_CreateOrEdit", Model)
+    </div>
+    <input type="submit" value="Save" class="btn btn-primary" />
+    @Html.ActionLink("Cancel", "Details", new {id = Model.Id}, new {@class = "btn btn-default"})
+}
+
+<script>
+    function onSuccess(result) {
+        if(result.url){
+            window.location.href = result.url;
+        }
+    }
+</script>

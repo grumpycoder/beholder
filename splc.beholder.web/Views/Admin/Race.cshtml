@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.Race>
+
+@{
+    ViewBag.Title = "Race";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_RaceList", Model)

@@ -1,0 +1,114 @@
+@model Caseiro.Mvc.PagedList.PagedList<MediaWebsiteEGroup>
+
+@{
+    ViewBag.Title = "Website EGroups";
+
+    var name = Session["name"] ?? Request["name"];
+    var activeyear = Session["activeyear"] ?? Request["activeyear"];
+    var activestatusid = Session["activestatusid"] ?? Request["activestatusid"];
+    var mediaurl = Session["mediaurl"] ?? Request["mediaurl"];
+    var comment = Session["comment"] ?? Request["comment"];
+    var movementclassid = Session["movementclassid"] ?? Request["movementclassid"];
+    var docsearch = Session["docsearch"] ?? Request["docsearch"];
+
+}
+<style type="text/css">
+    .panel-group .panel {
+        overflow: visible; /*This is the issue*/
+    }
+</style>
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-11 col-lg-11">
+            @using (Html.BeginForm("Index", "MediaWebsiteEGroups", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+                <input type="text" id="name" name="name" placeholder="Website Name" class="form-control" value="@(name)" />
+
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <small>More search options</small>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+
+                                <table class="table table-condensed table-responsive table-no-border">
+                                    <tr>
+                                        <td><label class="control-label">Active Year</label></td>
+                                        <td><label class="control-label">Active Status</label></td>
+                                        <td><label class="control-label">Website URL</label></td>
+                                        <td><label class="control-label">Comments</label></td>
+                                        <td><label class="control-label">Document Search Term</label></td>
+                                        <td><label class="control-label">Movements</label></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" id="activeyear" name="activeyear" placeholder="Active Year" class="form-control" value="@(activeyear)" /></td>
+                                        <td>
+                                            @Html.DropDownList("activestatusid", ((IEnumerable<ActiveStatus>)ViewBag.PossibleActiveStatus).Select(option => new SelectListItem
+                                           {
+                                               Text = (option == null ? "None" : option.Name),
+                                               Value = option.Id.ToString(),
+                                               Selected = false
+                                           }), "Active Status", new { @class = "chosen-select" })
+                                        </td>
+                                        <td><input type="text" id="mediaurl" name="mediaurl" placeholder="htp://www.domain.com" class="form-control" value="@(mediaurl)" /></td>
+                                        <td><input type="text" name="comment" id="comment" value="@comment" class="form-control" /></td>
+                                        <td><input type="text" name="docsearch" id="docsearch" placeholder="Document Search Term" value="@docsearch" class="form-control" /></td>
+                                        <td>
+                                            <select data-placeholder="Choose Movements..." name="movementclassid" multiple class="chosen-select form-control" style="width:350px;">
+                                                @foreach (var item in (IEnumerable<MovementClass>)ViewBag.PossibleMovementClasses)
+                                                {
+                                                    var selectedValue = false;
+                                                    if (@movementclassid != null)
+                                                    {
+                                                        foreach (var i in (List<int>)movementclassid)
+                                                        {
+                                                            if (i == item.Id) { selectedValue = true; break; }
+                                                        }
+                                                    }
+                                                    if (selectedValue)
+                                                    {
+                                                <option value="@item.Id" selected="selected">
+                                                    @item.Name
+                                                </option>
+                                                    }
+                                                    else
+                                                    {
+                                                <option value="@item.Id">
+                                                    @item.Name
+                                                </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Create", "Create", "MediaWebsiteEGroups", null, new { @class = "btn btn-default" })
+            </span>
+        </span>
+    </div>
+</div>
+
+<div id="_websiteEGroupList">
+    @Html.Partial("_MediaWebsiteEGroupList", Model)
+</div>
+

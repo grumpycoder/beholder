@@ -1,0 +1,233 @@
+@model Organization
+
+@{
+    ViewBag.Title = string.Format("Details - {0}", Model.OrganizationDesc);
+
+    var pageSize = Session["pageSize"];
+    var page = Session["page"];
+    var organizationname = Session["organizationname"];
+    var activeyear = Session["activeyear"] ?? Request["activeyear"];
+    var activestatusid = Session["activestatusid"] ?? Request["activestatusid"];
+    var movementclassid = Session["movementclassid"] ?? Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+
+}
+
+<h2 class="title-bar">@Model.OrganizationName</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page, pageSize, organizationname, activeyear, activestatusid, movementclassid, movementclassid_string })
+        </span>
+        <span class="pull-right">
+            @Html.ActionLink("Edit", "Edit", "Organizations", new { id = Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "RemoveOrganization", "Organizations", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+</div>
+
+<div class="row">
+
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+                @if (Model.OrganizationMediaImageRels.Count > 0)
+                {
+                    <img src="@Url.Action("ShowPrimaryImage", "Organizations", new { Model.Id })" alt="org image" class="thumbnail-img" height="270" width="500" />
+                }
+                else
+                {
+                     <img src="~/Content/images/image_unavailable.jpg" alt="" height="270" width="500" />
+                }
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Confidentiality Type</td>
+                            <td>@(Model.ConfidentialityType == null ? "None" : Model.ConfidentialityType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Movement Class</td>
+                            <td>@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Organization Type</td>
+                            <td>@(Model.OrganizationType == null ? "None" : Model.OrganizationType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Active Year</td>
+                            <td>@Model.ActiveYear</td>
+                        </tr>
+                        <tr>
+                            <td>Formed Date</td>
+                            <td>@String.Format("{0:d}", Model.FormedDate)</td>
+                        </tr>
+                        <tr>
+                            <td>Disband Date</td>
+                            <td>@String.Format("{0:d}", Model.DisbandDate)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Approval</td>
+                            <td>@(Model.ApprovalStatus == null ? "None" : Model.ApprovalStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>@(Model.ActiveStatus == null ? "None" : Model.ActiveStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ActiveYear).ToString()</td>
+                            <td>@(Model.ActiveYear)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div id="organizationAliases">
+                @Html.Partial("../Aliases/_OrganizationAliasList", Model.AliasOrganizationRels.Where(x => x.DateDeleted == null))
+            </div>
+        </li>
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="organizationPersons">
+                @Html.Partial("../Organizations/_OrganizationPersonList", Model.OrganizationPersonRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterOrganizations">
+                @Html.Partial("../Chapters/_ChapterOrganizationList", Model.ChapterOrganizationRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationOrganizations">
+                @Html.Partial("../Organizations/_OrganizationOrganizationList", Model)
+            </div>
+        </li>
+        <li>
+            <div id="organizationEvents">
+                @Html.Partial("../Organizations/_OrganizationEventList", Model.OrganizationEventRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationMediaAudioVideos">
+                @Html.Partial("../Organizations/_OrganizationMediaAudioVideoList", Model.OrganizationMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationMediaWebsiteEGroups">
+                @Html.Partial("../Organizations/_OrganizationMediaWebsiteEGroupList", Model.OrganizationMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationVehicles">
+                @Html.Partial("../Organizations/_OrganizationVehicleList", Model.OrganizationVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationMediaCorrespondences">
+                @Html.Partial("../Organizations/_OrganizationMediaCorrespondenceList", Model.OrganizationMediaCorrespondenceRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationMediaPublisheds">
+                @Html.Partial("../Organizations/_OrganizationMediaPublishedList", Model.OrganizationMediaPublishedRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationSubscriptions">
+                @Html.Partial("../Organizations/_OrganizationSubscriptionList", Model.OrganizationSubscriptionRels)
+            </div>
+        </li>
+
+    </ul>
+</div>
+
+<div class="row">
+    <div id="organizationMediaImages">
+        @Html.Partial("../Organizations/_OrganizationMediaImageList", Model.OrganizationMediaImageRels)
+    </div>
+</div>
+
+<div class="row">
+    <div id="organizationComments">
+        @Html.Partial("../Comments/_OrganizationCommentList", Model.OrganizationComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "OrganizationId", Model.Id } })
+    </div>
+</div>
+
+<div class="row">
+    <div id="organizationStatusHistories">
+        @Html.Partial("../Organizations/_OrganizationStatusHistoryList", Model.OrganizationStatusHistories.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "OrganizationId", Model.Id } })
+    </div>
+</div>
+
+
+<script>
+
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#PersonId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundPersonList() {
+        if ($("#PersonId").data("kendoComboBox").value() === '-1') {
+            $("#PersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroupId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        if ($("#MediaWebsiteEGroupId").data("kendoComboBox").value() === '-1') {
+            $("#MediaWebsiteEGroupId").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

@@ -1,0 +1,45 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@using splc.domain.Models
+@using Caseiro.Mvc.PagedList
+@model PagedList<Subscription>
+
+@{
+    var pageSize = Request["pageSize"];
+    var searchterm = Request["searchterm"];
+}
+
+@if (!Model.Any())
+{
+    <h3>No Subscriptions found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, searchterm }))
+</div>
+
+<ul class="card-list">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="thumbnail">
+
+                <a href="@Url.Action("Details", "Subscriptions", new { id = item.Id })">
+                    <h4 class="title-elliipsis" title="@string.Format("{0}", item.PublicationName)">@string.Format("{0}", item.PublicationName)</h4>
+                    <table class="table">
+                        <tr>
+                            <td>Renewal Permission Date</td>
+                            <td>@(item.RenewalPermissionDate == null ? "Unknown" : @String.Format("{0:d}", item.RenewalPermissionDate))</td>
+                        </tr>
+                        <tr>
+                            <td>Subscription Rate</td>
+                            <td>@(item.SubscriptionRate == null ? "Unknown" : @String.Format("{0:d}", item.SubscriptionRate))</td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </li>
+    }
+</ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, searchterm }))
+</div>

@@ -1,0 +1,43 @@
+﻿@model Group
+
+@{
+    ViewBag.Title = "Create User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="title-bar">New Group</h2>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div class="row">
+        @Html.Partial("_CreateOrEditGroup", Model)
+    </div>
+
+    <input type="submit" value="Save" class="btn btn-primary" />
+    @Html.ActionLink("Cancel", "Groups", "Security", null, new { @class = "btn btn-default" })
+}
+
+<script>
+    function onSuccess(result) {
+        if (result.url) {
+            window.location.href = result.url;
+        }
+    }
+</script>
+
+@*<h2 class="page-title small">Create New User</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset class="form-horizontal well well-small fieldset-auto-width">
+        <legend></legend>
+
+        @Html.Partial("_CreateOrEditGroup", Model)
+
+        <input type="submit" value="Create" class="btn btn-primary pull-right" />
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>*@

@@ -1,0 +1,190 @@
+@model Vehicle
+@{
+    var personId = ViewBag.PersonId;
+    var beholderPersonId = ViewBag.BeholderPersonId;
+    var searchTerm = Session["searchTerm"];
+    var page = Session["page"];
+    ViewBag.Title = "Details - " + string.Format("{0} {1} {2}", Model.VehicleColor == null ? "[Color]" : Model.VehicleColor.Name, Model.VehicleMake == null ? "[Make]" : Model.VehicleMake.Name, Model.VehicleModel == null ? "[Model]" : Model.VehicleModel.Name);
+}
+<h2 class="title-bar">@string.Format("{0} {1} {2}", Model.VehicleColor == null ? "[Color]" : Model.VehicleColor.Name, Model.VehicleMake == null ? "[Make]" : Model.VehicleMake.Name, Model.VehicleModel == null ? "[Model]" : Model.VehicleModel.Name)</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page = Session["page"], searchTerm = Session["searchTerm"] })
+    </span>
+    <span class="pull-right">
+        @Html.ActionLink("Edit", "Edit", "Vehicles", new {id = Model.Id}, new { @class = "btn btn-default" })
+    @Html.ActionLink("Delete", "RemoveVehicle", "Vehicles", new { id = Model.Id }, new { @class = "btn btn-default" })
+</span>
+</div>
+</div>
+
+<div class="row">
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+
+                <img src="~/Content/images/image_unavailable.jpg" alt="">
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Vehicle Make</td>
+                            <td>@(Model.VehicleMake == null ? "Unknown" : Model.VehicleMake.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Vehicle Model</td>
+                            <td>@(Model.VehicleModel == null ? "Unknown" : Model.VehicleModel.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Vehicle Type</td>
+                            <td>@(Model.VehicleType == null ? "Unknown" : Model.VehicleType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Vehicle Color</td>
+                            <td>@(Model.VehicleColor == null ? "Unknown" : Model.VehicleColor.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>VIN</td>
+                            <td>@(Model.VIN ?? "Unknown")</td>
+                        </tr>
+                        <tr>
+                            <td>Vehicle Year</td>
+                            <td>@(Model.VehicleYear == null ? "Unknown" : Model.VehicleYear.ToString())</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="personVehicles">
+                @Html.Partial("../Persons/_PersonVehicleList", Model.PersonVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterVehicles">
+                @Html.Partial("../Chapters/_ChapterVehicleList", Model.ChapterVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationVehicles">
+                @Html.Partial("../Organizations/_OrganizationVehicleList", Model.OrganizationVehicleRels)
+            </div>
+        </li>
+        @*//TODO: Not implemented*@
+        @*<li>
+            <div id="vehicleContacts">
+                @Html.Partial("../Vehicles/_VehicleContactList", Model)
+            </div>
+        </li>*@
+        <li>
+            <div id="eventVehicles">
+                @Html.Partial("../Events/_EventVehicleList", Model.EventVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="vehicleMediaAudioVideos">
+                @Html.Partial("../MediaAudioVideos/_MediaAudioVideoVehicleList", Model.MediaAudioVideoVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="vehicleVehicles">
+                @Html.Partial("../Vehicles/_VehicleVehicleList", Model)
+            </div>
+        </li>
+        <li>
+            <div id="vehicleMediaWebsiteEGroups">
+                @Html.Partial("../MediaWebsiteEGroups/_MediaWebsiteEGroupVehicleList", Model.MediaWebsiteEGroupVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceVehicles">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceVehicleList", Model.MediaCorrespondenceVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaPublishedVehicles">
+                @Html.Partial("../MediaPublisheds/_MediaPublishedVehicleList", Model.MediaPublishedVehicleRels)
+            </div>
+        </li>
+
+
+    </ul>
+</div>
+<div class="row">
+    <div id="mediaImageVehicles">
+        @Html.Partial("../MediaImages/_MediaImageVehicleList", Model.MediaImageVehicleRels)
+    </div>
+</div>
+
+<div class="row">
+    <div id="vehicleComments">
+        @Html.Partial("../Comments/_VehicleCommentList", Model.VehicleComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified))
+    </div>
+</div>
+
+<script>
+
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#PersonId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundPersonList() {
+        if ($("#PersonId").data("kendoComboBox").value() === '-1') {
+            $("#PersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroupId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        if ($("#MediaWebsiteEGroupId").data("kendoComboBox").value() === '-1') {
+            $("#MediaWebsiteEGroupId").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

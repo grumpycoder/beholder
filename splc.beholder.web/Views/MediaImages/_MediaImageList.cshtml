@@ -1,0 +1,72 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<MediaImage>
+
+@{
+
+    var pageSize = Session["pageSize"] ?? Request["pageSize"];
+    var imagetitle = Session["imagetitle"] ?? Request["imagetitle"];
+    var activeyear = Session["activeyear"] ?? Request["activeyear"];
+    var location = Session["location"] ?? Request["location"];
+    var comment = Session["comment"] ?? Request["comment"];
+    var artist = Session["artist"] ?? Request["artist"];
+    var movementclassid = Session["movementclassid"] ?? Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+    var stateid_string = "";
+    if ((Session["stateid"] ?? Request["stateid"]) != null)
+    {
+        stateid_string = string.Join(",", (List<int>)(Session["stateid"] ?? Request["stateid"]));
+    }
+}
+
+@if (!Model.Any())
+{
+    <h3>No Images found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, imagetitle, activeyear, location, comment, artist, movementclassid, stateid_string, movementclassid_string }))
+</div>
+
+<ul class="card-list">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="thumbnail">
+
+                <a href="@Url.Action("Details", "MediaImages", new { id = item.Id })">
+                    @if (item.Image != null)
+                    {
+                        <img src="@Url.Action("ShowImage", "MediaImages", new { item.Image.Id })" alt="media image" class="thumbnail-img" height="175" width="250" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/images/image_unavailable.jpg" alt="" class="thumbnail-img" height="175" width="250" />
+                    }
+                    <h4 class="title-elliipsis" title="@string.Format("{0}", item.ImageTitle ?? "Unknown")">@string.Format("{0}", item.ImageTitle ?? "Unknown")</h4>
+                    <table class="table">
+                        <tr>
+                            <td>Movement</td>
+                            <td>@(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Date Taken</td>
+                            <td>@(item.DateTaken == null ? "Unknown" : @String.Format("{0:d}", item.DateTaken))</td>
+                        </tr>
+                        <tr>
+                            <td>Date Published</td>
+                            <td>@(item.DatePublished == null ? "Unknown" : @String.Format("{0:d}", item.DatePublished))</td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </li>
+    }
+</ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, imagetitle, activeyear, location, comment, artist, movementclassid, stateid_string, movementclassid_string }))
+</div>

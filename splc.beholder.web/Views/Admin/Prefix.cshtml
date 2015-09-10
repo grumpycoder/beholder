@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.Prefix>
+
+@{
+    ViewBag.Title = "Prefixes";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_PrefixList", Model)

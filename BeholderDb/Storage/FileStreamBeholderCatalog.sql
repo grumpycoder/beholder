@@ -1,0 +1,4 @@
+﻿CREATE FULLTEXT CATALOG [FileStreamBeholderCatalog]
+    WITH ACCENT_SENSITIVITY = ON
+    AUTHORIZATION [dbo];
+

@@ -1,0 +1,78 @@
+﻿@model MediaCorrespondenceMediaCorrespondenceRel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.MediaCorrespondenceId, new { @required = "required", @data_val_required = "Correspondence is required." })
+    @Html.HiddenFor(model => model.MediaCorrespondence2Id, new { @required = "required", @data_val_required = "Correspondence is required." })
+
+    <fieldset>
+
+        @if (Model.Id == 0)
+        {
+            @Html.HiddenFor(model => model.MediaCorrespondence2.Id)
+            <div class="form-group" id="mediaCorrespondenceGroup">
+                @Html.BootstrapLabelFor(model => model.MediaCorrespondence2)
+                <div class="col-sm-8">
+                    @*this is for the autocomplete search box*@
+                    <div class="ui-widget">
+                        <select id="combobox_corr" data-url="@Url.Action("GetMediaCorrespondenceList", "MediaCorrespondences")" data-id="mediaCorrespondenceCombo" data-hidden-field="MediaCorrespondence2Id"></select>
+                    </div>
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.MediaCorrespondence2Id)</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.MediaCorrespondence.Id)
+            @Html.BootstrapLabelFor(model => model.MediaCorrespondence)
+            <div class="col-sm-8">
+                <input readonly="true" class="text-box single-line" type="text" value="@Model.MediaCorrespondence.CorrespondenceName" />
+            </div>
+
+            @Html.HiddenFor(model => model.MediaCorrespondence2.Id)
+            @Html.BootstrapLabelFor(model => model.MediaCorrespondence2)
+            <div class="col-sm-8">
+                <input readonly="true" class="text-box single-line" type="text" value="@Model.MediaCorrespondence2.CorrespondenceName" />
+            </div>
+
+        }
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.RelationshipTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RelationshipTypeId, ((IEnumerable<RelationshipType>)ViewBag.PossibleRelationshipTypes).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.RelationshipTypeId)
+                    } : null), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Relationship Type is required." })
+                <div class="help-block">@Html.ValidationMessageFor(model => model.RelationshipTypeId)</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateStart)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateStart)
+                <div class="help-block">@Html.ValidationMessageFor(m => m.DateStart)</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateEnd)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateEnd)
+                <div class="help-block">@Html.ValidationMessageFor(m => m.DateEnd)</div>
+            </div>
+        </div>
+
+    </fieldset>
+}
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+    });
+</script>

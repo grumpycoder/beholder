@@ -1,0 +1,22 @@
+@using System.Collections
+@model IEnumerable<splc.domain.Models.AddressPersonRel>
+
+<fieldset>
+    <legend></legend>
+    @foreach (var addr in @Model)
+    {
+        @Html.ActionLink("Edit", "Edit", "Address", new { id = addr.Id }, null)
+        <address>
+            <div class="display-label">@Html.DisplayFor(model => addr.AddressType.Name)</div>
+
+            <div class="display-field">@Html.DisplayFor(model => addr.Address.Address1) @Html.DisplayFor(model => addr.Address.Address2)</div>
+
+            <div class="display-field">@string.Format("{0}, {1} {2}", @Html.DisplayFor(model => addr.Address.City), @Html.DisplayFor(model => addr.Address.State.StateCode), @Html.DisplayFor(model => addr.Address.Zip5))</div>
+
+        </address>
+
+    }
+</fieldset>
+
+
+

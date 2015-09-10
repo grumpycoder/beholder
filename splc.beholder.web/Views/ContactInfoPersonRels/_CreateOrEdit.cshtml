@@ -1,0 +1,75 @@
+@model ContactInfoPersonRel
+@{
+    var commonPersonId = ViewBag.CommonPersonId;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.PersonId)
+        @Html.HiddenFor(m => m.ContactInfo.Id)
+        @Html.HiddenFor(m => m.ContactInfoId)
+        @Html.HiddenFor(m => m.CreatedUserId)
+        @Html.HiddenFor(m => m.ContactInfo.CreatedUserId)
+        <fieldset>
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.ContactInfoTypeId)
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.ContactInfoTypeId, ((IEnumerable<ContactInfoType>)ViewBag.PossibleContactInfoTypes).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.ContactInfoTypeId)
+                    } : null), "Choose...", new { @class = "form-control" })
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.ContactInfoTypeId)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.PrimaryStatusId)
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.PrimaryStatusId, ((IEnumerable<PrimaryStatus>)ViewBag.PossiblePrimaryStatus).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.PrimaryStatusId)
+                    } : null), "Choose...", new { @class = "form-control" })
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.PrimaryStatusId)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.ContactInfo.Contact)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.ContactInfo.Contact)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.ContactInfo.Contact)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.FirstKnownUseDate)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.FirstKnownUseDate)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.FirstKnownUseDate)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.LastKnownUseDate)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.LastKnownUseDate)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.LastKnownUseDate)</span>
+                </div>
+            </div>
+
+        </fieldset>
+}
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+    });
+</script>
+
+

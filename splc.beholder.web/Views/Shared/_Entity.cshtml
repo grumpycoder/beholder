@@ -1,0 +1,32 @@
+﻿@model Search
+
+<div class="span4 card">
+    <div class="title">
+        @Html.ActionLink(string.Format("{0}", String.IsNullOrEmpty(Model.EntityName) ? Model.EntityDesc : Model.EntityName), "Details", Model.Controller, new { id = Model.Id }, null)
+    </div>
+    <div>
+    @*    <div><i class="icon-user icon-4x"></i></div>*@
+        <table class="table">
+            <tr>
+                <td>Entity</td>
+                <td>@(Model.Entity == null ? "Unknown" : Model.Entity)</td>
+            </tr>
+            <tr>
+                <td>Entity Type</td>
+                <td>@(Model.EntityType == null ? "Unknown" : Model.EntityType)</td>
+            </tr>
+            <tr>
+                <td>Movement</td>
+                <td>@(Model.MovementClass == null ? "Unknown" : Model.MovementClass)</td>
+            </tr>
+            <tr>
+                <td>Approval Status</td>
+                <td>@(Model.ApprovalStatus == null ? "Unknown" : Model.ApprovalStatus)</td>
+            </tr>
+            <tr>
+                <td>Active</td>
+                <td>@(Model.ActiveStatus == null ? "Unknown" : Model.ActiveStatus)</td>
+            </tr>
+        </table>
+    </div>
+</div>

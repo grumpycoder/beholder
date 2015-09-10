@@ -1,0 +1,64 @@
+﻿@model IEnumerable<splc.domain.Models.MediaAudioVideoVehicleRel>
+
+<h2>Vehicle-Audio Video Relationships</h2>
+<table class="table table-hover">
+    <tr>
+        <th>Audio Video
+        </th>
+        <th>VIN
+        </th>
+        <th>Date Start
+        </th>
+        <th>Date End
+        </th>
+        <th>Relationship Type
+        </th>
+        <th>Primary Status
+        </th>
+        <th>Approval Status
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.MediaAudioVideo.Title
+            </td>
+            <td>
+                @item.Vehicle.VIN
+            </td>
+            <td>
+                @item.DateStart
+            </td>
+            <td>
+                @item.DateEnd
+            </td>
+            <td>
+                @(item.RelationshipType == null ? "Unknown" : item.RelationshipType.Name)
+            </td>
+            <td>
+                @(item.PrimaryStatusId == null ? "Unknown" : item.PrimaryStatus.Name)
+            </td>
+            <td>
+                @item.ApprovalStatus.Name
+            </td>
+            <td class="nowrap">
+                <a href="@Url.Action("ApproveMediaAudioVideoVehicle", "Approval", new { id = item.Id })" 
+                    class="btn btnApprove" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaAudioVideoVehicleApprovals", "Approval")">Approve</a>
+
+                <a href="@Url.Action("RejectMediaAudioVideoVehicle", "Approval", new { id = item.Id })" 
+                    class="btn btnApprove" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaAudioVideoVehicleApprovals", "Approval")">Disapprove</a>
+
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,133 @@
+@model Caseiro.Mvc.PagedList.PagedList<BeholderPerson>
+
+@{
+    ViewBag.Title = "People";
+    //var form = (FormCollection)Session["formcollection"];
+
+    var fname = Request["fname"];
+    var lname = Request["lname"];
+    var alias = Request["alias"];
+    var location = Request["location"];
+    var movementclassid = Session["movementclassid"] ?? Request["movementclassid"];
+    var stateid = Session["stateid"] ?? Request["stateid"];
+}
+<style type="text/css">
+    .panel-group .panel {;
+        overflow: visible; /*This is the issue*/
+    }
+</style>
+
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-11 col-lg-11">
+            @using (Html.BeginForm("Index", "Persons", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+
+                <input type="text" id="fname" name="fname" placeholder="First Name" class="form-control" value="@(fname)" />
+                <input type="text" id="lname" name="lname" placeholder="Last Name" class="form-control" value="@(lname)" />
+
+                <input type="submit" value="Search" class="btn btn-primary" />
+                <input type="reset" value="Clear" class="btn btn-default" />
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                    <small>More search options</small>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <table class="table table-condensed table-responsive table-no-border">
+                                    <tr>
+                                        <td>@Html.BootstrapLabel("Alias")</td>
+                                        <td>@Html.BootstrapLabel("City")</td>
+                                        <td>@Html.BootstrapLabel("State")</td>
+                                        <td>@Html.BootstrapLabel("Movements")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text" id="alias" name="alias" placeholder="Alias" class="form-control" value="@(alias)" /></td>
+                                        <td><input type="text" id="location" name="location" placeholder="location" class="form-control" value="@(location)" /></td>
+                                        <td>
+                                            <select data-placeholder="Choose States..." name="stateid" id="stateid" multiple class="chosen-select form-control" style="width:350px;">
+                                                @foreach (var item in (IEnumerable<State>)ViewBag.PossibleStates)
+                                                {
+                                                    var selectedValue = false;
+                                                    if (@stateid != null)
+                                                    {
+                                                        foreach (var i in (List<int>)stateid)
+                                                        {
+                                                            if (i == item.Id) { selectedValue = true; break; }
+                                                        }
+                                                    }
+                                                    if (selectedValue)
+                                                    {
+                                                        <option value="@item.Id" selected="selected">
+                                                            @item.StateCode
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Id">
+                                                            @item.StateCode
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+
+                                        </td>
+                                        <td>
+                                            <select data-placeholder="Choose Movements..." name="movementclassid" id="movementclassid" multiple class="chosen-select form-control" style="width:350px;">
+                                                @foreach (var item in (IEnumerable<MovementClass>)ViewBag.PossibleMovementClasses)
+                                                      {
+                                                          var selectedValue = false;
+                                                          if (@movementclassid != null)
+                                                          {
+                                                              foreach (var i in (List<int>)movementclassid)
+                                                              {
+                                                                  if (i == item.Id) { selectedValue = true; break; }
+                                                              }
+                                                          }
+                                                          if (selectedValue)
+                                                          {
+                                                <option value="@item.Id" selected="selected">
+                                                    @item.Name
+                                                </option>
+                                                          }
+                                                          else
+                                                          {
+                                                <option value="@item.Id">
+                                                    @item.Name
+                                                </option>
+                                                          }
+                                                      }
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+        <span>
+                <span class="pull-right">
+                    @Html.ActionLink("Create", "Create", "Persons", null, new { @class = "btn btn-default" })
+                </span>
+            </span>
+    </div>
+</div>
+
+<div id="personList">
+    @Html.Partial("_PersonList", Model)
+</div>
+
+
+

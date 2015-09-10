@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.TagType>
+
+@{
+    ViewBag.Title = "TagType";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_TagTypeList", Model)

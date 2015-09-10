@@ -1,0 +1,94 @@
+﻿@model VehicleVehicleRel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.VehicleId, new { @required="required", @data_val_required="Vehicle is required."})
+    @Html.HiddenFor(model => model.Vehicle2Id, new { @required = "required", @data_val_required = "Vehicle is required." })
+
+    <fieldset>
+        <legend>Vehicle Relationship</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.PrimaryStatus)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.PrimaryStatusId, ((IEnumerable<PrimaryStatus>)ViewBag.PossiblePrimaryStatus).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.PrimaryStatusId)
+                    } : null), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.PrimaryStatusId)</span>
+            </div>
+        </div>
+
+        @if (Model.Id == 0)
+        {
+            @Html.HiddenFor(model => model.Vehicle2.Id)
+            <div class="form-group" id="vehicleGroup">
+                @Html.BootstrapLabelFor(model => model.Vehicle2)
+                <div class="col-sm-8">
+                    @*this is for the autocomplete search box*@
+                    <div class="ui-widget">
+                        <select id="combobox_vehicle" data-url="@Url.Action("GetVehicleList", "Vehicles")" data-id="vehicleCombo" data-hidden-field="Vehicle2Id"></select>
+                    </div>
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.Vehicle2Id)</span>
+                </div>
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.Vehicle.Id)
+            @Html.BootstrapLabelFor(model => model.Vehicle)
+            <div class="col-sm-8">
+                <input type="text" class="disabled form-control" readonly="true" value="@Model.Vehicle" style="width: 100%;" />
+                @*<input readonly="true" class="text-box single-line" type="text" value="@string.Format("{0} {1} {2}-{3}", @Model.Vehicle.VehicleColorId == null ? "Color??" : @Model.Vehicle.VehicleColor.Name, @Model.Vehicle.VehicleMakeId == null ? "Make??" : @Model.Vehicle.VehicleMake.Name, @Model.Vehicle.VehicleModelId == null ? "Model??" : @Model.Vehicle.VehicleModel.Name, @Model.Vehicle.VIN == null ? "Unknown VIN" : @Model.Vehicle.VIN)" />*@
+            </div>
+
+            @Html.HiddenFor(model => model.Vehicle2.Id)
+            @Html.BootstrapLabelFor(model => model.Vehicle2)
+            <div class="col-sm-8">
+                <input type="text" class="disabled form-control" readonly="true" value="@Model.Vehicle2" style="width: 100%;" />
+                @*<input readonly="true" class="text-box single-line" type="text" value="@string.Format("{0} {1} {2}-{3}", @Model.Vehicle2.VehicleColorId == null ? "Color??" : @Model.Vehicle2.VehicleColor.Name, @Model.Vehicle2.VehicleMakeId == null ? "Make??" : @Model.Vehicle2.VehicleMake.Name, @Model.Vehicle2.VehicleModelId == null ? "Model??" : @Model.Vehicle2.VehicleModel.Name, @Model.Vehicle2.VIN == null ? "Unknown VIN" : @Model.Vehicle2.VIN)" />*@
+            </div>
+
+        }
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.RelationshipTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RelationshipTypeId, ((IEnumerable<RelationshipType>)ViewBag.PossibleRelationshipTypes).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.RelationshipTypeId)
+                    } : null), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Relationship Type is required." })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RelationshipTypeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateStart)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateStart)
+                <span class="help-block">@Html.ValidationMessageFor(m => m.DateStart)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateEnd)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateEnd)
+                <span class="help-block">@Html.ValidationMessageFor(m => m.DateEnd)</span>
+            </div>
+        </div>
+
+    </fieldset>
+}
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+    });
+</script>

@@ -1,0 +1,287 @@
+@model Contact
+
+<div class="row">
+
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(model => model.CreatedUserId)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.CommonPersonId)
+    @Html.HiddenFor(model => model.CommonPerson.Id)
+    @*@Html.HiddenFor(model => model.CommonPerson.Id)*@
+    @Html.HiddenFor(model => model.CommonPerson.CreatedUserId)
+    @Html.HiddenFor(model => model.DateCreated)
+    @Html.HiddenFor(model => model.CommonPerson.DateCreated)
+
+
+    <fieldset class="col-sm-6">
+        <legend>Name</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CommonPerson.PrefixId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.PrefixId,
+                    ((IEnumerable<Prefix>)ViewBag.PossiblePrefixes).Select(option => new SelectListItem
+                    {
+                        Text = (option == null ? "None" : option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.CommonPerson.PrefixId)
+                    }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.PrefixId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CommonPerson.FName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CommonPerson.FName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.FName)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CommonPerson.MName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CommonPerson.MName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.MName)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CommonPerson.LName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CommonPerson.LName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.LName)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CommonPerson.SuffixId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.SuffixId, ((IEnumerable<Suffix>)ViewBag.PossibleSuffixes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.CommonPerson.SuffixId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.SuffixId)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+
+        <legend>Specifics</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.ConfidentialityTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ConfidentialityTypeId, ((IEnumerable<ConfidentialityType>)ViewBag.PossibleConfidentialityTypes).Select(option => new SelectListItem
+                            {
+                                Text = (option == null ? "None" : option.Name),
+                                Value = option.Id.ToString(),
+                                Selected = (Model != null) && (option.Id == Model.ConfidentialityTypeId)
+                            }), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Confidentiality Type is required." })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ConfidentialityTypeId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.ContactTopicId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ContactTopicId, ((IEnumerable<ContactTopic>)ViewBag.PossibleContactTopic).Select(option => new SelectListItem
+                            {
+                                Text = (option == null ? "None" : option.Name),
+                                Value = option.Id.ToString(),
+                                Selected = (Model != null) && (option.Id == Model.ContactTopicId)
+                            }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ContactTopicId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.ContactTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ContactTypeId, ((IEnumerable<ContactType>)ViewBag.PossibleContactType).Select(option => new SelectListItem
+                            {
+                                Text = (option == null ? "None" : option.Name),
+                                Value = option.Id.ToString(),
+                                Selected = (Model != null) && (option.Id == Model.ContactTypeId)
+                            }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ContactTypeId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.SSN)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.CommonPerson.SSN)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.SSN)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.MaritialStatusId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.MaritialStatusId, ((IEnumerable<MaritialStatus>)ViewBag.PossibleMaritialStatus).Select(option => new SelectListItem
+                        {
+                            Text = (option == null ? "None" : option.Name),
+                            Value = option.Id.ToString(),
+                            Selected = (Model != null) && (option.Id == Model.CommonPerson.MaritialStatusId)
+                        }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.MaritialStatusId)</span>
+            </div>
+        </div>
+        @*<div class="form-group">
+
+                Age
+                <div class="col-sm-8">
+                </div>
+            </div>*@
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.DOB)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.CommonPerson.DOB)
+            </div>
+
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.ActualDOBIndicator)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.CommonPerson.ActualDOBIndicator)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.DeceasedDate)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.CommonPerson.DeceasedDate)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.ActualDeceasedDateIndicator)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.CommonPerson.ActualDeceasedDateIndicator)
+            </div>
+        </div>
+
+
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+
+        <legend>Physical Appearance</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.HairColorId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.HairColorId, ((IEnumerable<HairColor>)ViewBag.PossibleHairColors).Select(option => new SelectListItem
+                        {
+                            Text = (option == null ? "None" : option.Name),
+                            Value = option.Id.ToString(),
+                            Selected = (Model != null) && (option.Id == Model.CommonPerson.HairColorId)
+                        }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.HairColorId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.HairPatternId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.HairPatternId, ((IEnumerable<HairPattern>)ViewBag.PossibleHairPatterns).Select(option => new SelectListItem
+                        {
+                            Text = (option == null ? "None" : option.Name),
+                            Value = option.Id.ToString(),
+                            Selected = (Model != null) && (option.Id == Model.CommonPerson.HairPatternId)
+                        }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.HairPatternId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.EyeColorId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.EyeColorId, ((IEnumerable<EyeColor>)ViewBag.PossibleEyeColors).Select(option => new SelectListItem
+                        {
+                            Text = (option == null ? "None" : option.Name),
+                            Value = option.Id.ToString(),
+                            Selected = (Model != null) && (option.Id == Model.CommonPerson.EyeColorId)
+                        }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.EyeColorId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.Height)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.CommonPerson.Height)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.Weight)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.CommonPerson.Weight)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.GenderId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.GenderId, ((IEnumerable<Gender>)ViewBag.PossibleGenders).Select(option => new SelectListItem
+                        {
+                            Text = (option == null ? "None" : option.Name),
+                            Value = option.Id.ToString(),
+                            Selected = (Model != null) && (option.Id == Model.CommonPerson.GenderId)
+                        }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.GenderId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.RaceId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.RaceId, ((IEnumerable<Race>)ViewBag.PossibleRaces).Select(option => new SelectListItem
+                        {
+                            Text = (option == null ? "None" : option.Name),
+                            Value = option.Id.ToString(),
+                            Selected = (Model != null) && (option.Id == Model.CommonPerson.RaceId)
+                        }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.RaceId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.Profession)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.Profession)
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+
+        <legend>Miscellaneous</legend>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.DriversLicenseNumber)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.CommonPerson.DriversLicenseNumber)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.DriversLicenseStateId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.DriversLicenseStateId, ((IEnumerable<State>)ViewBag.PossibleStates).Select(option => new SelectListItem
+                        {
+                            Text = (option == null ? "None" : option.StateName),
+                            Value = option.Id.ToString(),
+                            Selected = (Model != null) && (option.Id == Model.CommonPerson.DriversLicenseStateId)
+                        }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.DriversLicenseStateId)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.CommonPerson.LicenseTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.CommonPerson.LicenseTypeId, ((IEnumerable<LicenseType>)ViewBag.PossibleLicenseTYpes).Select(option => new SelectListItem
+                        {
+                            Text = (option == null ? "None" : option.Name),
+                            Value = option.Id.ToString(),
+                            Selected = (Model != null) && (option.Id == Model.CommonPerson.RaceId)
+                        }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CommonPerson.DriversLicenseStateId)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+
+    <script type="text/javascript">
+        $(function () {
+            initPartialControls();
+        });
+    </script>
+
+</div>

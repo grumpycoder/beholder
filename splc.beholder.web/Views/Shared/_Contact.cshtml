@@ -1,0 +1,43 @@
+﻿@model Contact
+
+<div class="span4 card">
+    <div class="title">
+        @Html.ActionLink(string.Format("{0}, {1}", Model.CommonPerson.LName, Model.CommonPerson.FName), "Details", "Contacts", new { id = Model.Id }, null)
+    </div>
+    <div>
+        @if (Model.ContactMediaImageRels.Count > 0)
+        {
+            <div>
+                <img src="@Url.Action("ShowPrimaryImage", "Contacts", new { Id = Model.Id })" alt="contact image" class="person-thumbnail" />
+            </div>   
+        }
+        else
+        {
+            <div>
+                <img src="~/content/img/unknown-person.png" class="person-thumbnail" alt="no contact image" />
+            </div>
+        }
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>Type</td>
+                <td>@(Model.ContactType == null ? "Unknown" : Model.ContactType.Name)</td>
+            </tr>
+            <tr>
+                <td>Contact Topic</td>
+                <td>@(Model.ContactTopic == null ? "Unknown" : Model.ContactType.Name)</td>
+            </tr>
+            <tr>
+                <td>Profession</td>
+                <td>@(Model.Profession == null ? "Unknown" : Model.Profession)</td>
+            </tr>
+            <tr>
+                <td>State</td>
+                <td>
+                    @(Model.AddressContactRels.FirstOrDefault() == null ? "Unknown" : String.Format("{0}, {1}", Model.AddressContactRels.FirstOrDefault().Address.City, Model.AddressContactRels.FirstOrDefault().Address.State == null ? "Unknown" : Model.AddressContactRels.FirstOrDefault().Address.State.StateName))
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

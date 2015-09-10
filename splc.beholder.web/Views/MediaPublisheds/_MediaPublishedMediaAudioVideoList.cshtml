@@ -1,0 +1,114 @@
+﻿@model IEnumerable<splc.domain.Models.MediaPublishedMediaAudioVideoRel>
+@{
+    var viewItem = ViewBag.Controller == "MediaAudioVideos" ? "Published" : "Audio Videos";
+    var source = ViewBag.Controller == "MediaAudioVideos" ? "MediaAudioVideos" : "MediaPublisheds";
+    var mediaPublishedId =  ViewData["MediaPublishedId"] == null ? -1 : (int)ViewData["MediaPublishedId"];
+    var mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int) ViewData["MediaAudioVideoId"];
+    var showAudioVideo = ViewBag.Controller == "MediaPublisheds";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showAudioVideo){
+                        @Html.ActionLink(item.MediaAudioVideo.Title, "Details", "MediaAudioVideos", new { id = item.MediaAudioVideo.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaAudioVideo.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(item.MediaPublished.Name, "Details", "MediaPublisheds", new { id = item.MediaPublished.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaPublished.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditMediaPublishedMediaAudioVideo", "MediaPublisheds", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#mediaPublishedMediaAudioVideos"
+                               data-action="@Url.Action("GetMediaPublishedMediaAudioVideos", "MediaPublisheds", new { mediaPublishedId = @mediaPublishedId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteMediaPublishedMediaAudioVideo", "MediaPublisheds", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#mediaPublishedMediaAudioVideos"
+                               data-action="@Url.Action("GetMediaPublishedMediaAudioVideos", "MediaPublisheds", new { mediaPublishedId = @mediaPublishedId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateMediaPublishedMediaAudioVideo", "MediaPublisheds", new { mediaPublishedId = @mediaPublishedId, mediaAudioVideoId = @mediaAudioVideoId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#mediaPublishedMediaAudioVideos"
+           data-action="@Url.Action("GetMediaPublishedMediaAudioVideos", "MediaPublisheds", new { mediaPublishedId = @mediaPublishedId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+@*<table class="table table-bordered">
+    <caption>
+        @((string) ViewData["Controller"] == "MediaAudioVideos" ? string.Format("Published Items ({0})", Model.Count()) : string.Format("Audio Videos ({0})", Model.Count()))
+    </caption>
+    
+    @if (!Model.Any())
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",(string) ViewData["Controller"] == "MediaAudioVideos" ? "Published Items" : "Audio Video")</td>
+        </tr>
+    }
+    @foreach (var mediaPublishedMediaAudioVideoRel in Model)
+    {
+        //string controller = ViewData["Controller"].ToString();
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditMediaPublishedMediaAudioVideo", "MediaPublisheds", new { id = mediaPublishedMediaAudioVideoRel.Id, source = ViewData["Controller"].ToString()})" 
+                    class="btnEdit" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaPublishedMediaAudioVideos", "MediaPublisheds", new { mediaPublishedId =  ViewData["MediaPublishedId"] == null ? -1 : (int)ViewData["MediaPublishedId"] , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"] })"><i class="icon-pencil icon-large"></i></a>
+                <a href="@Url.Action("DeleteMediaPublishedMediaAudioVideo", "MediaPublisheds", new { id = mediaPublishedMediaAudioVideoRel.Id})" 
+                    class="btnDelete" 
+                    data-title="Delete Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaPublishedMediaAudioVideos", "MediaPublisheds", new { mediaPublishedId =  ViewData["MediaPublishedId"] == null ? -1 : (int)ViewData["MediaPublishedId"]  , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"] })"><i class="icon-trash icon-large"></i></a>
+            </td>
+            @if (ViewData["Controller"].ToString() == "MediaAudioVideos")
+            {
+                <td>
+                    @Html.ActionLink(mediaPublishedMediaAudioVideoRel.MediaPublished.Name, "Details", "MediaPublisheds", new { id = mediaPublishedMediaAudioVideoRel.MediaPublished.Id }, null)
+                </td>
+                <td>@Html.DisplayFor(model => mediaPublishedMediaAudioVideoRel.MediaPublished.MovementClass.Name)</td>
+            }
+            else
+            {
+                <td>
+                    @Html.ActionLink(mediaPublishedMediaAudioVideoRel.MediaAudioVideo.Title, "Details", "MediaAudioVideos", new { id = mediaPublishedMediaAudioVideoRel.MediaAudioVideo.Id }, null)
+                </td>
+                <td>@Html.DisplayFor(model => mediaPublishedMediaAudioVideoRel.MediaAudioVideo.MovementClass.Name)</td>
+            }
+        </tr>
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateMediaPublishedMediaAudioVideo", "MediaPublisheds", new { mediaPublishedId = ViewData["MediaPublishedId"] == null ? -1 : (int)ViewData["MediaPublishedId"]  , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"]})" 
+                class="btnNew" 
+                data-title="New Relationship" 
+                data-refresh="true"
+                data-action="@Url.Action("GetMediaPublishedMediaAudioVideos", "MediaPublisheds", new { mediaPublishedId = ViewData["MediaPublishedId"] == null ? -1 : ViewData["MediaPublishedId"], mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>*@

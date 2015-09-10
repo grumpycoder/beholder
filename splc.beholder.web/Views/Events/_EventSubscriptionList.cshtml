@@ -1,0 +1,115 @@
+﻿@model IEnumerable<EventSubscriptionRel>
+@using splc.domain.Models;
+@{
+    var viewItem = ViewBag.Controller == "Events" ? "Subscriptions" : "Events";
+    var source = ViewBag.Controller == "Events" ? "Events" : "Subscriptions";
+    var subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"];
+    var eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]; 
+    var showEvent = ViewBag.Controller == "Subscriptions";
+}
+@*//TODO: Subscription lookup not working*@
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showEvent){
+                        @Html.ActionLink(string.Format("{0}", item.Event.EventName), "Details", "Events", new { id = item.Event.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Event.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(item.Subscription.PublicationName, "Details", "Subscriptions", new { id = item.Subscription.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Subscription.SubscriptionRate)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditEventSubscription", "Events", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#eventSubscriptions"
+                               data-action="@Url.Action("GetEventSubscriptions", "Events", new { eventId = @eventId, subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteEventSubscription", "Events", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#eventSubscriptions"
+                               data-action="@Url.Action("GetEventSubscriptions", "Events", new { eventId = @eventId, subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateEventSubscription", "Events", new { eventId = @eventId, subscriptionId = @subscriptionId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#eventSubscriptions"
+           data-action="@Url.Action("GetEventSubscriptions", "Events", new { eventId = @eventId, subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+@*<table class="table table-bordered">
+    <caption>
+        @((string) ViewData["Controller"] == "Events" ? string.Format("Audio Videos ({0})", Model.Count()) : string.Format("Events ({0})", Model.Count()))
+    </caption>
+    
+    @if (!Model.Any())
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",(string) ViewData["Controller"] == "Events" ? "Subscriptions" : "Events")</td>
+        </tr>
+    }
+    @if (ViewData["Controller"].ToString() == "Events" && Model.Any())
+    {
+        foreach (var rel in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditEventSubscription", "Events", new { id = rel.Id, source = ViewData["Controller"].ToString()})" 
+                       class="btnEdit" data-title="Edit Relationship" data-refresh="true" 
+data-action="@Url.Action("GetEventSubscriptions", "Events", new { eventId =  ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"] , subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteEventSubscription", "Events", new { id = rel.Id})" 
+class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetEventSubscriptions", "Events", new { eventId =  ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]  , subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+
+                <td>@Html.ActionLink(rel.Subscription.PublicationName, "Details", "Subscriptions", new { id = rel.Subscription.Id }, null)</td>
+                <td>@Html.DisplayFor(model => rel.Subscription.SubscriptionRate)</td>
+            </tr>
+        }
+    }
+    @if (ViewData["Controller"].ToString() == "Subscriptions")
+    {
+        foreach (var rel in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditEventSubscription", "Events", new { id = rel.Id, source = ViewData["Controller"].ToString()})" class="btnEdit" data-title="Edit Relationship" data-refresh="true" data-action="@Url.Action("GetEventSubscriptions", "Events", new { eventId =  ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"] , subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteEventSubscription", "Events", new { id = rel.Id})" class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetEventSubscriptions", "Events", new { eventId =  ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]  , subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+
+                <td>@Html.ActionLink(rel.Event.EventName, "Details", "Events", new { id = rel.Event.Id }, null)</td>
+                <td>@Html.DisplayFor(model => rel.Event.MovementClass.Name)</td>
+            </tr>
+        }
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateEventSubscription", "Events", new { eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]  , subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"]})" 
+class="btnNew" data-title="New Relationship" data-refresh="true" 
+data-action="@Url.Action("GetEventSubscriptions", "Events", new {  eventId = ViewData["EventId"] == null ? -1 : ViewData["EventId"], subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>*@

@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.CorrespondenceType>
+
+@{
+    ViewBag.Title = "Correspondence Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_CorrespondenceTypeList", Model)

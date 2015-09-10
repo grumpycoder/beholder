@@ -1,0 +1,113 @@
+﻿@model IEnumerable<EventMediaAudioVideoRel>
+@{
+    var viewItem = ViewBag.Controller == "Events" ? "Audio Videos" : "Events";
+    var source = ViewBag.Controller == "Events" ? "Events" : "MediaAudioVideos";
+    var mediaAudioVideoId =  ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"];
+    var eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]; 
+    var showEvent = ViewBag.Controller == "MediaAudioVideos";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showEvent){
+                        @Html.ActionLink(string.Format("{0}", item.Event.EventName), "Details", "Events", new { id = item.Event.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Event.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(item.MediaAudioVideo.Title, "Details", "MediaAudioVideos", new { id = item.MediaAudioVideo.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaAudioVideo.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditEventMediaAudioVideo", "Events", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#eventMediaAudioVideos"
+                               data-action="@Url.Action("GetEventMediaAudioVideos", "Events", new { eventId = @eventId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteEventMediaAudioVideo", "Events", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#eventMediaAudioVideos"
+                               data-action="@Url.Action("GetEventMediaAudioVideos", "Events", new { eventId = @eventId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateEventMediaAudioVideo", "Events", new { eventId = @eventId, mediaAudioVideoId = @mediaAudioVideoId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#eventMediaAudioVideos"
+           data-action="@Url.Action("GetEventMediaAudioVideos", "Events", new { eventId = @eventId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+
+@*<table class="table table-bordered">
+    <caption>
+        @((string) ViewData["Controller"] == "Events" ? string.Format("Audio Videos ({0})", Model.Count()) : string.Format("Events ({0})", Model.Count()))
+    </caption>
+    
+    @if (!Model.Any())
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",(string) ViewData["Controller"] == "Events" ? "Audio Videos" : "Events")</td>
+        </tr>
+    }
+    @if (ViewData["Controller"].ToString() == "Events" && Model.Any())
+    {
+        foreach (var rel in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditEventMediaAudioVideo", "Events", new { id = rel.Id, source = ViewData["Controller"].ToString()})" 
+class="btnEdit" data-title="Edit Relationship" data-refresh="true" data-action="@Url.Action("GetEventMediaAudioVideos", "Events", new { eventId =  ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"] , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteEventMediaAudioVideo", "Events", new { id = rel.Id})" 
+                       class="btnDelete" data-title="Delete Relationship" data-refresh="true" 
+data-action="@Url.Action("GetEventMediaAudioVideos", "Events", new { eventId =  ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]  , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+
+                <td>@Html.ActionLink(rel.MediaAudioVideo.Title, "Details", "MediaAudioVideos", new { id = rel.MediaAudioVideo.Id }, null)</td>
+                <td>@Html.DisplayFor(model => rel.MediaAudioVideo.MovementClass.Name)</td>
+            </tr>
+        }
+    }
+    @if (ViewData["Controller"].ToString() == "MediaAudioVideos")
+    {
+        foreach (var rel in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditEventMediaAudioVideo", "Events", new { id = rel.Id, source = ViewData["Controller"].ToString()})" class="btnEdit" data-title="Edit Relationship" data-refresh="true" data-action="@Url.Action("GetEventMediaAudioVideos", "Events", new { eventId =  ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"] , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteEventMediaAudioVideo", "Events", new { id = rel.Id})" class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetEventMediaAudioVideos", "Events", new { eventId =  ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]  , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+
+                <td>@Html.ActionLink(rel.Event.EventName, "Details", "Events", new { id = rel.Event.Id }, null)</td>
+                <td>@Html.DisplayFor(model => rel.Event.MovementClass.Name)</td>
+            </tr>
+        }
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateEventMediaAudioVideo", "Events", new { eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]  , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"]})" 
+class="btnNew" data-title="New Relationship" data-refresh="true" data-action="@Url.Action("GetEventMediaAudioVideos", "Events", new {  eventId = ViewData["EventId"] == null ? -1 : ViewData["EventId"], mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>*@

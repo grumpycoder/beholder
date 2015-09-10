@@ -1,0 +1,61 @@
+﻿@model IEnumerable<PersonContactRel>
+@{
+    var viewItem = ViewBag.Controller == "Persons" ? "Contacts" : "People";
+    var source = ViewData["Controller"].ToString();  
+    var contactId = ViewData["ContactId"] ?? -1;
+    var personId = ViewData["PersonId"] == null ? -1 : (int) ViewData["PersonId"];
+    var showPerson = ViewBag.Controller == "Contacts";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                     @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showPerson)
+                    {
+                        @Html.ActionLink(string.Format("{0}", item.BeholderPerson.CommonPerson.FullName), "Details", "Persons", new { id = item.BeholderPerson.Id }, null)<br />
+                        @Html.DisplayFor(model => item.BeholderPerson.MovementClass.Name)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(string.Format("{0}", item.Contact.CommonPerson.FullName), "Details", "Contacts", new { id = item.Contact.Id }, null)<br />
+                        @Html.DisplayFor(model => item.Contact.ContactType.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditPersonContact", "Persons", new { id = item.Id, source = @source})" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#personContacts"
+                               data-action="@Url.Action("GetPersonContacts", "Persons", new { personId =  @personId, contactId = @contactId })"><span class="glyphicon glyphicon-pencil"></span></a>
+
+                            <a href="@Url.Action("DeletePersonContact", "Persons", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#personContacts"
+                               data-action="@Url.Action("GetPersonContacts", "Persons", new { personId = @personId, contactId = @contactId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreatePersonContact", "Persons", new { contactId = @contactId, personId = @personId})" 
+           class="btnNew" data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#personContacts"
+           data-action="@Url.Action("GetPersonContacts", "Persons", new {  contactId = @contactId, personId = @personId})"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

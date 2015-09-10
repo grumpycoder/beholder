@@ -1,0 +1,18 @@
+﻿@model PersonMediaWebsiteEGroupRel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">Create New Person/Website-EGroup Relationship</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditPersonMediaWebsiteEGroup", Model)
+    <input type="submit" value="Create Relationship" class="btn btn-primary pull-right" />
+</div> 
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

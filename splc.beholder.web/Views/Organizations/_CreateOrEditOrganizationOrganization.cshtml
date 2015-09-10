@@ -1,0 +1,100 @@
+﻿@model OrganizationOrganizationRel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.OrganizationId, new { @required = "required", data_val_required = "Organization is required. " })
+    @Html.HiddenFor(model => model.Organization2Id, new { @required = "required", data_val_required = "Organization is required. " })
+
+    <fieldset>
+
+        @if (Model.Id == 0)
+        {
+            <div class="form-group" id="organizationGroup">
+                @Html.BootstrapLabelFor(model => model.Organization2Id)
+                <div class="col-sm-8">
+                    @*this is for the autocomplete search box*@
+                    <div class="ui-widget">
+                        <select id="combobox_org" data-url="@Url.Action("GetDropdown", "Organizations")" data-id="organizationCombo" data-hidden-field="Organization2Id"></select>
+                    </div>
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.Organization2Id)</span>
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="form-group">
+                @Html.HiddenFor(model => model.Organization.Id)
+                @Html.BootstrapLabelFor(model => model.Organization)
+                <div class="col-sm-8">
+                    @*<input readonly="true" class="text-box single-line" type="text" value="@Model.Organization.OrganizationName" width="100%" />*@
+                    <input type="text" class="disabled form-control" readonly="true" value="@Model.Organization.OrganizationName" style="width: 100%;" />
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.HiddenFor(model => model.Organization2.Id)
+                @Html.BootstrapLabelFor(model => model.Organization2)
+                <div class="col-sm-8">
+                    @*<input readonly="true" class="text-box single-line" type="text" value="@Model.Organization2.OrganizationName" />*@
+                    <input type="text" class="disabled form-control" readonly="true" value="@Model.Organization2.OrganizationName" style="width: 100%;" />
+                </div>
+            </div>
+
+        }
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.RelationshipTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RelationshipTypeId, ((IEnumerable<RelationshipType>)ViewBag.PossibleRelationshipTypes).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.RelationshipTypeId)
+                    } : null), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Relationship Type is required." })
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.RelationshipTypeId)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.DateStart)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.DateStart)
+                    <span class="help-block">@Html.ValidationMessageFor(m => m.DateStart)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.DateEnd)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.DateEnd)
+                    <span class="help-block">@Html.ValidationMessageFor(m => m.DateEnd)</span>
+                </div>
+            </div>
+
+
+            @*<div class="form-group">
+                    @Html.BootstrapLabelFor(m => m.ApprovalStatusId)
+                    <div class="col-sm-8">
+                        @Html.DropDownListFor(model => model.ApprovalStatusId, ((IEnumerable<ApprovalStatus>)ViewBag.PossibleApprovalStatus).Select(option => option != null ? new SelectListItem
+                            {
+                                Text = (option.Name),
+                                Value = option.Id.ToString(),
+                                Selected = (Model != null) && (option.Id == Model.ApprovalStatusId)
+                            } : null), "Choose...", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApprovalStatusId)
+                    </div>
+                </div>*@
+            @Html.ValidationMessage("CustomError")
+
+        </fieldset>
+}
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+        if ($('#Organization2Id').val() == 0) { $('#Organization2Id').val(null); }
+
+    });
+</script>

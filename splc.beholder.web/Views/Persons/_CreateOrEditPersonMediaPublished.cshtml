@@ -1,0 +1,102 @@
+﻿@model PersonMediaPublishedRel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.MediaPublishedId, new { @required = "required", @data_val_required = "Media Published is required." })
+
+    <fieldset>
+
+        @if (ViewBag.Controller == "MediaPublisheds")
+        {
+            <div class="form-group" id="personGroup">
+                @Html.BootstrapLabelFor(m => m.BeholderPerson)
+                <div class="col-sm-8">
+                    @(Html.Kendo().ComboBoxFor(m => m.PersonId).Name("PersonId")
+                          .AutoBind(true).Enable(Model.PersonId == -1).HtmlAttributes(new { style = "width:100%; max-width:280px;" })
+                          .DataTextField("Name").DataValueField("Id").MinLength(3).Placeholder("Find Person")
+                          .Filter(FilterType.Contains).HighlightFirst(true).Events(e => e.DataBound("databoundPersonList"))
+                          .TemplateId("personTemplate")
+                          .DataSource(s =>
+                              s.Read(r => r.Action("GetPersonSelectList", "Persons")).ServerFiltering(true)))
+
+                    @Html.HiddenFor(model => model.PersonId)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.PersonId)</span>
+
+                </div>
+            </div>
+        }
+
+        @if (ViewBag.Controller == "Persons")
+        {
+            @Html.HiddenFor(model => model.MediaPublished.Id)
+            <div class="form-group" id="mediaPublishedGroup">
+                @Html.BootstrapLabelFor(m => m.MediaPublished)
+                <div class="col-sm-8">
+                    @if (Model.Id == 0)
+                    {
+
+                        @*this is for the autocomplete search box for person*@
+                        <div class="ui-widget">
+                            <select id="combobox_pub" data-url="@Url.Action("GetMediaPublishedList", "MediaPublisheds")" data-id="mediaPublishedsCombo" data-hidden-field="MediaPublishedId"></select>
+                        </div>
+                        <span class="help-block">@Html.ValidationMessageFor(model => model.MediaPublishedId)</span>
+                    }
+                    else
+                    {
+                        @*<input readonly="true" class="text-box single-line" type="text" value="@Model.MediaPublished.Name" />*@
+                        <input type="text" class="disabled form-control" readonly="true" value="@Model.MediaPublished.Name" style="width: 100%;" />
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.RelationshipTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RelationshipTypeId, ((IEnumerable<RelationshipType>)ViewBag.PossibleRelationshipTypes).Select(option => option != null ? new SelectListItem
+                {
+                    Text = (option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.RelationshipTypeId)
+                } : null), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Relationship Type is required." })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RelationshipTypeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateStart)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateStart)
+                <span class="help-block">@Html.ValidationMessageFor(m => m.DateStart)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateEnd)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateEnd)
+                <span class="help-block">@Html.ValidationMessageFor(m => m.DateEnd)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+}
+
+<script id="personTemplate" type="text/x-kendo-template">
+    <strong>#: Name #</strong>
+    <br />
+    <small>Movement: #= Movement != null ? Movement : 'Unknown' #</small>
+    <br />
+    <small>DOB: #= DOB != null ? DOB : 'Unknown' #</small>
+    <br />
+    <small>Location: #= Location != null ? Location : 'Unknown' #</small>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+        if ($('#MediaPublishedId').val() == -1) { $('#MediaPublishedId').val(null); }
+    });
+</script>

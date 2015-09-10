@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.LibraryCategoryType>
+
+@{
+    ViewBag.Title = "Library Category Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_LibraryCategoryTypeList", Model)

@@ -1,0 +1,61 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@using Caseiro.Mvc.PagedList
+@model PagedList<Contact>
+
+@{
+    var pageSize = Request["pageSize"];
+    var fname = Request["fname"];
+    var lname = Request["lname"];
+    var location = Request["location"];
+    var stateid_string = "";
+    if ((Session["stateid"] ?? Request["stateid"]) != null)
+    {
+        stateid_string = string.Join(",", (List<int>)(Session["stateid"] ?? Request["stateid"]));
+    }
+}
+
+@if (!Model.Any())
+{
+    <h3>No Contacts found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, fname, lname, location, stateid_string }))
+</div>
+
+    <ul class="card-list">
+        @foreach (var item in Model)
+        {
+            <li>
+            <div class="thumbnail">
+            <a href="@Url.Action("Details", "Contacts", new { id = item.Id })">
+                <h4 class="title-elliipsis" title="@string.Format("{0}, {1}", item.CommonPerson.LName, item.CommonPerson.FName)">@string.Format("{0}, {1}", item.CommonPerson.LName, item.CommonPerson.FName)</h4>
+                <table class="table">
+                    <tr>
+                        <td>Type</td>
+                        <td>@(item.ContactType == null ? "Unknown" : item.ContactType.Name)</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Topic</td>
+                        <td>@(item.ContactTopic == null ? "Unknown" : item.ContactType.Name)</td>
+                    </tr>
+                    <tr>
+                        <td>Profession</td>
+                        <td>@(item.Profession ?? "Unknown")</td>
+                    </tr>
+                    <tr>
+                        <td>State</td>
+                        <td>
+                            @(item.AddressContactRels.FirstOrDefault() == null ? "Unknown" : String.Format("{0}, {1}", item.AddressContactRels.FirstOrDefault().Address.City, item.AddressContactRels.FirstOrDefault().Address.State == null ? "Unknown" : item.AddressContactRels.FirstOrDefault().Address.State.StateName))
+                        </td>
+                    </tr>
+                </table>
+            </a>
+            </div>
+            </li>
+                }
+    </ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, fname, lname, location, stateid_string }))
+</div>
+

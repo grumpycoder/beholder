@@ -1,0 +1,127 @@
+@model IEnumerable<Address>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Address1
+        </th>
+        <th>
+            Address2
+        </th>
+        <th>
+            City
+        </th>
+        <th>
+            County
+        </th>
+        <th>
+            Country
+        </th>
+        <th>
+            Zip5
+        </th>
+        <th>
+            Zip4
+        </th>
+        <th>
+            Longitude
+        </th>
+        <th>
+            Latitude
+        </th>
+        <th>
+            DateCreated
+        </th>
+        <th>
+            CreatedUserId
+        </th>
+        <th>
+            DateModified
+        </th>
+        <th>
+            ModifiedUserId
+        </th>
+        <th>
+            DateDeleted
+        </th>
+        <th>
+            DeletedUserId
+        </th>
+        <th>
+            AddressPersonRels
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+        <td>
+			@item.Address1
+        </td>
+        <td>
+			@item.Address2
+        </td>
+        <td>
+			@item.City
+        </td>
+        <td>
+			@item.County
+        </td>
+        <td>
+			@item.Country
+        </td>
+        <td>
+			@item.Zip5
+        </td>
+        <td>
+			@item.Zip4
+        </td>
+        <td>
+			@String.Format("{0:F}", item.Longitude)
+        </td>
+        <td>
+			@String.Format("{0:F}", item.Latitude)
+        </td>
+        <td>
+			@String.Format("{0:d}", item.DateCreated)
+        </td>
+        <td>
+			@item.CreatedUserId
+        </td>
+        <td>
+			@String.Format("{0:d}", item.DateModified)
+        </td>
+        <td>
+			@item.ModifiedUserId
+        </td>
+        <td>
+			@String.Format("{0:d}", item.DateDeleted)
+        </td>
+        <td>
+			@item.DeletedUserId
+        </td>
+        <td>
+@* ReSharper disable SpecifyACultureInStringConversionExplicitly *@
+			@(item.AddressPersonRels == null ? "None" : item.AddressPersonRels.Count.ToString())
+@* ReSharper restore SpecifyACultureInStringConversionExplicitly *@
+        </td>
+    </tr>
+}
+
+</table>
+
+

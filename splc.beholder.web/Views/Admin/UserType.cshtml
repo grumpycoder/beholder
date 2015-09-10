@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.UserType>
+
+@{
+    ViewBag.Title = "User Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_UserTypeList", Model)

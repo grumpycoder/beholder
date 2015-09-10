@@ -1,0 +1,111 @@
+﻿@model IEnumerable<ChapterEventRel>
+@{
+    //This is the entity that you are coming from.
+    var viewItem = ViewBag.Controller == "Chapters" ? "Events" : "Chapters";
+    var source = ViewBag.Controller == "Chapters" ? "Chapters" : "Events";
+
+    var chapterId = ViewData["ChapterId"] == null ? -1 : (int)ViewData["ChapterId"];
+    var eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"];
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (source == "Chapters")
+                    {
+                        @Html.ActionLink(string.Format("{0}", item.Event.EventName), "Details", "Events", new { id = item.EventId }, null)<br />
+                        @Html.DisplayFor(model => item.Event.MovementClass.Name)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(string.Format("{0}", item.Chapter.ChapterName), "Details", "Chapters", new { id = item.ChapterId }, null)<br />
+                        @Html.DisplayFor(model => item.Event.MovementClass.Name)
+                    }
+
+
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditChapterEvent", "Chapters", new { id = item.Id, source = @source })"
+                               class="btnEdit"
+                               data-title="Edit Relationship"
+                               data-refresh="true"
+                               data-target="#chapterEvents"
+                               data-action="@Url.Action("GetChapterEvents", "Chapters", new { chapterId =  @chapterId, eventId = @eventId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteChapterEvent", "Chapters", new { id = item.Id})"
+                               class="btnDelete"
+                               data-title="Delete Relationship"
+                               data-refresh="true"
+                               data-target="#chapterEvents"
+                               data-action="@Url.Action("GetChapterEvents", "Chapters", new { chapterId =  @chapterId, eventId = @eventId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateChapterEvent", "Chapters", new { chapterId = @chapterId, eventId = @eventId })"
+           class="btnNew" 
+           data-title="New Relationship"
+           data-refresh="true"
+           data-target="#chapterEvents"
+           data-action="@Url.Action("GetChapterEvents", "Chapters", new { chapterId =  @chapterId, eventId = @eventId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+@*<table class="table table-bordered">
+        <caption>
+            @((string) ViewData["Controller"] == "Events" ? string.Format("Chapters ({0})", Model.Count()) : string.Format("Events ({0})", Model.Count()))
+        </caption>
+
+        @if (!Model.Any())
+        {
+            <tr>
+                <td>@string.Format("No Known {0} Relationships",(string) ViewData["Controller"] == "Events" ? "Chapter" : "Event")</td>
+            </tr>
+        }
+        @foreach (var chapterEventRel in Model)
+        {
+            //string controller = ViewData["Controller"].ToString();
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditChapterEvent", "Chapters", new { id = chapterEventRel.Id, source = ViewData["Controller"].ToString()})"
+                       class="btnEdit" data-title="Edit Relationship" data-refresh="true"
+    data-action="@Url.Action("GetChapterEvents", "Chapters", new { chapterId =  ViewData["ChapterId"] == null ? -1 : (int)ViewData["ChapterId"] , eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteChapterEvent", "Chapters", new { id = chapterEventRel.Id})"
+    class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetChapterEvents", "Chapters", new { chapterId =  ViewData["ChapterId"] == null ? -1 : (int)ViewData["ChapterId"]  , eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+                @if (ViewData["Controller"].ToString() == "Events")
+                {
+                    <td>
+                        @Html.ActionLink(chapterEventRel.Chapter.ChapterName, "Details", "Chapters", new { id = chapterEventRel.Chapter.Id }, null)
+                    </td>
+                    <td>@Html.DisplayFor(model => chapterEventRel.Chapter.MovementClass.Name)</td>
+                }
+                else
+                {
+                    <td>
+                        @Html.ActionLink(chapterEventRel.Event.EventName, "Details", "Events", new { id = chapterEventRel.Event.Id }, null)
+                    </td>
+                    <td>@Html.DisplayFor(model => chapterEventRel.Event.MovementClass.Name)</td>
+                }
+            </tr>
+        }
+        <tr>
+            <td colspan="3">
+                <a href="@Url.Action("CreateChapterEvent", "Chapters", new { chapterId = ViewData["ChapterId"] == null ? -1 : (int)ViewData["ChapterId"]  , eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]})"
+    class="btnNew" data-title="New Relationship" data-refresh="true" data-action="@Url.Action("GetChapterEvents", "Chapters", new {  chapterId = ViewData["ChapterId"] == null ? -1 : ViewData["ChapterId"], eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]})"><i class="icon-plus-sign icon-large"></i></a>
+            </td>
+        </tr>
+    </table>*@

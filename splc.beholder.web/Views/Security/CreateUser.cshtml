@@ -1,0 +1,24 @@
+﻿@model User
+
+@{
+    ViewBag.Title = "Create User";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2 class="page-title small">Create New User</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.ValidationSummary(true)
+    <fieldset class="form-horizontal well well-small fieldset-auto-width">
+        <legend></legend>
+
+        @Html.Partial("_CreateOrEditUser", Model)
+
+        <input type="submit" value="Create" class="btn btn-primary pull-right" />
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

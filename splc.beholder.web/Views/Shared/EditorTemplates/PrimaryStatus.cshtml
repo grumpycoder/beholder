@@ -1,0 +1,54 @@
+﻿@using splc.data
+@using splc.data.repository
+@using splc.domain.Models
+@model PrimaryStatus
+@{
+
+    var repo = new LookupRepository(new ACDBContext());
+    
+    
+        //var list = new SelectList(repo.GetPrimaryStatuses(), "Id", "Name", selectedValue: Model.Id);
+        var list = repo.GetPrimaryStatuses().Select(p => new SelectListItem()
+        {
+            Text = p.Name,
+            Value = p.Id.ToString(), 
+            Selected = (Model != null) && (p.Id == Model.Id)
+        });
+
+    
+    //var options = repo.GetPrimaryStatuses().Cast<PrimaryStatus>().Select(p => new SelectListItem()
+    //{
+    //    Text = p.Name,
+    //    Value = p.Id.ToString(),
+    //    Selected = p == Model
+    //}).ToArray();
+
+
+    //var options = Enum.GetValues(typeof(PrimaryStatus))
+    //.Cast<PrimaryStatus>()
+    //.Select(t => new SelectListItem
+    //{
+    //    Text = t.ToString(),
+    //    Value = t.ToString(),
+    //    Selected = t == Model
+    //})
+    //.ToArray();
+    // var options = context.PrimaryStatus
+    //.Cast<PrimaryStatus>()
+    //.Select(t => new SelectListItem
+    //{
+    //    Text = t.ToString(),
+    //    Value = t.ToString(),
+    //    Selected = t == Model
+    //})
+    //.ToArray();
+}
+    @Html.DropDownList("", list, new {@class = "form-control"})
+
+
+@*@Html.DropDownList(((IEnumerable<splc.domain.Models.PrimaryStatus>)ViewBag.PossiblePrimaryStatus).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.Id)
+                    } : null), "Choose...", new { @class = "form-control" })*@

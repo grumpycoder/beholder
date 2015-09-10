@@ -1,0 +1,30 @@
+@model MediaImage
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="title-bar">New Media Image</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.Partial("_CreateOrEdit", Model)
+
+    <div class="row">
+        <div>
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
+}
+
+<script>
+    function onSuccess(result) {
+        if(result.url){
+            window.location.href = result.url;
+        }
+    }
+</script>

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<splc.domain.Models.PersonContactRel>
+
+<h2>Person-Contact Relationships</h2>
+<table class="table table-hover">
+    <tr>
+        <th>Person
+        </th>
+        <th>Contact Name
+        </th>
+        <th>Date Start
+        </th>
+        <th>Date End
+        </th>
+        <th>Relationship Type
+        </th>
+        <th>Primary Status
+        </th>
+        <th>Approval Status
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.BeholderPerson.CommonPerson.FullName
+            </td>
+            <td>
+                @item.Contact.CommonPerson.FullName
+            </td>
+            <td>
+                @item.DateStart
+            </td>
+            <td>
+                @item.DateEnd
+            </td>
+            <td>
+                @(item.RelationshipType == null ? "Unknown" : item.RelationshipType.Name)
+            </td>
+            <td>
+                @(item.PrimaryStatusId == null ? "Unknown" : item.PrimaryStatus.Name)
+            </td>
+            <td>
+                @item.ApprovalStatus.Name
+            </td>
+            <td class="nowrap">
+                <a href="@Url.Action("ApprovePersonContact", "Approval", new { id = item.Id })" 
+                    class="btn btnApprove" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetPersonContactApprovals", "Approval")">Approve</a>
+
+                <a href="@Url.Action("RejectPersonContact", "Approval", new { id = item.Id })" 
+                    class="btn btnApprove" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetPersonContactApprovals", "Approval")">Disapprove</a>
+
+            </td>
+        </tr>
+    }
+
+</table>

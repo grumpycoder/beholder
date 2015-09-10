@@ -1,0 +1,101 @@
+﻿@model ChapterEventRel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.EventId, new { @required = "required", @data_val_required = "Event is required." })
+
+    <fieldset>
+
+        @if (ViewBag.Controller == "Events")
+        {
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.Chapter)
+                <div class="col-sm-8">
+                    @(Html.Kendo().ComboBoxFor(m => m.ChapterId).Name("ChapterId").AutoBind(true).Enable(Model.ChapterId == -1).HtmlAttributes(new { style = "width:100%; max-width:280px;" })
+                          .DataTextField("Name").DataValueField("Id").MinLength(3).Placeholder("Find Chapter")
+                          .Filter(FilterType.Contains).HighlightFirst(true).Events(e => e.DataBound("databoundChapterList"))
+                          .TemplateId("chapterTemplate")
+                          .DataSource(s =>
+                              s.Read(r => r.Action("GetChapterList", "Chapters")).ServerFiltering(true)))
+                    <span class="help-block">ex.Name:State:City</span>
+                    @Html.HiddenFor(model => model.ChapterId)
+
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.ChapterId)</span>
+                </div>
+            </div>
+            
+        }
+
+        @if (ViewBag.Controller == "Chapters")
+        {
+            @Html.HiddenFor(model => model.Event.Id)
+            <div class="form-group" id="eventGroup">
+                @Html.BootstrapLabelFor(m => m.Event)
+                <div class="col-sm-8">
+                    @if (Model.Id == 0)
+                    {
+                        @*this is for the autocomplete search box for person*@
+                        <div class="ui-widget">
+                            <select id="combobox_events" data-url="@Url.Action("GetEventList", "Events")" data-id="eventsCombo" data-hidden-field="EventId"></select>
+                        </div>
+                        <span class="help-block">@Html.ValidationMessageFor(model => model.EventId)</span>
+                    }
+                    else
+                    {
+                        @*<input readonly="true" class="text-box single-line" type="text" value="@Model.Event.EventName" />*@
+                        <input type="text" class="disabled form-control" readonly="true" value="@Model.Event.EventName" style="width: 100%;" />
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.RelationshipTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RelationshipTypeId, ((IEnumerable<RelationshipType>)ViewBag.PossibleRelationshipTypes).Select(option => option != null ? new SelectListItem
+                    {
+                        Text = (option.Name),
+                        Value = option.Id.ToString(),
+                        Selected = (Model != null) && (option.Id == Model.RelationshipTypeId)
+                    } : null), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Relationship Type is required." })
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.RelationshipTypeId)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.DateStart)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.DateStart)
+                    <span class="help-block">@Html.ValidationMessageFor(m => m.DateStart)</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.BootstrapLabelFor(m => m.DateEnd)
+                <div class="col-sm-8">
+                    @Html.EditorFor(m => m.DateEnd)
+                    <span class="help-block">@Html.ValidationMessageFor(m => m.DateEnd)</span>
+                </div>
+            </div>
+
+        </fieldset>
+}
+
+<script id="chapterTemplate" type="text/x-kendo-template">
+    <strong>#: Name #</strong>
+    <br />
+    <small>Movement: #= Movement != null ? Movement : 'Unknown' #</small>
+    <br />
+    <small>Location: #= Location != null ? Location : 'Unknown' #</small>
+    <br />
+    <small>Active Year: #= ActiveYear != null ? ActiveYear: 'Unknown' #</small>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+        if ($('#EventId').val() == -1) { $('#EventId').val(null); }
+    });
+</script>

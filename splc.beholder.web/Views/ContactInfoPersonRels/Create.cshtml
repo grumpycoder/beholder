@@ -1,0 +1,18 @@
+@model ContactInfoPersonRel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">Create New Contact Information</h2>
+<div class="row">
+    
+    @Html.Partial("_CreateOrEdit", Model)
+    <input type="submit" value="Create" class="btn btn-primary pull-right" />
+
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

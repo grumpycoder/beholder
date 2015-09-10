@@ -1,0 +1,23 @@
+﻿@model splc.domain.Models.MediaImageMediaImageRel
+
+@{
+	ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">Create New Relationship</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset class="form-horizontal well well-small fieldset-auto-width">
+        <legend></legend>
+
+        @Html.Partial("_CreateOrEditMediaImageMediaImage", Model)
+
+        <input type="submit" value="Create Relationship" class="btn btn-primary pull-right" />
+    </fieldset>
+}
+
+<div>
+	@Html.ActionLink("Back to List", "Index")
+</div>

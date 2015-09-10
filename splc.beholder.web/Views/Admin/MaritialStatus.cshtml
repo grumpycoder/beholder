@@ -1,0 +1,8 @@
+﻿@model IEnumerable<MaritialStatus>
+
+@{
+    ViewBag.Title = "Marital Status";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_MaritialStatusList", Model)

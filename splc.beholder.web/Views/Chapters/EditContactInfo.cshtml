@@ -1,0 +1,30 @@
+﻿@model ChapterContactInfoRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Contact Information</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" })) {
+    @Html.ValidationSummary(true)
+    <fieldset class="form-horizontal well well-small fieldset-auto-width">
+        <legend></legend>
+
+        @Html.HiddenFor(model => model.Id)
+		@Html.Partial("_CreateOrEditContactInfo", Model)
+
+        <input type="submit" value="Save" class="btn btn-primary pull-right" />
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+    });
+</script>
+

@@ -1,0 +1,19 @@
+﻿@model AddressEventRel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">Create New Address</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditEventAddress", Model)
+    <input type="submit" value="Save Address" class="btn btn-primary pull-right" />
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

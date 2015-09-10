@@ -1,0 +1,312 @@
+@model MediaCorrespondence
+
+@{
+    ViewBag.Title = string.Format("Details - {0}", Model.CorrespondenceName == "Unspecified On Conversion" ? (Model.Summary).Substring(0, 20) : Model.CorrespondenceName);
+    var page = Session["page"] ?? Request["page"];
+    var pageSize = Session["pageSize"] ?? Request["pageSize"];
+    var correspondencename = Session["correspondencename"] ?? Request["correspondencename"];
+    var fromname = Session["fromname"] ?? Request["fromname"];
+    var datefrom = Session["datefrom"] ?? Request["datefrom"];
+    var dateto = Session["dateto"] ?? Request["dateto"];
+    var correspondencetypeid = Session["correspondencetypeid"] ?? Request["correspondencetypeid"];
+    var docsearch = Session["docsearch"] ?? Request["docsearch"];
+
+
+    var correspondencetypeid_string = "";
+    if ((Session["correspondencetypeid"] ?? Request["correspondencetypeid"]) != null)
+    {
+        correspondencetypeid_string = string.Join(",", (List<int>)(Session["correspondencetypeid"] ?? Request["correspondencetypeid"]));
+    }
+}
+
+<h2 class="title-bar">@Model.CorrespondenceName</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page, pageSize, correspondencename, fromname, datefrom, dateto, correspondencetypeid, correspondencetypeid_string, docsearch })
+        </span>
+        <span class="pull-right">
+            @Html.ActionLink("Edit", "Edit", "MediaCorrespondences", new {id = Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "RemoveCorrespondence", "MediaCorrespondences", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+</div>
+
+<div class="row">
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+                @if (Model.MediaCorrespondenceMediaImageRels.Count > 0)
+                {
+                    <img src="@Url.Action("ShowPrimaryImage", "MediaCorrespondence", new { Model.Id })" alt="org image" class="thumbnail-img" height="270" width="500" />
+                }
+                else
+                {
+                    <img src="~/Content/images/image_unavailable.jpg" alt="" height="270" width="500" />
+                }
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ConfidentialityTypeId).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.ConfidentialityType.Name).ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.MovementClassId).ToString()</td>
+                            <td>@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.Summary).ToString()</td>
+                            <td>@Model.Summary</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateReceived).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateReceived)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Miscellaneous</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.MediaTypeId).ToString()</td>
+                            <td>@(Model.MediaType == null ? "None" : Model.MediaType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.CorrespondenceTypeId).ToString()</td>
+                            <td>@(Model.CorrespondenceType == null ? "None" : Model.CorrespondenceType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.FromName).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.FromName).ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ToName).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.ToName).ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.CatalogId).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.CatalogId).ToString()</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Renewal Information</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.RenewalPermmisionType).ToString()</td>
+                            <td>@(Model.RenewalPermmisionType == null ? "None" : Model.RenewalPermmisionType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateRenewalPermission).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateRenewalPermission)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.RenewalPermission).ToString()</td>
+                            <td>@(Model.RenewalPermission)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Location</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.City).ToString()</td>
+                            <td>@Model.City</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.County).ToString()</td>
+                            <td>@Model.County</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.StateId).ToString()</td>
+                            <td>@(Model.State == null ? "None" : Model.State.StateName)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Documents</div>
+                <div class="panel-body">
+                    <div id="documentList">
+                        @Html.Action("GetContextList", new { correspondenceId = Model.Id })
+                    </div>
+
+                </div>
+                <div class="panel-footer">
+                    @(Html.Kendo().Upload().Name("attachments")
+                    .Async(a => a.Save("SaveAttachments", "MediaCorrespondences", new { correspondenceId = @Model.Id }))
+                    .ShowFileList(false)
+                    .Events(e =>
+                        e.Complete(@<text> function(e){LoadView("#documentList","@Url.Action("GetContextList", "MediaCorrespondences", new { correspondenceId = Model.Id })")}</text>).Error("onError"))
+                                                        .Messages(m => m.HeaderStatusUploaded("")
+                                                            .StatusUploaded("").Select("Choose")))
+                </div>
+            </div>
+        </li>
+
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="personMediaCorrespondences">
+                @Html.Partial("../Persons/_PersonMediaCorrespondenceList", Model.PersonMediaCorrespondenceRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterMediaCorrespondences">
+                @Html.Partial("../Chapters/_ChapterMediaCorrespondenceList", Model.ChapterMediaCorrespondenceRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationMediaCorrespondences">
+                @Html.Partial("../Organizations/_OrganizationMediaCorrespondenceList", Model.OrganizationMediaCorrespondenceRels)
+            </div>
+        </li>
+        <li>
+            <div id="contactMediaCorrespondences">
+                @Html.Partial("../Contacts/_ContactMediaCorrespondenceList", Model.ContactMediaCorrespondenceRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceEvents">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceEventList", Model.MediaCorrespondenceEventRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceMediaAudioVideos">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceMediaAudioVideoList", Model.MediaCorrespondenceMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceMediaWebsiteEGroups">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceMediaWebsiteEGroupList", Model.MediaCorrespondenceMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceVehicles">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceVehicleList", Model.MediaCorrespondenceVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceMediaCorrespondences">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceMediaCorrespondenceList", Model)
+            </div>
+        </li>
+        <li>
+            <div id="mediaPublishedMediaCorrespondences">
+                @Html.Partial("../MediaPublisheds/_MediaPublishedMediaCorrespondenceList", Model.MediaPublishedMediaCorrespondenceRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceSubscriptions">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceSubscriptionList", Model.MediaCorrespondenceSubscriptionRels)
+            </div>
+        </li>
+    </ul>
+
+</div>
+
+<div class="row">
+    <div id="mediaCorrespondenceMediaImages">
+        @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceMediaImageList", Model.MediaCorrespondenceMediaImageRels)
+    </div>
+</div>
+
+<div class="row">
+    <div id="mediaCorrespondenceComments">
+        @Html.Partial("../Comments/_MediaCorrespondenceCommentList", Model.MediaCorrespondenceComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "MediaCorrespondenceId", Model.Id } })
+    </div>
+</div>
+
+<script>
+    function onError(e) {
+        toastr.error(e.XMLHttpRequest.responseText);
+    };
+
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#PersonId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundPersonList() {
+        if ($("#PersonId").data("kendoComboBox").value() === '-1') {
+            $("#PersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroupId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        if ($("#MediaWebsiteEGroupId").data("kendoComboBox").value() === '-1') {
+            $("#MediaWebsiteEGroupId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataContactList() {
+        return {
+            term: $("#ContactId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundContactList() {
+        if ($("#ContactId").data("kendoComboBox").value() === '-1') {
+            $("#ContactId").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

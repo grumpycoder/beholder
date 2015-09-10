@@ -1,0 +1,16 @@
+﻿@model VehicleComment
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Comment</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditVehicleComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+<div>
+    @Html.ActionLink("Back", "Details", "Vehicles", new { id = Model.VehicleId }, null)
+</div>

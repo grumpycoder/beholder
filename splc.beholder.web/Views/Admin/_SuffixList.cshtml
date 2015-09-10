@@ -1,0 +1,41 @@
+﻿@model IEnumerable<splc.domain.Models.Suffix>
+<h3>Suffixes</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Sort Order</th>
+        </tr>
+    </thead>
+    @foreach (var item in @Model)
+    {
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditSuffix", "Admin", new { id = item.Id })" 
+                    class="btnEdit" 
+                    data-title="Edit Suffix" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("Suffix", "Admin", null)"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("DeleteSuffix", "Admin", new { id = item.Id })" 
+                    class="btnDelete" 
+                    data-title="Delete Suffix" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("Suffix", "Admin", null)"><span class="glyphicon glyphicon-trash"></span></a>
+            </td>
+            <td>@item.Name</td>
+            <td>@item.SortOrder</td>
+        </tr>
+
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateSuffix", "Admin", null)" 
+                class="btnNew" 
+                data-refresh="true" 
+                data-title="New Suffix" 
+                data-action="@Url.Action("Suffix", "Admin", null)"><span class="glyphicon glyphicon-plus"></span></a>
+        </td>
+    </tr>
+</table>
+

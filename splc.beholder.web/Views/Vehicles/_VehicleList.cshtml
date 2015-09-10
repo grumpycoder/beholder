@@ -1,0 +1,49 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<Vehicle>
+
+@{
+    var pageSize = Session["pageSize"] ?? Request["pageSize"];
+    var searchTerm = Session["searchTerm"] ?? Request["searchTerm"];
+}
+@if (!Model.Any())
+{
+    <h3>No Vehicles found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, searchTerm }))
+</div>
+<div id="eventList">
+    <table class="table table-condensed table-hover table-responsive">
+        <tr>
+            <th></th>
+            <th>VIN</th>
+            <th>Color</th>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Type</th>
+            <th>Tag</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("Edit", "Vehicles", new { id = item.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("RemoveVehicle", "Vehicles", new { id = item.Id })"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Details", "Vehicles", new { id = item.Id })"><span class="glyphicon glyphicon-info-sign"></span></a>
+                </td>
+                <td>@item.VIN</td>
+                <td>@(item.VehicleColor == null ? "Unknown" : item.VehicleColor.Name)</td>
+                <td>@(item.VehicleMake == null ? "Unknown" : item.VehicleMake.Name)</td>
+                <td>@(item.VehicleModel == null ? "Unknown" : item.VehicleModel.Name)</td>
+                <td>@(item.VehicleType == null ? "Unknown" : item.VehicleType.Name)</td>
+                <td>@(item.VehicleTags.Count == 0 ? "Unknown" : item.VehicleTags.First().TagNumber))</td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, searchTerm }))
+</div>

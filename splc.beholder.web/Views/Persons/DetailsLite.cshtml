@@ -1,0 +1,194 @@
+@model BeholderPerson
+
+@{
+    ViewBag.Title = "Details - " + string.Format("{0} {1} {2} {3}", Model.CommonPerson.Prefix == null ? "" : Model.CommonPerson.Prefix.Name, @Model.CommonPerson.FName, @Model.CommonPerson.MName, @Model.CommonPerson.LName);
+    var searchterm = Session["searchterm"] ?? Request["searchterm"];
+}
+
+<h2 class="title-bar">@Model.CommonPerson.FullName</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", "Searches", new { page = Session["page"], searchterm }, null)
+        </span>
+    </div>
+</div>
+<p>
+    Alias:
+    @if (Model.CommonPerson.AliasPersonRels.Any())
+    {
+        List<string> aliasList = new List<string>();
+        foreach (var alias in Model.CommonPerson.AliasPersonRels)
+        {
+            aliasList.Add(alias.Alias.AliasName);
+        }
+        <text>@String.Join(",", aliasList)</text>
+    }
+    else
+    {
+        <text>No known aliases</text>
+    }
+</p>
+
+<h3>Details</h3>
+<div class="row">
+
+    <div class="col-sm-4 col-md-4">
+        <table class="table table-bordered">
+            <tr>
+                <td>Confidentiality Type</td>
+                <td>@(Model.ConfidentialityType == null ? "Unknown" : Model.ConfidentialityType.Name)</td>
+            </tr>
+            <tr>
+                <td>Movement Class</td>
+                <td>@(Model.MovementClass == null ? "Unknown" : Model.MovementClass.Name)</td>
+            </tr>
+            <tr>
+                <td>SSN</td>
+                <td>@Model.CommonPerson.SSN</td>
+            </tr>
+            <tr>
+                <td>Marital Status</td>
+                <td>@(Model.CommonPerson.MaritialStatus == null ? "Unknown" : Model.CommonPerson.MaritialStatus.Name)</td>
+            </tr>
+            <tr>
+                <td>Age</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Date of Birth</td>
+                <td>@(Model.CommonPerson.DOB == null ? "Unknown" : @String.Format("{0:d}", Model.CommonPerson.DOB))</td>
+            </tr>
+            <tr>
+                <td>Actual Date of Birth</td>
+                <td>@(Model.CommonPerson.ActualDOBIndicator == null ? "Unknown" : @String.Format("{0}", Model.CommonPerson.ActualDOBIndicator))</td>
+            </tr>
+            <tr>
+                <td>Deceased Date</td>
+                <td>@(Model.CommonPerson.DeceasedDate == null ? "Unknown" : @String.Format("{0:d}", Model.CommonPerson.DeceasedDate))</td>
+            </tr>
+            <tr>
+                <td>Actual Deceased Date</td>
+                <td>@(Model.CommonPerson.ActualDeceasedDateIndicator == null ? "Unknown" : @String.Format("{0}", Model.CommonPerson.ActualDeceasedDateIndicator))</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-4 col-md-4">
+        <table class="table table-bordered">
+            <tr>
+                <td>Hair Color</td>
+                <td>@(Model.CommonPerson.HairColor == null ? "Unknown" : Model.CommonPerson.HairColor.Name)</td>
+            </tr>
+            <tr>
+                <td>Hair Pattern</td>
+                <td>@(Model.CommonPerson.HairPattern == null ? "Unknown" : Model.CommonPerson.HairPattern.Name)</td>
+            </tr>
+            <tr>
+                <td>Eye Color</td>
+                <td>@(Model.CommonPerson.EyeColor == null ? "Unknown" : Model.CommonPerson.EyeColor.Name)</td>
+            </tr>
+            <tr>
+                <td>Height</td>
+                <td>@(Model.CommonPerson.Height ?? "Unknown")</td>
+            </tr>
+            <tr>
+                <td>Weight</td>
+                <td>@(Model.CommonPerson.Weight ?? "Unknown")</td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>@(Model.CommonPerson.Gender == null ? "Unknown" : Model.CommonPerson.Gender.Name)</td>
+            </tr>
+            <tr>
+                <td>Race</td>
+                <td>@(Model.CommonPerson.Race == null ? "Unknown" : Model.CommonPerson.Race.Name)</td>
+            </tr>
+            <tr>
+                <td colspan="2">Distinguishable Marks</td>
+            </tr>
+            <tr>
+                <td colspan="2">@(Model.DistinguishableMarks ?? "None")</td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<h3>Associations</h3>
+<div class="row">
+    <div id="organizationPersons" class="col-sm-4 col-md-4">
+        <h4>Organizations</h4>
+        @if (Model.OrganizationPersonRels.Any())
+        {
+            <table class="table table-condensed">
+                <tr>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                </tr>
+                @foreach (var item in Model.OrganizationPersonRels)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.Organization.OrganizationName, "DetailsLite", "Organizations", new { id = item.OrganizationId }, null)
+                            @*@item.Organization.OrganizationName*@
+                        </td>
+                        <td>@(item.DateStart == null ? "Unknown" : item.DateStart.ToString())</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <text>No Known Organizations</text>
+        }
+
+    </div>
+    <div id="chapterPersons" class="col-sm-4 col-md-4">
+        <h4>Chapters</h4>
+        @if (Model.ChapterPersonRels.Any())
+        {
+            <table class="table table-condensed">
+                <tr>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                </tr>
+                @foreach (var item in Model.ChapterPersonRels)
+                {
+                    <tr>
+                        <td>@Html.ActionLink(@item.Chapter.ChapterName, "DetailsLite", "Chapters", new { id = item.ChapterId }, null)</td>
+                        <td>@(item.DateStart == null ? "Unknown" : item.DateStart.ToString())</td>
+                    </tr>
+                }
+            </table>
+        }
+        else
+        {
+            <text>No Known Chapters</text>
+        }
+    </div>
+</div>
+
+<h3>Articles/Publications</h3>
+<div class="row">
+    <div class="col-sm-8 col-md-10">
+        @if (!Model.PersonMediaPublishedRels.Any())
+        {
+            <text>No publications</text>
+        }
+
+        @foreach (var pub in Model.PersonMediaPublishedRels.OrderByDescending(x => x.MediaPublished.DatePublished))
+        {
+            <p>
+                @if (pub.MediaPublished.MediaPublishedContexts.Any())
+                {
+                    <strong>
+                        <a href="@Url.Action("Download", "MediaPublisheds", new { Id = pub.MediaPublished.MediaPublishedContextId ?? pub.MediaPublished.MediaPublishedContexts.FirstOrDefault().Id })" target="_blank">
+                            @string.Format("{0} ({1:d})", pub.MediaPublished.Name, pub.MediaPublished.DatePublished)
+                        </a>
+                    </strong><br />
+                    @(String.IsNullOrEmpty(pub.MediaPublished.Summary) ? "No Summary" : pub.MediaPublished.Summary);
+                }
+            </p>
+        }
+    </div>
+</div>

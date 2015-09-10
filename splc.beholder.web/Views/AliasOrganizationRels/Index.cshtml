@@ -1,0 +1,95 @@
+@model IEnumerable<splc.domain.Models.AliasOrganizationRel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th></th>
+        <th>
+            FirstKnownUseDate
+        </th>
+        <th>
+            LastKnownUseDate
+        </th>
+        <th>
+            Comments
+        </th>
+        <th>
+            DateCreated
+        </th>
+        <th>
+            CreatedUserId
+        </th>
+        <th>
+            DateModified
+        </th>
+        <th>
+            ModifiedUserId
+        </th>
+        <th>
+            DateDeleted
+        </th>
+        <th>
+            DeletedUserId
+        </th>
+        <th>
+            Organization
+        </th>
+        <th>
+            PrimaryStatus
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+        <td>
+			@String.Format("{0:g}", item.FirstKnownUseDate)
+        </td>
+        <td>
+			@String.Format("{0:g}", item.LastKnownUseDate)
+        </td>
+        <td>
+			@item.Comments
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateCreated)
+        </td>
+        <td>
+			@item.CreatedUserId
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateModified)
+        </td>
+        <td>
+			@item.ModifiedUserId
+        </td>
+        <td>
+			@String.Format("{0:g}", item.DateDeleted)
+        </td>
+        <td>
+			@item.DeletedUserId
+        </td>
+        <td>
+			@Html.DisplayTextFor(_ => item.Organization).ToString()
+        </td>
+        <td>
+			@(item.PrimaryStatus == null ? "None" : item.PrimaryStatus.Name)
+        </td>
+    </tr>
+}
+
+</table>
+
+

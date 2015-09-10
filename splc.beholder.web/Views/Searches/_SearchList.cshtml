@@ -1,0 +1,52 @@
+﻿@using MvcContrib.UI.Pager
+@model MvcContrib.Pagination.IPagination<splc.domain.Models.Search>
+
+
+@if (!Model.Any())
+{
+    <h3>No Matches Found</h3>
+}
+<div class="row">
+    @Html.Raw(@Html.Pager(Model))
+</div>
+
+<ul class="card-list">
+@foreach (var item in Model)
+{
+    <li>
+        <div class="thumbnail">
+
+            <a href="@Url.Action("Details", "Persons", new { id = item.Id })">
+                <h4 class="title-elliipsis" title="@string.Format("{0}", String.IsNullOrEmpty(item.EntityName) ? item.EntityDesc : item.EntityName)">@string.Format("{0}", string.Format("{0}", String.IsNullOrEmpty(item.EntityName) ? item.EntityDesc : item.EntityName))</h4>
+                <table class="table">
+            <tr>
+                <td>Entity</td>
+                <td>@(item.Entity == null ? "Unknown" : item.Entity)</td>
+            </tr>
+            <tr>
+                <td>Entity Type</td>
+                <td>@(item.EntityType == null ? "Unknown" : item.EntityType)</td>
+            </tr>
+            <tr>
+                <td>Movement</td>
+                <td>@(item.MovementClass == null ? "Unknown" : item.MovementClass)</td>
+            </tr>
+            <tr>
+                <td>Approval Status</td>
+                <td>@(item.ApprovalStatus == null ? "Unknown" : item.ApprovalStatus)</td>
+            </tr>
+            <tr>
+                <td>Active</td>
+                <td>@(item.ActiveStatus == null ? "Unknown" : item.ActiveStatus)</td>
+            </tr>
+                </table>
+            </a>
+        </div>
+    </li>
+}
+</ul>
+
+<div class="row">
+    @Html.Raw(@Html.Pager(Model))
+</div>
+

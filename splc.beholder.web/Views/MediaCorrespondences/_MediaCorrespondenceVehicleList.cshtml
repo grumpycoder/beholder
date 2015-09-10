@@ -1,0 +1,115 @@
+﻿@model IEnumerable<splc.domain.Models.MediaCorrespondenceVehicleRel>
+@{
+    var viewItem = ViewBag.Controller == "Vehicles" ? "Correspondence Items" : "Vehicles";
+    var source = ViewBag.Controller == "Vehicles" ? "Vehicles" : "MediaCorrespondences";
+    var mediaCorrespondenceId =  ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"];
+    var vehicleId = ViewData["VehicleId"] == null ? -1 : (int)ViewData["VehicleId"]; 
+    var showVehicle = ViewBag.Controller == "MediaCorrespondences";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showVehicle){
+                        @Html.ActionLink(string.Format("{0}", item.Vehicle), "Details", "Vehicles", new { id = item.Vehicle.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Vehicle.VIN)
+                    }
+                    else{
+                        @Html.ActionLink(item.MediaCorrespondence.CorrespondenceName, "Details", "MediaCorrespondences", new { id = item.MediaCorrespondence.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaCorrespondence.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditMediaCorrespondenceVehicle", "MediaCorrespondences", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#mediaCorrespondenceVehicles"
+                               data-action="@Url.Action("GetMediaCorrespondenceVehicles", "MediaCorrespondences", new { mediaCorrespondenceId = @mediaCorrespondenceId, vehicleId = @vehicleId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteMediaCorrespondenceVehicle", "MediaCorrespondences", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#mediaCorrespondenceVehicles"
+                               data-action="@Url.Action("GetMediaCorrespondenceVehicles", "MediaCorrespondences", new { mediaCorrespondenceId = @mediaCorrespondenceId, vehicleId = @vehicleId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateMediaCorrespondenceVehicle", "MediaCorrespondences", new { mediaCorrespondenceId = @mediaCorrespondenceId, vehicleId = @vehicleId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#mediaCorrespondenceVehicles"
+           data-action="@Url.Action("GetMediaCorrespondenceVehicles", "MediaCorrespondences", new { mediaCorrespondenceId = @mediaCorrespondenceId, vehicleId = @vehicleId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+
+@*<table class="table table-bordered">
+    <caption>
+        @((string) ViewData["Controller"] == "Vehicles" ? string.Format("Correspondence Items ({0})", Model.Count()) : string.Format("Vehicles ({0})", Model.Count()))
+    </caption>
+    
+    @if (!Model.Any())
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",(string) ViewData["Controller"] == "Vehicles" ? "Correspondence Items" : "Vehicles")</td>
+        </tr>
+    }
+    @foreach (var mediaCorrespondenceVehicleRel in Model)
+    {
+        //string controller = ViewData["Controller"].ToString();
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditMediaCorrespondenceVehicle", "MediaCorrespondences", new { id = mediaCorrespondenceVehicleRel.Id, source = ViewData["Controller"].ToString()})" 
+                    class="btnEdit" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaCorrespondenceVehicles", "MediaCorrespondences", new { mediaCorrespondenceId =  ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"] , vehicleId = ViewData["VehicleId"] == null ? -1 : (int)ViewData["VehicleId"] })"><i class="icon-pencil icon-large"></i></a>
+                <a href="@Url.Action("DeleteMediaCorrespondenceVehicle", "MediaCorrespondences", new { id = mediaCorrespondenceVehicleRel.Id})" 
+                    class="btnDelete" 
+                    data-title="Delete Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaCorrespondenceVehicles", "MediaCorrespondences", new { mediaCorrespondenceId =  ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"]  , vehicleId = ViewData["VehicleId"] == null ? -1 : (int)ViewData["VehicleId"] })"><i class="icon-trash icon-large"></i></a>
+            </td>
+            @if (ViewData["Controller"].ToString() == "Vehicles")
+            {
+                <td>
+                    @Html.ActionLink(mediaCorrespondenceVehicleRel.MediaCorrespondence.CorrespondenceName, "Details", "MediaCorrespondences", new { id = mediaCorrespondenceVehicleRel.MediaCorrespondence.Id }, null)
+                </td>
+                <td>@Html.DisplayFor(model => mediaCorrespondenceVehicleRel.MediaCorrespondence.MovementClass.Name)</td>
+            }
+            else
+            {
+                <td>
+                    @Html.ActionLink(string.Format("{0} {1} {2}", mediaCorrespondenceVehicleRel.Vehicle.VehicleColorId == null ? "Color??" : mediaCorrespondenceVehicleRel.Vehicle.VehicleColor.Name, mediaCorrespondenceVehicleRel.Vehicle.VehicleMakeId == null ? "Make??" : mediaCorrespondenceVehicleRel.Vehicle.VehicleMake.Name, mediaCorrespondenceVehicleRel.Vehicle.VehicleModelId == null ? "Model??" : mediaCorrespondenceVehicleRel.Vehicle.VehicleModel.Name), "Details", "Vehicles", new { id = mediaCorrespondenceVehicleRel.Vehicle.Id }, null)
+                </td>
+                <td>@Html.DisplayFor(model => mediaCorrespondenceVehicleRel.Vehicle.VIN)</td>
+            }
+        </tr>
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateMediaCorrespondenceVehicle", "MediaCorrespondences", new { mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"]  , vehicleId = ViewData["VehicleId"] == null ? -1 : (int)ViewData["VehicleId"]})" 
+                class="btnNew" 
+                data-title="New Relationship" 
+                data-refresh="true"
+                data-action="@Url.Action("GetMediaCorrespondenceVehicles", "MediaCorrespondences", new { mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : ViewData["MediaCorrespondenceId"], vehicleId = ViewData["VehicleId"] == null ? -1 : (int)ViewData["VehicleId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>*@

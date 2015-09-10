@@ -1,0 +1,39 @@
+﻿@model MediaPublished
+
+<div class="span4 card">
+    <div class="title">
+        @Html.ActionLink(string.Format("{0}", Model.Name), "Details", "MediaPublisheds", new { id = Model.Id }, null)
+    </div>
+    <div>
+@*        @if (Model.Image != null)
+        {
+            <div><img src="@Url.Action("ShowImage", "MediaAudioVideos", new { Id = Model.Image.Id })" alt="media image" class="person-thumbnail" /></div>
+        }
+        else
+        {
+            *@<div>
+                <img src="~/content/img/unknown-person.png" class="person-thumbnail" alt="no image" />
+            </div>
+@*        }*@
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>Type</td>
+                <td>@(Model.MediaType == null ? "Unknown" : Model.MediaType.Name)</td>
+            </tr>
+            <tr>
+                <td>Movement</td>
+                <td>@(Model.MovementClass == null ? "Unknown" : Model.MovementClass.Name)</td>
+            </tr>
+            <tr>
+                <td>Date Received</td>
+                <td>@(Model.DateReceived == null ? "Unknown" : @String.Format("{0:d}", Model.DateReceived))</td>
+            </tr>
+            <tr>
+                <td>Date Published</td>
+                <td>@(Model.DatePublished == null ? "Unknown" : @String.Format("{0:d}", Model.DatePublished))</td>
+            </tr>
+        </table>
+    </div>    
+</div>

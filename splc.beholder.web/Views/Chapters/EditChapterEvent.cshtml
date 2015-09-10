@@ -1,0 +1,15 @@
+﻿@model ChapterEventRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+<h2 class="page-title small">Edit Chapter/Event Relationship</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditChapterEvent", Model)
+    <input type="submit" value="Create Relationship" class="btn btn-primary pull-right" />
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

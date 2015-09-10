@@ -1,0 +1,246 @@
+@model Event
+@{
+    var eventId = ViewBag.EventId;
+
+    var page = Session["page"];
+    var pageSize = Session["pageSize"];
+    var eventname = Session["eventname"];
+    var datefrom = Session["datefrom"];
+    var dateto = Session["dateto"];
+    var eventtypeid = Request["eventtypeid"];
+
+    var eventtypeid_string = "";
+    if ((Session["eventtypeid"] ?? Request["eventtypeid"]) != null)
+    {
+        eventtypeid_string = string.Join(",", (List<int>)(Session["eventtypeid"] ?? Request["eventtypeid"]));
+    }
+
+    ViewBag.Title = "Details - " + string.Format("{0}", Model.EventName);
+}
+
+<h2 class="title-bar">@Model.EventName</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page, pageSize, eventname, datefrom, dateto, eventtypeid, eventtypeid_string })
+        </span>
+        <span class="pull-right">
+            @Html.ActionLink("Edit", "Edit", "Events", new { id = Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "RemoveEvent", "Events", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+</div>
+
+<div class="row">
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+                <div class="thumbnail">
+                    @if (Model.EventMediaImageRels.Count > 0)
+                    {
+                        <img src="@Url.Action("ShowPrimaryImage", "Events", new { Model.Id })" alt="org image" class="thumbnail-img" height="270" width="500" />
+                    }
+                    else
+                    {
+                         <img src="~/Content/images/image_unavailable.jpg" alt="" height="270" width="500" />
+                    }
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.EventDate).ToString()</td>
+                            <td>@(Model.EventDate == null ? "Unknown" : @String.Format("{0:d}", Model.EventDate))</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.MovementClassId).ToString()</td>
+                            <td>@(Model.MovementClassId == null ? "Unknown" : Model.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ActiveYear).ToString()</td>
+                            <td>@string.Format(@Model.ActiveYear == null ? "Unknown" : @Model.ActiveYear.ToString())</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.Summary).ToString()</td>
+                            <td>@string.Format(@Model.Summary ?? "Unknown")</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.Religion).ToString()</td>
+                            <td>@string.Format(@Model.Religion ?? "Unknown")</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ConfidentialityTypeId).ToString()</td>
+                            <td>@(Model.ConfidentialityTypeId == null ? "Unknown" : Model.ConfidentialityType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.EventDocumentationTypeId).ToString()</td>
+                            <td>@(Model.EventDocumentationTypeId == null ? "Unknown" : Model.EventDocumentationType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.WebIncidentTypeId).ToString()</td>
+                            <td>@(Model.WebIncidentTypeId == null ? "Unknown" : Model.WebIncidentType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.NewsSourceId).ToString()</td>
+                            <td>@(Model.NewsSourceId == null ? "Unknown" : Model.NewsSource.NewsSourceName)</td>
+                        </tr>
+                        <tr>
+                            <td>Event Type(s)</td>
+                            <td>
+                                @foreach (var item in Model.EventEventTypeRels)
+                                {
+                                   <span class="badge">@item.EventType.Name</span>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Approval</td>
+                            <td>@(Model.ApprovalStatus == null ? "None" : Model.ApprovalStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>@(Model.ActiveStatus == null ? "None" : Model.ActiveStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div id="eventAddresses">
+                @Html.Partial("../Addresses/_EventAddressList", Model.AddressEventRels.Where(x => x.DateDeleted == null && x.Address.DateDeleted == null))
+            </div>
+        </li>
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="personEvents">
+                @Html.Partial("../Persons/_PersonEventList", Model.PersonEventRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterEvents">
+                @Html.Partial("../Chapters/_ChapterEventList", Model.ChapterEventRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationEvents">
+                @Html.Partial("../Organizations/_OrganizationEventList", Model.OrganizationEventRels)
+            </div>
+        </li>
+        <li>
+            <div id="eventEvents">
+                @Html.Partial("../Events/_EventEventList", Model)
+            </div>
+        </li>
+        <li>
+            <div id="eventMediaAudioVideos">
+                @Html.Partial("../Events/_EventMediaAudioVideoList", Model.EventMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="eventMediaWebsiteEGroups">
+                @Html.Partial("../Events/_EventMediaWebsiteEGroupList", Model.EventMediaWebsiteEGroupRels)
+            </div>
+        </li>
+        <li>
+            <div id="eventVehicles">
+                @Html.Partial("../Events/_EventVehicleList", Model.EventVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceEvents">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceEventList", Model.MediaCorrespondenceEventRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaPublishedEvents">
+                @Html.Partial("../MediaPublisheds/_MediaPublishedEventList", Model.MediaPublishedEventRels)
+            </div>
+        </li>
+        <li>
+            <div id="eventSubscriptions">
+                @Html.Partial("../Events/_EventSubscriptionList", Model.EventSubscriptionRels)
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div class="row">
+    <div id="eventMediaImages">
+        @Html.Partial("../Events/_EventMediaImageList", Model.EventMediaImageRels)
+    </div>
+</div>
+
+<div class="row">
+    <div id="eventComments">
+        @Html.Partial("../Comments/_EventCommentList", Model.EventComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified))
+    </div>
+</div>
+
+<div class="row">
+    <div id="eventStatusHistories">
+        @Html.Partial("../Events/_EventStatusHistoryList", Model.EventStatusHistories.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "EventId", Model.Id } })
+    </div>
+</div>
+
+<script>
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#PersonId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundPersonList() {
+        if ($("#PersonId").data("kendoComboBox").value() === '-1') {
+            $("#PersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroupId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        if ($("#MediaWebsiteEGroupId").data("kendoComboBox").value() === '-1') {
+            $("#MediaWebsiteEGroupId").data("kendoComboBox").text('');
+        }
+    };
+</script>

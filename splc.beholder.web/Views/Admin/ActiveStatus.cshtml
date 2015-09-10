@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.ActiveStatus>
+
+@{
+    ViewBag.Title = "Active Status";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_ActiveStatusList", Model)

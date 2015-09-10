@@ -1,0 +1,61 @@
+﻿@model IEnumerable<MediaCorrespondenceMediaAudioVideoRel>
+
+@{
+    var viewItem = ViewBag.Controller == "MediaAudioVideos" ? "Correspondence Items" : "Audio Videos";
+    var source = ViewBag.Controller == "MediaAudioVideos" ? "MediaAudioVideos" : "MediaCorrespondences";
+    var mediaCorrespondenceId =  ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"];
+    var mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int) ViewData["MediaAudioVideoId"];
+    var showAudioVideo = ViewBag.Controller == "MediaCorrespondences";
+}
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showAudioVideo){
+                        @Html.ActionLink(item.MediaAudioVideo.Title, "Details", "MediaAudioVideos", new { id = item.MediaAudioVideo.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaAudioVideo.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(item.MediaCorrespondence.CorrespondenceName, "Details", "MediaCorrespondences", new { id = item.MediaCorrespondence.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaCorrespondence.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                             <a href="@Url.Action("EditMediaCorrespondenceMediaAudioVideo", "MediaCorrespondences", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#mediaCorrespondenceMediaAudioVideos"
+                               data-action="@Url.Action("GetMediaCorrespondenceMediaAudioVideos", "MediaCorrespondences", new { mediaCorrespondenceId = @mediaCorrespondenceId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteMediaCorrespondenceMediaAudioVideo", "MediaCorrespondences", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#mediaCorrespondenceMediaAudioVideos"
+                               data-action="@Url.Action("GetMediaCorrespondenceMediaAudioVideos", "MediaCorrespondences", new { mediaCorrespondenceId = @mediaCorrespondenceId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+         <a href="@Url.Action("CreateMediaCorrespondenceMediaAudioVideo", "MediaCorrespondences", new { mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"]  , mediaAudioVideoId = ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"]})" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#mediaCorrespondenceMediaAudioVideos"
+           data-action="@Url.Action("GetMediaCorrespondenceMediaAudioVideos", "MediaCorrespondences", new { mediaCorrespondenceId = @mediaCorrespondenceId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+

@@ -1,0 +1,44 @@
+@model NewsSource
+
+@{
+    ViewBag.Title = string.Format("Details - {0}", Model.NewsSourceName);
+}
+
+<h2 class="title-bar">@Model.NewsSourceName (@Model.NewsSourceType.Name)</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page = Session["page"], searchTerm = Session["searchTerm"] })
+        </span>
+        <span class="pull-right">
+            @Html.ActionLink("Edit", "Edit", "NewsSources", new { id = Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "Delete", "NewsSources", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 col-lg-3">
+        <div class="panel panel-primary">
+            <div class="panel panel-heading">Status</div>
+            <div class="panel-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                        <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                        <td>@String.Format("{0:d}", Model.DateModified)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div id="newsSourceComments">
+        @Html.Partial("../Comments/_NewsSourceCommentList", Model.NewsSourceComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified))
+    </div>
+</div>

@@ -1,0 +1,19 @@
+﻿@model ChapterSubscriptionRel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">Create New Chapter/Subscription Relationship</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditChapterSubscription", Model)
+    <input type="submit" value="Save Relationship" class="btn btn-primary pull-right" />
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

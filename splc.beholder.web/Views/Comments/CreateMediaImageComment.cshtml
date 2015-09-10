@@ -1,0 +1,17 @@
+﻿@model MediaImageComment
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+<h2 class="page-title small">New Comment</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditMediaImageComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+<div>
+    @Html.ActionLink("Back", "Details", "MediaImages", new { id = Model.MediaImageId }, null)
+</div>

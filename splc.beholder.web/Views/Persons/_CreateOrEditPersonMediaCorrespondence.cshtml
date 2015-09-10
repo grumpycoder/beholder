@@ -1,0 +1,103 @@
+﻿@model PersonMediaCorrespondenceRel
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.MediaCorrespondenceId, new { @required = "required", @data_val_required = "Correspondence is required." })
+    <fieldset>
+
+        @if (ViewBag.Controller == "MediaCorrespondences")
+        {
+
+            <div class="form-group" id="personGroup">
+                @Html.BootstrapLabelFor(m => m.BeholderPerson)
+                <div class="col-sm-8">
+                    @(Html.Kendo().ComboBoxFor(m => m.PersonId).Name("PersonId")
+                          .AutoBind(true).Enable(Model.PersonId == -1).HtmlAttributes(new { style = "width:100%; max-width:280px;" })
+                          .DataTextField("Name").DataValueField("Id").MinLength(3).Placeholder("Find Person")
+                          .Filter(FilterType.Contains).HighlightFirst(true).Events(e => e.DataBound("databoundPersonList"))
+                          .TemplateId("personTemplate")
+                          .DataSource(s =>
+                              s.Read(r => r.Action("GetPersonSelectList", "Persons")).ServerFiltering(true)))
+
+                    @Html.HiddenFor(model => model.PersonId)
+                    <span class="help-block">@Html.ValidationMessageFor(model => model.PersonId)</span>
+
+                </div>
+            </div>
+            
+        }
+
+        @if (ViewBag.Controller == "Persons")
+        {
+            <div class="form-group" id="mediaCorrespondenceGroup">
+                @Html.HiddenFor(model => model.MediaCorrespondence.Id)
+                @Html.BootstrapLabelFor(m => m.MediaCorrespondence)
+                <div class="col-sm-8">
+                    @if (Model.Id == 0)
+                    {
+                        @*this is for the autocomplete search box for person*@
+                        <div class="ui-widget">
+                            <select id="combobox_corr" data-url="@Url.Action("GetMediaCorrespondenceList", "MediaCorrespondences")" data-id="mediaCorrespondencesCombo" data-hidden-field="MediaCorrespondenceId"></select>
+
+                            <span class="help-block">@Html.ValidationMessageFor(model => model.MediaCorrespondenceId)</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <input type="text" class="disabled form-control" readonly="true" value="@Model.MediaCorrespondence.CorrespondenceName" style="width: 100%;" />
+                        @*<input readonly="true" class="text-box single-line" type="text" value="@Model.MediaCorrespondence.CorrespondenceName" />*@
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.RelationshipTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RelationshipTypeId, ((IEnumerable<RelationshipType>)ViewBag.PossibleRelationshipTypes).Select(option => option != null ? new SelectListItem
+                {
+                    Text = (option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.RelationshipTypeId)
+                } : null), "Choose...", new { @class = "form-control", @required = "required", @data_val_required = "Relationship Type is required." })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RelationshipTypeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateStart)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateStart)
+                <span class="help-block">@Html.ValidationMessageFor(m => m.DateStart)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.DateEnd)
+            <div class="col-sm-8">
+                @Html.EditorFor(m => m.DateEnd)
+                <span class="help-block">@Html.ValidationMessageFor(m => m.DateEnd)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+}
+
+<script id="personTemplate" type="text/x-kendo-template">
+    <strong>#: Name #</strong>
+    <br />
+    <small>Movement: #= Movement != null ? Movement : 'Unknown' #</small>
+    <br />
+    <small>DOB: #= DOB != null ? DOB : 'Unknown' #</small>
+    <br />
+    <small>Location: #= Location != null ? Location : 'Unknown' #</small>
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        initPartialControls();
+        if ($('#MediaCorrespondenceId').val() == -1) { $('#MediaCorrespondenceId').val(null); }
+    });
+</script>

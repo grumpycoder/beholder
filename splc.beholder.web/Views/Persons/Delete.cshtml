@@ -1,0 +1,33 @@
+@model BeholderPerson
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+@*<h2 class="title-bar">@Model.CommonPerson.FullName</h2>*@
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.Id)
+    
+    @Html.EditorFor(m => m.RemovalReason)
+    @Html.ValidationMessageFor(model => model.RemovalReason)
+
+    <div class="row">
+        <div>
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "Details", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </div>
+    </div>
+}
+
+
+<script>
+    function onSuccess(result) {
+        if(result.url){
+            window.location.href = result.url;
+        }
+    }
+</script>

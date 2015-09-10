@@ -1,0 +1,41 @@
+﻿@model IEnumerable<splc.domain.Models.WebsiteGroupType>
+<h3>Website Group Types</h3>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Sort Order</th>
+        </tr>
+    </thead>
+    @foreach (var item in @Model)
+    {
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditWebsiteGroupType", "Admin", new { id = item.Id })" 
+                    class="btnEdit" 
+                    data-title="Edit Website Group Type" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("WebsiteGroupType", "Admin", null)"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("DeleteWebsiteGroupType", "Admin", new { id = item.Id })" 
+                    class="btnDelete" 
+                    data-title="Delete Website Group Type" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("WebsiteGroupType", "Admin", null)"><span class="glyphicon glyphicon-trash"></span></a>
+            </td>
+            <td>@item.Name</td>
+            <td>@item.SortOrder</td>
+        </tr>
+
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateWebsiteGroupType", "Admin", null)" 
+                class="btnNew" 
+                data-refresh="true" 
+                data-title="New Website Group Type" 
+                data-action="@Url.Action("WebsiteGroupType", "Admin", null)"><span class="glyphicon glyphicon-plus"></span></a>
+        </td>
+    </tr>
+</table>
+

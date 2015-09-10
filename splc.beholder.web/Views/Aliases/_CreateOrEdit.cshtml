@@ -1,0 +1,60 @@
+@model Alias
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.AliasName)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.AliasName)
+    @Html.ValidationMessageFor(model => model.AliasName)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.DateCreated)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateCreated)
+    @Html.ValidationMessageFor(model => model.DateCreated)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.CreatedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.CreatedUserId)
+    @Html.ValidationMessageFor(model => model.CreatedUserId)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.DateModified)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateModified)
+    @Html.ValidationMessageFor(model => model.DateModified)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.ModifiedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.ModifiedUserId)
+    @Html.ValidationMessageFor(model => model.ModifiedUserId)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.DateDeleted)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateDeleted)
+    @Html.ValidationMessageFor(model => model.DateDeleted)
+</div>
+
+<div class="editor-label">
+    @Html.BootstrapLabelFor(model => model.DeletedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DeletedUserId)
+    @Html.ValidationMessageFor(model => model.DeletedUserId)
+</div>
+

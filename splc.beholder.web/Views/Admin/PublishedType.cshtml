@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.PublishedType>
+
+@{
+    ViewBag.Title = "Published Type";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_PublishedTypeList", Model)

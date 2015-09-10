@@ -1,0 +1,57 @@
+﻿@model BeholderPerson
+
+<div class="span4 card">
+    <div class="title">
+        @Html.ActionLink(string.Format("{0}, {1}", Model.CommonPerson.LName, Model.CommonPerson.FName), "Details", "Persons", new { id = Model.Id }, null)
+    </div>
+    <div>
+        @if (Model.PersonMediaImageRels.Count > 0)
+        {
+            <div>
+                <img src="@Url.Action("ShowPrimaryImage", "Persons", new { Id = Model.Id })" alt="person image" class="person-thumbnail" />
+            </div>   
+        }
+        else
+        {
+            <div>
+                <img src="~/content/img/unknown-person.png" class="person-thumbnail" alt="no person image" />
+            </div>
+        }
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>Alias
+                </td>
+                <td>
+                    @if (@Model.CommonPerson.AliasPersonRels.Count > 0)
+                    {
+                        @Model.CommonPerson.AliasPersonRels.First().Alias.AliasName    
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Movement
+                </td>
+                <td>
+                    @(Model.MovementClass == null ? "Unknown" : Model.MovementClass.Name)
+                </td>
+            </tr>
+            @*<tr>
+                <td>DOB</td>
+                <td>@(Model.CommonPerson.DOB == null ? "Unknown" : @String.Format("{0:d}", Model.CommonPerson.DOB))</td>
+            </tr>
+            <tr>
+                <td>Race</td>
+                <td>@(Model.CommonPerson.Race == null ? "Unknown" : @String.Format("{0}", Model.CommonPerson.Race.Name))</td>
+            </tr>*@
+            <tr>
+                <td>State</td>
+                <td>
+                    @(Model.CommonPerson.AddressPersonRels.FirstOrDefault() == null ? "Unknown" : @String.Format("{0}, {1}", Model.CommonPerson.AddressPersonRels.FirstOrDefault().Address.City, Model.CommonPerson.AddressPersonRels.FirstOrDefault().Address.State != null Model.CommonPerson.AddressPersonRels.FirstOrDefault().Address.State.StateName))
+                    @*@(Model.CommonPerson.AddressPersonRels.FirstOrDefault() == null ? "Unknown" : @String.Format("{0}, {1}", Model.CommonPerson.AddressPersonRels.FirstOrDefault().Address.City, Model.CommonPerson.AddressPersonRels.FirstOrDefault().Address.State.StateName))*@
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

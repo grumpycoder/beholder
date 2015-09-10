@@ -1,0 +1,64 @@
+﻿@model IEnumerable<splc.domain.Models.ContactMediaImageRel>
+
+<h2>Contact Image Relationships</h2>
+<table class="table table-hover">
+    <tr>
+        <th>Contact
+        </th>
+        <th>Image
+        </th>
+        <th>Date Start
+        </th>
+        <th>Date End
+        </th>
+        <th>Relationship Type
+        </th>
+        <th>Primary Status
+        </th>
+        <th>Approval Status
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Contact.CommonPerson.FullName
+            </td>
+            <td>
+                @item.MediaImage.ImageTitle ?? "Unknown"
+            </td>
+            <td>
+                @item.DateStart
+            </td>
+            <td>
+                @item.DateEnd
+            </td>
+            <td>
+                @(item.RelationshipType == null ? "Unknown" : item.RelationshipType.Name)
+            </td>
+            <td>
+                @(item.PrimaryStatusId == null ? "Unknown" : item.PrimaryStatus.Name)
+            </td>
+            <td>
+                @item.ApprovalStatus.Name
+            </td>
+            <td class="nowrap">
+                <a href="@Url.Action("ApproveContactImage", "Approval", new { id = item.Id })" 
+                    class="btn btnApprove" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetContactImageApprovals", "Approval")">Approve</a>
+
+                <a href="@Url.Action("RejectContactImage", "Approval", new { id = item.Id })" 
+                    class="btn btnApprove" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetContactImageApprovals", "Approval")">Disapprove</a>
+
+            </td>
+        </tr>
+    }
+
+</table>

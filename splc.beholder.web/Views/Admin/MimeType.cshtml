@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.MimeType>
+
+@{
+    ViewBag.Title = "Mime Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_MimeTypeList", Model)

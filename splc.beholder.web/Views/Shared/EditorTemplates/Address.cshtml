@@ -1,0 +1,95 @@
+﻿@model Address
+
+
+
+
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Address</legend>
+
+        @Html.HiddenFor(model => model.Id)
+            <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.Address1)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address1)
+            @Html.ValidationMessageFor(model => model.Address1)
+        </div>
+
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.Address2)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Address2)
+            @Html.ValidationMessageFor(model => model.Address2)
+        </div>
+
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.City)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.City)
+            @Html.ValidationMessageFor(model => model.City)
+        </div>
+
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.County)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.County)
+            @Html.ValidationMessageFor(model => model.County)
+        </div>
+
+        <div class="editor-label">
+            State
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.StateId, ((IEnumerable<State>)ViewBag.PossibleStates).Select(option => new SelectListItem
+       {
+           Text = (option == null ? "None" : option.StateName),
+           Value = option.Id.ToString(),
+           Selected = (Model != null) && (option.Id == Model.StateId)
+       }), "Choose...", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.StateId)
+        </div>
+
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.Zip5)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Zip5)
+            @Html.ValidationMessageFor(model => model.Zip5)
+        </div>
+
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.Zip4)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Zip4)
+            @Html.ValidationMessageFor(model => model.Zip4)
+        </div>
+
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.Longitude)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Longitude)
+            @Html.ValidationMessageFor(model => model.Longitude)
+        </div>
+
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.Latitude)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Latitude)
+            @Html.ValidationMessageFor(model => model.Latitude)
+        </div>
+
+      
+    </fieldset>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

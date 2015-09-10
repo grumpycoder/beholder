@@ -1,0 +1,142 @@
+@model Chapter
+
+
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.DateCreated)
+
+    <fieldset class="col-sm-6">
+        <legend>Name</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ChapterName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.ChapterName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ChapterName)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ChapterDesc)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.ChapterDesc)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ChapterDesc)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ConfidentialityTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ConfidentialityTypeId, ((IEnumerable<ConfidentialityType>) ViewBag.PossibleConfidentialityTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.ConfidentialityTypeId)
+                }), "Choose...", new { @class = "form-control", data_val_required = "Confidentiality Type is required." })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ConfidentialityTypeId)</span>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+        <legend>Specifics</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.MovementClassId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.MovementClassId, ((IEnumerable<MovementClass>) ViewBag.PossibleMovementClasses).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.MovementClassId)
+                }), "Choose...", new { @class = "form-control", data_val_required = "Movement is required." })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.MovementClassId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ChapterTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ChapterTypeId, ((IEnumerable<ChapterType>) ViewBag.PossibleChapterTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.ChapterTypeId)
+                }), "Choose...", new { @class = "form-control", data_val_required = "Chapter Type is required." })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ChapterTypeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ActiveYear)
+            <div class="col-sm-8">
+                @Html.TextBoxFor(model => model.ActiveYear)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ActiveYear)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.FormedDate)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.FormedDate)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.FormedDate)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.DisbandDate)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.DisbandDate)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.DisbandDate)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.IsHeadquarters)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.IsHeadquarters)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.IsHeadquarters)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+        <legend>Status</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ApprovalStatusId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ApprovalStatusId, ((IEnumerable<ApprovalStatus>) ViewBag.PossibleApprovalStatus).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.ApprovalStatusId)
+                }), "Choose...", new {@class = "form-control"})
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ApprovalStatusId)</span>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ReportStatusFlag)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.ReportStatusFlag)
+                @Html.ValidationMessageFor(model => model.ReportStatusFlag)
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ActiveStatusId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ActiveStatusId, ((IEnumerable<ActiveStatus>) ViewBag.PossibleActiveStatus).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.ActiveStatusId)
+                }), "Choose...", new {@class = "form-control"})
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ActiveStatusId)</span>
+            </div>
+        </div>
+
+
+    </fieldset>

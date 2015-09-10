@@ -1,0 +1,17 @@
+﻿@model AliasChapterRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Alias</h2>
+
+    <div class="row">
+        @Html.Partial("_CreateOrEditChapterAlias", Model)
+        <input type="submit" value="Save" />
+    </div>
+    
+
+<div>
+	@Html.ActionLink("Back to List", "Index")
+</div>

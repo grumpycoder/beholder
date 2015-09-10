@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.WebIncidentType>
+
+@{
+    ViewBag.Title = "Web Incident Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_WebIncidentTypeList", Model)

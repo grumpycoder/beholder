@@ -1,0 +1,44 @@
+@model Alias
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Alias</legend>
+
+    <div class="display-label">AliasName</div>
+    <div class="display-field">@Model.AliasName</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateCreated)</div>
+
+    <div class="display-label">CreatedUserId</div>
+    <div class="display-field">@Model.CreatedUserId</div>
+
+    <div class="display-label">DateModified</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateModified)</div>
+
+    <div class="display-label">ModifiedUserId</div>
+    <div class="display-field">@Model.ModifiedUserId</div>
+
+    <div class="display-label">DateDeleted</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateDeleted)</div>
+
+    <div class="display-label">DeletedUserId</div>
+    <div class="display-field">@Model.DeletedUserId</div>
+
+    <div class="display-label">AliasChapterRels</div>
+    <div class="display-field">@(Model.AliasChapterRels == null ? "None" : Model.AliasChapterRels.Count.ToString())</div>
+
+    <div class="display-label">AliasPersonRels</div>
+    <div class="display-field">@(Model.AliasPersonRels == null ? "None" : Model.AliasPersonRels.Count.ToString())</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

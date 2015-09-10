@@ -1,0 +1,41 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<NewsSource>
+@{
+    var pageSize = Session["pageSize"] ?? Request["pageSize"];
+    var searchTerm = Session["searchTerm"] ?? Request["searchTerm"];
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, searchTerm }))
+</div>
+<div id="newsSourceList">
+    <table class="table table-condensed table-hover table-responsive">
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Type</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("Edit", "NewsSources", new { id = item.Id })"><span class="glyphicon glyphicon-pencil"></span></a>
+                    @*<a href="@Url.Action("Delete", "NewsSources", new { id = item.Id })"><span class="glyphicon glyphicon-trash"></span></a>*@
+                    <a href="@Url.Action("Details", "NewsSources", new { id = item.Id })"><span class="glyphicon glyphicon-info-sign"></span></a>
+                    <a href="@Url.Action("Delete", "NewsSources", new { id = item.Id})"
+                       class="btnDelete"
+                       data-title="Delete News Source"
+                       data-refresh="true"
+                       data-target="#newsSourceList"
+                       data-action="@Url.Action("Index", "NewsSources", new { searchTerm })"><span class="glyphicon glyphicon-trash"></span></a>
+
+                </td>
+                <td>@item.NewsSourceName</td>
+                <td>@(item.NewsSourceType.Name)</td>
+            </tr>
+        }
+
+    </table>
+</div>
+
+

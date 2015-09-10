@@ -1,0 +1,18 @@
+﻿@model ChapterMediaAudioVideoRel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">Create New Chapter/Audio-Video Relationship</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditChapterMediaAudioVideo", Model)
+    <input type="submit" value="Create Relationship" class="btn btn-primary pull-right" />
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+

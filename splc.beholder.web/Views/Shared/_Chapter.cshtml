@@ -1,0 +1,43 @@
+﻿@model Chapter
+
+<div class="span4 card">
+    <div class="title">
+        <div>
+            @Html.ActionLink(string.Format("{0}", Model.ChapterName), "Details", "Chapters", new { id = Model.Id }, null)
+        </div>
+    </div>
+    <div>
+        @if (Model.ChapterMediaImageRels.Count > 0)
+        {
+            <div>
+                <img src="@Url.Action("ShowPrimaryImage", "Chapters", new { Id = Model.Id })" alt="chapter image" class="person-thumbnail" />
+            </div>   
+        }
+        else
+        {
+            <div>
+                <img src="~/content/img/unknown-person.png" class="person-thumbnail" alt="no person image" />
+            </div>
+        }
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>Movement</td>
+                <td>@(Model.MovementClass == null ? "Unknown" : Model.MovementClass.Name)</td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td>@(Model.AddressChapterRels.FirstOrDefault() == null ? "Unknown" : @String.Format("{0}, {1}", Model.AddressChapterRels.FirstOrDefault().Address.City, Model.AddressChapterRels.FirstOrDefault().Address.State == null ? "Unknown" : Model.AddressChapterRels.FirstOrDefault().Address.State.StateName))</td>
+            </tr>
+            <tr>
+                <td class="nowrap">Active Year</td>
+                <td>@(Model.ActiveYear == null ? "Unknown" : Model.ActiveYear.ToString())</td>
+            </tr>
+            <tr>
+                <td>Active</td>
+                <td>@(Model.ActiveStatusId == null ? "Unknown" : Model.ActiveStatus.Name)</td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+﻿@model IEnumerable<AddressType>
+
+@{
+    ViewBag.Title = "Address Type";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_AddressTypeList", Model)

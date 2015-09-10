@@ -1,0 +1,107 @@
+﻿@using splc.beholder.web.Helpers
+@{
+    ViewBag.Title = "Approvals";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .menu-list {
+        height: 500px;
+        overflow: auto;
+    }
+</style>
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-2 col-lg-2 menu-list">
+        <ul class="nav nav-list" id="approvalList">
+            @*<li>@Html.MenuLink("Person", "PersonApprovals", "Approval")</li>
+            *@
+
+                <li>@Ajax.ActionLink("Person Person", "GetPersonPersonApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Person Contacts", "GetPersonContactApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Person Events", "GetPersonEventApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Person Vehicles", "GetPersonVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Person Images", "GetPersonMediaImageApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Person Audio Video", "GetPersonMediaAudioVideoApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Person Published", "GetPersonPublishedApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Person Correspondence", "GetPersonCorrespondenceApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            @*<li>@Ajax.ActionLink("Person Subscription", "GetPersonSubscriptionApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            *@
+
+                <li>@Ajax.ActionLink("Organization Organizations", "GetOrganizationOrganizationApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Persons", "GetOrganizationPersonApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Events", "GetOrganizationEventApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Vehicles", "GetOrganizationVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Audio Video", "GetOrganizationMediaAudioVideoApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Images", "GetOrganizationMediaImageApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Correspondence", "GetOrganizationCorrespondenceApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Published", "GetOrganizationPublishedApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Subscriptions", "GetOrganizationSubscriptionApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+
+            <li>@Ajax.ActionLink("Chapter Persons", "GetChapterPersonApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Chapters", "GetChapterChapterApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Organizations", "GetChapterOrganizationApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Events", "GetChapterEventApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Vehicles", "GetChapterVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Audio Video", "GetChapterMediaAudioVideoApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Images", "GetChapterMediaImageApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Correspondence", "GetChapterMediaCorrespondenceApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Published", "GetChapterMediaPublishedApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Subscriptions", "GetChapterSubscriptionApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+            <li>@Ajax.ActionLink("Contact Contacts", "GetContactContactApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Contact Correspondence", "GetContactMediaCorrespondenceApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Contact Images", "GetContactImageApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            @*<li>@Ajax.ActionLink("Contact Published", "GetContactPublishedApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            *@
+                @*<li>@Ajax.ActionLink("Contact Subscription", "GetContactSubscriptionApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            *@
+
+
+                <li>@Ajax.ActionLink("Vehicle Vehicles", "GetVehicleVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+            <li>@Ajax.ActionLink("Vehicle Images", "GetMediaImageVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Vehicle Audio Video", "GetMediaAudioVideoVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+            <li>@Ajax.ActionLink("Event Events", "GetEventEventApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Event Audio Video", "GetEventAudioVideoApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Event Images", "GetEventImageApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Event Subscription", "GetEventSubscriptionApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Event Vehicle", "GetEventVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+            <li>@Ajax.ActionLink("Subscription Subscription", "GetSubscriptionSubscriptionApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Subscription Vehicle", "GetSubscriptionVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+            <li>@Ajax.ActionLink("Image Audio Video", "GetMediaImageMediaAudioVideoApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Image Subscription", "GetImageSubscriptionApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+
+            <li>@Ajax.ActionLink("Correspondence Event", "GetCorrespondenceEventApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Correspondence Audio Video", "GetCorrespondenceAudioVideoApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Correspondence Correspondence", "GetCorrespondenceCorrespondenceApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Correspondence Image", "GetCorrespondenceImageApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Correspondence Subscription", "GetCorrespondenceSubscriptionApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Correspondence Vehicle", "GetCorrespondenceVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+            <li>@Ajax.ActionLink("Published Event", "GetPublishedEventApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Published Audio Video", "GetPublishedAudioVideoApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Published Correspondence", "GetPublishedCorrespondenceApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Published Image", "GetPublishedImageApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Published Published", "GetPublishedPublishedApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+            <li>@Ajax.ActionLink("Published WebsiteEGroup", "GetPublishedWebsiteEGroupApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+            <li>@Ajax.ActionLink("Published Vehicle", "GetPublishedVehicleApprovals", "Approval", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "approvalDetail" })</li>
+
+
+        </ul>
+    </div>
+    <div class="col-md-10 col-lg-10" id="approvalDetail">
+
+        <div class="well well-small">Choose from the options on the left to begin approvals.</div>
+    </div>
+
+</div>
+
+

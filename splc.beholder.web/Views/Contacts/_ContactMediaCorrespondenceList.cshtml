@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ContactMediaCorrespondenceRel>
+@{
+    var viewItem = ViewBag.Controller == "MediaCorrespondences" ? "Contacts" : "Correspondence Items";
+    var source = ViewData["Controller"].ToString();  
+    var contactId = ViewData["ContactId"] ?? -1;
+    var mediaCorrespondenceId =  ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"];
+    var showContact = ViewBag.Controller == "MediaCorrespondences";
+    
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                     @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showContact)
+                    {
+                        @Html.ActionLink(string.Format("{0}", item.Contact.CommonPerson.FullName), "Details", "Contacts", new { id = item.Contact.Id }, null)<br />
+                        @Html.DisplayFor(model => item.Contact.ContactType.Name)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.MediaCorrespondence.CorrespondenceName, "Details", "MediaCorrespondences", new { id = item.MediaCorrespondence.Id }, null)<br />
+                        @Html.DisplayFor(model => item.MediaCorrespondence.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditContactMediaCorrespondence", "Contacts", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#contactMediaCorrespondences"
+                               data-action="@Url.Action("GetContactMediaCorrespondences", "Contacts", new { mediaCorrespondenceId = @mediaCorrespondenceId, contactId = @contactId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteContactMediaCorrespondence", "Contacts", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#contactMediaCorrespondences"
+                               data-action="@Url.Action("GetContactMediaCorrespondences", "Contacts", new { mediaCorrespondenceId = @mediaCorrespondenceId, contactId = @contactId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateContactMediaCorrespondence", "Contacts", new { contactId = @contactId , mediaCorrespondenceId = @mediaCorrespondenceId })" 
+           class="btnNew" data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#contactMediaCorrespondences"
+           data-action="@Url.Action("GetContactMediaCorrespondences", "Contacts", new { mediaCorrespondenceId = @mediaCorrespondenceId, contactId = @contactId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+

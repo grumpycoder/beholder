@@ -1,0 +1,52 @@
+﻿@model IEnumerable<AliasChapterRel>
+@{
+    const string viewItem = "Aliases";
+    var chapterId = ViewBag.ChapterId; 
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    No Known Aliases
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    <strong>@item.Alias.AliasName</strong><br />
+                    @(item.PrimaryStatus != null ? item.PrimaryStatus.Name : "[Unknown]")
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditChapterAlias", "Aliases", new { id = item.Id })" 
+                               class="btnEdit"
+                               data-title="Edit Alias"
+                               data-refresh="true"
+                               data-target="#chapterAliases"
+                               data-action="@Url.Action("GetChapterAliases", "Aliases", new { id = item.ChapterId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteChapterAlias", "Aliases", new { id = item.Id })"
+                               class="btnDelete"
+                               data-title="Delete Alias"
+                               data-refresh="true"
+                               data-target="#chapterAliases"
+                               data-action="@Url.Action("GetChapterAliases", "Aliases", new { id = item.ChapterId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateChapterAlias", "Aliases", new { chapterId = @chapterId})" 
+           class="btnNew"
+           data-title="New Alias"
+           data-refresh="true"
+           data-target="#chapterAliases"
+           data-action="@Url.Action("GetChapterAliases", "Aliases", new { id = @chapterId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+@*//TODO: Unable to delete chapteralias*@

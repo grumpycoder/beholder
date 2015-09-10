@@ -1,0 +1,44 @@
+@model PersonComment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>PersonComment</legend>
+
+    <div class="display-label">PersonId</div>
+    <div class="display-field">@Model.BeholderPersonId</div>
+
+    <div class="display-label">Comment</div>
+    <div class="display-field">@Model.Comment</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateCreated)</div>
+
+    <div class="display-label">CreatedUserId</div>
+    <div class="display-field">@Model.CreatedUserId</div>
+
+    <div class="display-label">DateModified</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateModified)</div>
+
+    <div class="display-label">ModifiedUserId</div>
+    <div class="display-field">@Model.ModifiedUserId</div>
+
+    <div class="display-label">DateDeleted</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateDeleted)</div>
+
+    <div class="display-label">DeletedUserId</div>
+    <div class="display-field">@Model.DeletedUserId</div>
+
+    <div class="display-label">CommonPerson</div>
+    <div class="display-field">@Html.DisplayTextFor(_ => Model.CommonPerson).ToString()</div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+

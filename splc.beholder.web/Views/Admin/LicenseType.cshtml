@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.LicenseType>
+
+@{
+    ViewBag.Title = "License Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_LicenseTypeList", Model)

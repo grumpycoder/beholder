@@ -1,0 +1,50 @@
+﻿@model IEnumerable<splc.domain.Models.PersonVehicleRel>
+
+@{
+    //var vehicleId = ViewBag.VehicleId ?? Model.First().VehicleId;
+    //var source = ViewContext.ParentActionViewContext.RouteData.Values["controller"];
+    var c = ViewContext.ParentActionViewContext;
+        
+    var vehicleId = ViewBag.VehicleId == null ? -1 : (int)ViewBag.VehicleId;
+    var personId = ViewBag.PersonId == null ? -1 : (int)ViewBag.PersonId;
+    //var beholderPersonId = ViewBag.BeholderPersonId == null ? -1 : (int)ViewBag.BeholderPersonId;
+    //var source = ViewBag.Controller;
+    
+
+}
+
+<table class="table table-condensed">
+    <caption>@string.Format("People ({0})", Model.Count().ToString())</caption>
+    <tr>
+        <th></th>
+        <th>Date Start</th>
+        <th>Date End</th>
+        <th>Name</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditVehiclePerson", "Vehicles", new { id = item.Id })" class="btnEdit" s
+                   data-title="Edit Vehicle" data-refresh="true"  
+                   data-action=@Url.Action("GetVehiclePersonList", "Vehicles", new { personId = item.PersonId })><i class="icon-pencil icon-large"></i></a>
+                <a href="@Url.Action("DeleteVehiclePerson", "Vehicles", new { id = item.Id })" class="btnDelete" 
+                   data-title="Delete Vehicle" data-refresh="true" 
+                   data-action=@Url.Action("GetVehiclePersonList", "Vehicles", new { personId = item.PersonId })><i class="icon-trash icon-large"></i></a>
+            </td>
+            <td>@String.Format("{0:d}", @item.DateStart)</td>
+            <td>@String.Format("{0:d}", @item.DateEnd)</td>
+            <td>@item.BeholderPerson.CommonPerson.FullName</td>
+        </tr>
+    }
+    <tr>
+        <td colspan="9">
+            <a href=@Url.Action("CreateVehiclePerson", "Vehicles", new { vehicleId, personId }) class="btnNew" 
+               data-title="New Vehicle"
+               data-action=@Url.Action("GetVehiclePersonList", "Vehicles", new {vehicleId, personId })><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>
+
+

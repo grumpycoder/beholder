@@ -1,0 +1,17 @@
+﻿@model MediaWebsiteEGroupComment
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2 class="page-title small">Edit Comment</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditMediaWebsiteEGroupComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+
+<div>
+    @Html.ActionLink("Back", "Details", "MediaWebsiteEGroups", new { id = Model.MediaWebsiteEGroupId }, null)
+</div>

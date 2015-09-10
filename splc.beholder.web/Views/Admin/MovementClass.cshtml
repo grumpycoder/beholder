@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.MovementClass>
+
+@{
+    ViewBag.Title = "Movement Classes";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_MovementClassList", Model)

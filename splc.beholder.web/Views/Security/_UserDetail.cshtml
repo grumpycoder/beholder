@@ -1,0 +1,79 @@
+﻿@model User
+
+
+<section>
+    <h4>Users</h4>
+</section>
+
+
+@if (!Model.GroupUsers.Any())
+{
+    <p>User assigned to no groups</p>
+}
+else
+{
+    <table class="table table-condensed table-striped">
+        <caption>Groups</caption>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.GroupUsers.Where(x => x.DateDeleted == null))
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.Name)
+                </td>
+                <td>
+                    <a href="@Url.Action("DeleteGroupUser", "Security", new {id = item.Id})"
+                       class="btnDelete"
+                       data-title="Delete Group"
+                       data-message="Are you sure you want to delete?"
+                       data-refresh="true"
+                       data-action="@Url.Action("UserDetail", "Security", new {id = @Model.Id})">
+                        <span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+@Html.DropDownList("GroupId", (SelectList)ViewBag.Groups, "Choose Group")
+
+@Html.ActionLink("Add to group", "CreateGroupUser", "Security", new { userId = @Model.Id }, new { @class = "btn", id = "btnNewGroupUser", data_action = @Url.Action("UserDetail", "Security", new { id = @Model.Id }) })
+
+
+<script type="text/javascript">
+    var groupId;
+    $(function () {
+        $('#GroupId').on('change', function () {
+            groupId = $(this).val();
+        });
+
+        $('#btnNewGroupUser').on('click', function (e) {
+            e.preventDefault();
+            var $target = $('#user-detail');
+            var url = $(this).attr('href');
+            url += "&groupId=" + groupId;
+            var action = $(this).data('action');
+
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function () {
+                    toastr.success('User added');
+                    LoadView($target, action);
+                },
+                error: function (data) {
+                    toastr.error(data);
+                }
+            });
+
+        });
+
+    });
+</script>

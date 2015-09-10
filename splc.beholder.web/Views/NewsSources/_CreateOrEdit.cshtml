@@ -1,0 +1,32 @@
+@model NewsSource
+
+<div class="row">
+
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.DateCreated)
+
+    <fieldset>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.NewsSourceName)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.NewsSourceName)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.NewsSourceName)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.NewsSourceTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.NewsSourceTypeId, ((IEnumerable<NewsSourceType>)ViewBag.PossibleNewsSourceTypes).Select(option => new SelectListItem
+                      {
+                          Text = (option == null ? "None" : option.Name),
+                          Value = option.Id.ToString(),
+                          Selected = (Model != null) && (option.Id == Model.NewsSourceTypeId)
+                      }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.NewsSourceTypeId)</span>
+            </div>
+        </div>
+
+    </fieldset>
+</div>

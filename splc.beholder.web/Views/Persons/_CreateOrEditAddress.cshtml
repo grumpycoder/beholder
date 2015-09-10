@@ -1,0 +1,139 @@
+﻿@model AddressPersonRel
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+@Html.HiddenFor(m => m.PersonId)
+@Html.HiddenFor(m => m.Address.Id)
+@Html.HiddenFor(m => m.AddressId)
+@Html.HiddenFor(m => m.Address.CreatedUserId)
+@Html.HiddenFor(m => m.CreatedUserId)
+
+<div class="section">
+
+    <div class="editor-label">
+        AddressType
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.AddressTypeId, ((IEnumerable<AddressType>)ViewBag.PossibleAddressTypes).Select(option => new SelectListItem
+                            {
+                                Text = (option == null ? "None" : option.Name),
+                                Value = option.Id.ToString(),
+                                Selected = (Model != null) && (option.Id == Model.AddressTypeId)
+                            }), "Choose...", new { @class = "form-control" })
+        <span class="help-block">@Html.ValidationMessageFor(model => model.AddressTypeId)</span>
+    </div>
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(m => m.PrimaryStatusId)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.PrimaryStatusId, ((IEnumerable<PrimaryStatus>)ViewBag.PossiblePrimaryStatus).Select(option => new SelectListItem
+                                                                                                                                                                  {
+                                                                                                                                                                      Text = (option == null ? "None" : option.Name),
+                                                                                                                                                                      Value = option.Id.ToString(),
+                                                                                                                                                                      Selected = (Model != null) && (option.Id == Model.PrimaryStatusId)
+                                                                                                                                                                  }), "Choose...", new { @class = "form-control" })
+        <span class="help-block">@Html.ValidationMessageFor(model => model.PrimaryStatusId)</span>
+    </div>
+
+</div>
+
+<div class="section">
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(model => model.Address.Address1)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Address.Address1)
+        <span class="help-block">@Html.ValidationMessageFor(model => model.Address.Address1)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(model => model.Address.Address2)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Address.Address2)
+        <span class="help-block">@Html.ValidationMessageFor(model => model.Address.Address2)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(model => model.Address.City)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Address.City)
+        <span class="help-block">@Html.ValidationMessageFor(model => model.Address.City)</span>
+    </div>
+
+    <div class="editor-label">
+        State
+    </div>
+    <div class="editor-field">
+
+        @Html.DropDownListFor(model => model.Address.StateId, ((IEnumerable<State>)ViewBag.PossibleStates).Select(option => new SelectListItem
+                                                                                                                                                   {
+                                                                                                                                                       Text = (option == null ? "None" : option.StateName),
+                                                                                                                                                       Value = option.Id.ToString(),
+                                                                                                                                                       Selected = (Model != null) && (option.Id == Model.Address.StateId)
+                                                                                                                                                   }), "Choose...", new { @class = "form-control" })
+        <span class="help-block">@Html.ValidationMessageFor(model => model.Address.StateId)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(model => model.Address.County)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Address.County)
+        <span class="help-block">@Html.ValidationMessageFor(model => model.Address.County)</span>
+    </div>
+
+    <div class="form-group">
+        @Html.BootstrapLabelFor(m => m.Address.Zip5)
+        <div class="col-sm-8">
+
+            <div class="input-block-level input-group">
+                @Html.TextBoxFor(m => m.Address.Zip5, new { @class = "form-control" })
+                <span class="input-group-addon">-</span>
+                @Html.TextBoxFor(m => m.Address.Zip4, new { @class = "form-control" })
+            </div>
+            <span class="help-block">@Html.ValidationMessageFor(m => m.Address.Zip5)</span>
+            <span class="help-block">@Html.ValidationMessageFor(m => m.Address.Zip4)</span>
+
+        </div>
+    </div>
+
+</div>
+<div class="section">
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(model => model.Address.Longitude)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Address.Longitude)
+        <span class="help-block">@Html.ValidationMessageFor(model => model.Address.Longitude)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(model => model.Address.Latitude)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Address.Latitude)
+        <span class="help-block">@Html.ValidationMessageFor(model => model.Address.Latitude)</span>
+    </div>
+</div>
+
+<div class="section">
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(model => model.FirstKnownUseDate)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.FirstKnownUseDate, new { @class="datepicker"})
+        <span class="help-block">@Html.ValidationMessageFor(model => model.FirstKnownUseDate)</span>
+    </div>
+
+    <div class="editor-label">
+        @Html.BootstrapLabelFor(model => model.LastKnownUseDate)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.LastKnownUseDate)
+        <span class="help-block">@Html.ValidationMessageFor(model => model.LastKnownUseDate)</span>
+    </div>
+</div>
+
+
+

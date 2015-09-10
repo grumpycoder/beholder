@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ChapterMediaWebsiteEGroupRel>
+@{
+    var viewItem = ViewBag.Controller == "Chapters" ? "Website EGroups" : "Chapters";
+    var source = ViewBag.Controller == "Chapters" ? "Chapters" : "MediaWebsiteEGroups";
+    var mediaWebsiteEGroupId =  ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"];
+    var chapterId = ViewData["ChapterId"] == null ? -1 : (int)ViewData["ChapterId"]; 
+    var showChapter = ViewBag.Controller == "MediaWebsiteEGroups";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showChapter){
+                        @Html.ActionLink(item.Chapter.ChapterName, "Details", "Chapters", new { id = item.Chapter.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Chapter.MovementClass.Name)
+                    }
+                    else{
+                       @Html.ActionLink(item.MediaWebsiteEGroup.Name, "Details", "MediaWebsiteEGroups", new { id = item.MediaWebsiteEGroup.Id }, null)<br/>
+                       @Html.DisplayFor(model => item.MediaWebsiteEGroup.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditChapterMediaWebsiteEGroup", "Chapters", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#chapterMediaWebsiteEGroups"
+                               data-action="@Url.Action("GetChapterMediaWebsiteEGroups", "Chapters", new { chapterId = @chapterId, mediaWebsiteEGroupId = @mediaWebsiteEGroupId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteChapterMediaWebsiteEGroup", "Chapters", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#chapterMediaWebsiteEGroups"
+                               data-action="@Url.Action("GetChapterMediaWebsiteEGroups", "Chapters", new { chapterId = @chapterId, mediaWebsiteEGroupId = @mediaWebsiteEGroupId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateChapterMediaWebsiteEGroup", "Chapters", new { chapterId = @chapterId, mediaWebsiteEGroupId = @mediaWebsiteEGroupId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#chapterMediaWebsiteEGroups"
+           data-action="@Url.Action("GetChapterMediaWebsiteEGroups", "Chapters", new { chapterId = @chapterId, mediaWebsiteEGroupId = @mediaWebsiteEGroupId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

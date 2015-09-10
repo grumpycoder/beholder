@@ -1,0 +1,263 @@
+@model Contact
+
+@{
+    ViewBag.Title = "Details - " + @Model.CommonPerson.FullName;
+    var fname = Session["fname"];
+    var lname = Session["lname"];
+    var location = Session["location"];
+    var page = Session["page"];
+    var pageSize = Session["pageSize"];
+
+}
+
+<h2 class="title-bar">@Model.CommonPerson.FullName</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>
+            @Html.ActionLink("Return to List", "Index", new { page, pageSize, fname, lname, location })
+    </span>
+    <span class="pull-right">
+        @Html.ActionLink("Edit", "Edit", "Contacts", new { id = Model.Id }, new { @class = "btn btn-default" })
+    @Html.ActionLink("Delete", "RemoveContact", "Contacts", new { id = Model.Id }, new { @class = "btn btn-default" })
+</span>
+</div>
+</div>
+
+<div class="row">
+
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+                @if (Model.ContactMediaImageRels.Count > 0)
+                {
+                    <img src="@Url.Action("ShowPrimaryImage", "Contacts", new { Model.Id })" alt="org image" class="thumbnail-img" height="270" width="500" />
+                }
+                else
+                {
+                     <img src="~/Content/images/image_unavailable.jpg" alt="" height="270" width="500" />
+                }
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>ConfidentialityType</td>
+                            <td>@(Model.ConfidentialityType == null ? "Unknown" : Model.ConfidentialityType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Contact Topic</td>
+                            <td>@(Model.ContactTopic == null ? "Unknown" : Model.ContactTopic.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Contact Type</td>
+                            <td>@(Model.ContactType == null ? "Unknown" : Model.ContactType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>SSN</td>
+                            <td>@Model.CommonPerson.SSN</td>
+                        </tr>
+                        <tr>
+                            <td>Marital Status</td>
+                            <td>@(Model.CommonPerson.MaritialStatus == null ? "Unknown" : Model.CommonPerson.MaritialStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Date of Birth</td>
+                            <td>@(Model.CommonPerson.DOB == null ? "Unknown" : @String.Format("{0:d}", Model.CommonPerson.DOB))</td>
+                        </tr>
+                        <tr>
+                            <td>Actual Date of Birth</td>
+                            <td>@(Model.CommonPerson.ActualDOBIndicator == null ? "Unknown" : @String.Format("{0}", Model.CommonPerson.ActualDOBIndicator))</td>
+                        </tr>
+                        <tr>
+                            <td>Deceased Date</td>
+                            <td>@(Model.CommonPerson.DeceasedDate == null ? "Unknown" : @String.Format("{0:d}", Model.CommonPerson.DeceasedDate))</td>
+                        </tr>
+                        <tr>
+                            <td>Actual Deceased Date</td>
+                            <td>@(Model.CommonPerson.ActualDeceasedDateIndicator == null ? "Unknown" : @String.Format("{0}", Model.CommonPerson.ActualDeceasedDateIndicator))</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Miscellaneous</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.CommonPerson.DriversLicenseNumber).ToString()</td>
+                            <td>@(Model.CommonPerson.DriversLicenseNumber ?? "Unknown")</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.CommonPerson.State).ToString()</td>
+                            <td>Drivers @(Model.CommonPerson.State == null ? "Unknown" : Model.CommonPerson.State.StateCode)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.CommonPerson.LicenseType).ToString()</td>
+                            <td>@(Model.CommonPerson.LicenseType == null ? "Unknown" : Model.CommonPerson.LicenseType.Name)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Physical Appearance</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.LabelFor(m => m.CommonPerson.HairColor)</td>
+                            <td>@(Model.CommonPerson.HairColor == null ? "Unknown" : Model.CommonPerson.HairColor.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.LabelFor(m => m.CommonPerson.HairPattern)</td>
+                            <td>@(Model.CommonPerson.HairPattern == null ? "Unknown" : Model.CommonPerson.HairPattern.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.LabelFor(m => m.CommonPerson.EyeColor)</td>
+                            <td>@(Model.CommonPerson.EyeColor == null ? "Unknown" : Model.CommonPerson.EyeColor.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.LabelFor(m => m.CommonPerson.Height)</td>
+                            <td>@(Model.CommonPerson.Height ?? "Unknown")</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.LabelFor(m => m.CommonPerson.Weight)</td>
+                            <td>@(Model.CommonPerson.Weight ?? "Unknown")</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.LabelFor(m => m.CommonPerson.Gender)</td>
+                            <td>@(Model.CommonPerson.Gender == null ? "Unknown" : Model.CommonPerson.Gender.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.LabelFor(m => m.CommonPerson.Race)</td>
+                            <td>@(Model.CommonPerson.Race == null ? "Unknown" : Model.CommonPerson.Race.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.LabelFor(m => m.Profession)</td>
+                            <td>@(Model.Profession ?? "None")</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+
+
+        <li>
+            <div id="personContactInfo">
+                @Html.Partial("../ContactInfoPersonRels/_PersonContactInfoList", Model.CommonPerson.ContactInfoPersonRels.Where(x => x.DateDeleted == null))
+            </div>
+        </li>
+        <li>
+            <div id="contactAddresses">
+                @Html.Partial("../Addresses/_ContactAddressList", Model.AddressContactRels.Where(x => x.DateDeleted == null))
+            </div>
+        </li>
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="personContacts">
+                @Html.Partial("../Persons/_PersonContactList", Model.PersonContactRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterContacts">
+                @Html.Partial("../Chapters/_ChapterContactList", Model.ChapterContactRels)
+            </div>
+        </li>
+        <li>
+            <div id="contactContacts">
+                @Html.Partial("../Contacts/_ContactContactList", Model)
+            </div>
+        </li>
+        @*//TODO: Not implemented
+        <li>
+            <div id="contactMediaWebsiteEGroups">
+                @Html.Partial("../Contacts/_ContactMediaWebsiteEGroupList", Model.ContactMediaWebsiteEGroupRels)
+            </div>
+        </li>*@
+        <li>
+            <div id="contactMediaCorrespondences">
+                @Html.Partial("../Contacts/_ContactMediaCorrespondenceList", Model.ContactMediaCorrespondenceRels)
+            </div>
+        </li>
+
+    </ul>
+
+
+</div>
+
+<div class="row">
+    <div id="contactMediaImages">
+        @Html.Partial("../Contacts/_ContactMediaImageList", Model.ContactMediaImageRels)
+    </div>
+</div>
+
+<div class="row">
+    <div id="contactComments">
+        @Html.Partial("../Comments/_ContactCommentList", Model.ContactComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified))
+    </div>
+</div>
+
+<script>
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#PersonId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundPersonList() {
+        if ($("#PersonId").data("kendoComboBox").value() === '-1') {
+            $("#PersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataContactList() {
+        return {
+            term: $("#Contact2Id").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundContactList() {
+        if ($("#Contact2Id").data("kendoComboBox").value() === '0') {
+            $("#Contact2Id").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

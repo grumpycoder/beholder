@@ -1,0 +1,63 @@
+﻿@model IEnumerable<splc.domain.Models.MediaPublishedMediaCorrespondenceRel>
+@{
+    var viewItem = ViewBag.Controller == "MediaPublisheds" ? "Correspondence Items" : "Published";
+    var source = ViewBag.Controller == "MediaPublisheds" ? "MediaPublisheds" : "MediaCorrespondences";
+    var mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"];
+    var mediaPublishedId = ViewData["MediaPublishedId"] == null ? -1 : (int)ViewData["MediaPublishedId"];
+    var showPublished = ViewBag.Controller == "MediaCorrespondences";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showPublished)
+                    {
+                        @Html.ActionLink(item.MediaPublished.Name, "Details", "MediaPublisheds", new { id = item.MediaPublished.Id }, null)<br />
+                        @Html.DisplayFor(model => item.MediaPublished.MovementClass.Name)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.MediaCorrespondence.CorrespondenceName, "Details", "MediaCorrespondences", new { id = item.MediaCorrespondence.Id }, null)<br />
+                        @Html.DisplayFor(model => item.MediaCorrespondence.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditMediaPublishedMediaCorrespondence", "MediaPublisheds", new { id = item.Id, @source })"
+                               class="btnEdit"
+                               data-title="Edit Relationship"
+                               data-refresh="true"
+                               data-target="#mediaPublishedMediaCorrespondences"
+                               data-action="@Url.Action("GetMediaPublishedMediaCorrespondences", "MediaPublisheds", new { @mediaPublishedId, @mediaCorrespondenceId })"><span class="glyphicon glyphicon-pencil"></span></a>
+
+                            <a href="@Url.Action("DeleteMediaPublishedMediaCorrespondence", "MediaPublisheds", new { id = item.Id})"
+                               class="btnDelete"
+                               data-title="Delete Relationship"
+                               data-refresh="true"
+                               data-target="#mediaPublishedMediaCorrespondences"
+                               data-action="@Url.Action("GetMediaPublishedMediaCorrespondences", "MediaPublisheds", new { @mediaPublishedId, @mediaCorrespondenceId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateMediaPublishedMediaCorrespondence", "MediaPublisheds", new { mediaPublishedId = ViewData["MediaPublishedId"] == null ? -1 : (int)ViewData["MediaPublishedId"]  , mediaCorrespondenceId = ViewData["MediaCorrespondenceId"] == null ? -1 : (int)ViewData["MediaCorrespondenceId"]})"
+           class="btnNew"
+           data-title="New Relationship"
+           data-refresh="true"
+           data-target="#mediaPublishedMediaCorrespondences"
+           data-action="@Url.Action("GetMediaPublishedMediaCorrespondences", "MediaPublisheds", new { @mediaPublishedId, @mediaCorrespondenceId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

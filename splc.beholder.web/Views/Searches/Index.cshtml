@@ -1,0 +1,33 @@
+@*@model MvcContrib.Pagination.IPagination<splc.domain.Models.Search>*@
+@model splc.beholder.web.Models.SearchResultViewModel
+
+@{
+    ViewBag.Title = "Search";
+    var searchterm = Session["searchterm"] ?? Request["searchterm"];
+}
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+<div class="search-bar">
+
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            @*@using (Ajax.BeginForm("Index", "Searches", new AjaxOptions
+                {
+                    HttpMethod = "POST",
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "searchList"
+                }, new { @class = "form-inline" }))*@
+            @using (Html.BeginForm("Index", "Searches", FormMethod.Get, new { id = "searchForm", @class = "form-inline" }))
+            {
+                <input type="search" id="searchterm" name="searchterm" class="form-control" placeholder="" value="@searchterm" />
+                <input type="submit" value="Search" class="btn btn-primary" />
+            }
+        </div>
+    </div>
+    @*<p class="text-muted">Search on multiple words split by " " or "|" or ","</p>*@
+
+</div>
+
+<div id="searchList">
+    @Html.Partial("_searchResultList", Model)
+</div>

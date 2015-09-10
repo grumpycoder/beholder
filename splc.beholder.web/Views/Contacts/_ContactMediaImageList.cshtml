@@ -1,0 +1,198 @@
+﻿@model IEnumerable<ContactMediaImageRel>
+
+@{
+    var viewItem = ViewBag.Controller == "Contacts" ? "Images" : "Contacts";
+    var source = ViewBag.Controller == "Contacts" ? "Contacts" : "MediaImages";
+    var mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"];
+    var contactId = ViewData["ContactId"] ?? -1;
+
+    var showContact = ViewBag.Controller == "MediaImages";
+}
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+
+        @if (!Model.Any())
+        {
+            <ul class="list-group">
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            </ul>
+        }
+
+
+        @if (showContact)
+        {
+            <ul class="list-group">
+                @foreach (var item in Model)
+                {
+                    <li class="list-group-item">
+                        @Html.ActionLink(string.Format("{0}", item.Contact.CommonPerson.FullName), "Details", "Contacts", new { id = item.ContactId }, null)<br/>
+                        @Html.DisplayFor(model => item.Contact.ContactType.Name)
+                        <div class="clearfix">
+                            <span class="pull-right">
+                                <a href="@Url.Action("EditContactMediaImage", "Contacts", new { id = item.Id, @source })"
+                                   class="btnEdit"
+                                   data-title="Edit Relationship"
+                                   data-refresh="true"
+                                   data-target="#contactMediaImages"
+                                   data-action="@Url.Action("GetContactMediaImages", "Contacts", new { @contactId, @mediaImageId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="@Url.Action("DeleteContactMediaImage", "Contacts", new { id = item.Id })"
+                                   class="btnDelete"
+                                   data-title="Delete Relationship"
+                                   data-refresh="true"
+                                   data-target="#contactMediaImages"
+                                   data-action="@Url.Action("GetContactMediaImages", "Contacts", new { @contactId, @mediaImageId })"><span class="glyphicon glyphicon-trash"></span></a>
+                            </span>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+
+            <div class="carousel slide media-carousel" id="media">
+
+                <div class="carousel-inner">
+                    @{
+                        var items = Model.Take(6);
+                        var iterations = 0;
+                    }
+                    @while (items.Any())
+                    {
+                        var active = iterations == 0 ? "active" : "";
+
+                        <div class="item @active" style="max-height: 240px;">
+                            <div class="row">
+                                @foreach (var item in items)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="">
+                                            @Html.ActionLink(string.Format("{0}", item.MediaImage.ImageTitle ?? "Unknown"), "Details", "MediaImages", new { id = item.MediaImageId }, new { @class = "image-title", @title = string.Format("{0}", @item.MediaImage.ImageTitle ?? "Unknown") })
+                                            @if (item.MediaImage.Image != null)
+                                            {
+                                                <img src="@Url.Action("ShowImage", "MediaImages", new { item.MediaImage.Image.Id })" width="100" height="190" />
+                                            }
+                                            @if (item.MediaImage.Image == null)
+                                            {
+                                                <img src="~/Content/images/image-missing.jpg" alt="" width="100" height="190" />
+                                            }
+                                            <div class="pull-right">
+                                                <a href="@Url.Action("DeleteContactMediaImage", "Contacts", new { id = item.Id })"
+                                                   class="btnDelete"
+                                                   data-title="Delete Relationship"
+                                                   data-refresh="true"
+                                                   data-target="#contactMediaImages"
+                                                   data-action="@Url.Action("GetContactMediaImages", "Contacts", new { @contactId, mediaImageId = -1 })"><span class="glyphicon glyphicon-trash"></span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        iterations++;
+                        items = Model.Skip(6 * iterations).Take(6);
+                    }
+                </div>
+
+                <a class="left carousel-control" href="#media" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#media" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+            
+        }
+
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateContactMediaImage", "Contacts", new { @contactId, @mediaImageId })"
+           class="btnNew"
+           data-title="New Relationship"
+           data-refresh="true"
+           data-target="#contactMediaImages"
+           data-action="@Url.Action("GetContactMediaImages", "Contacts", new { @contactId, @mediaImageId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+
+@*<table class="table table-bordered">
+    <caption>
+        @((string) ViewData["Controller"] == "Contacts" ? string.Format("MediaImages ({0})", Model.Count()) : string.Format("Contacts ({0})", Model.Count()))
+    </caption>
+    
+    @if (!Model.Any())
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",(string) ViewData["Controller"] == "MediaImages" ? "Contact Relationships" : "Images")</td>
+        </tr>
+    }
+    @if (ViewData["Controller"].ToString() == "Contacts" && Model.Any())
+    {
+        <tr>
+            <td colspan="3">
+                <div id="Carousel">
+                    <ul id="slider">
+                        @foreach (var contactMediaImageRel in Model)
+                        {
+                            if (contactMediaImageRel.MediaImage.Image != null)
+                            {
+                                var image = contactMediaImageRel.MediaImage.Image;
+                                <li>
+                                    <img src="@Url.Action("ShowImage", "MediaImages", new {image.Id })"  />
+                                    <br/>
+                                    @Html.ActionLink(contactMediaImageRel.MediaImage.ImageTitle, "Details", "MediaImages", new { id = contactMediaImageRel.MediaImage.Id }, null)
+                                    <a href="@Url.Action("EditContactMediaImage", "Contacts", new { id = contactMediaImageRel.Id, source = ViewData["Controller"].ToString()})" 
+                                        class="btnEdit" 
+                                        data-title="Edit Relationship" 
+                                        data-refresh="true" 
+                                        data-action="@Url.Action("GetContactMediaImages", "Contacts", new { contactId =  ViewData["ContactId"] == null ? -1 : (int)ViewData["ContactId"] , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] })"><i class="icon-pencil icon-large"></i></a>
+                                    <a href="@Url.Action("DeleteContactMediaImage", "Contacts", new { id = contactMediaImageRel.Id})" 
+                                        class="btnDelete" 
+                                        data-title="Delete Relationship" 
+                                        data-refresh="true" 
+                                        data-action="@Url.Action("GetContactMediaImages", "Contacts", new { contactId =  ViewData["ContactId"] == null ? -1 : (int)ViewData["ContactId"]  , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] })"><i class="icon-trash icon-large"></i></a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    }
+    @if (ViewData["Controller"].ToString() == "MediaImages")
+    {
+        foreach (var contactMediaImageRel in Model)
+        {
+            <tr>
+                <td class="nowrap">
+                    <a href="@Url.Action("EditContactMediaImage", "Contacts", new { id = contactMediaImageRel.Id, source = ViewData["Controller"].ToString()})" 
+                        class="btnEdit" 
+                        data-title="Edit Relationship" 
+                        data-refresh="true" 
+                        data-action="@Url.Action("GetContactMediaImages", "Contacts", new { contactId =  ViewData["ContactId"] == null ? -1 : (int)ViewData["ContactId"] , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] })"><i class="icon-pencil icon-large"></i></a>
+                    <a href="@Url.Action("DeleteContactMediaImage", "Contacts", new { id = contactMediaImageRel.Id})" 
+                        class="btnDelete" 
+                        data-title="Delete Relationship" 
+                        data-refresh="true" 
+                        data-action="@Url.Action("GetContactMediaImages", "Contacts", new { contactId =  ViewData["ContactId"] == null ? -1 : (int)ViewData["ContactId"]  , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] })"><i class="icon-trash icon-large"></i></a>
+                </td>
+
+                <td>@Html.ActionLink(string.Format("{0} {1} {2} {3}", contactMediaImageRel.Contact.CommonPerson.Prefix == null ? "" : contactMediaImageRel.Contact.CommonPerson.Prefix.Name, contactMediaImageRel.Contact.CommonPerson.FName, contactMediaImageRel.Contact.CommonPerson.MName, contactMediaImageRel.Contact.CommonPerson.LName), "Details", "Contact", new { id = contactMediaImageRel.Contact.Id }, null)</td>
+                <td>@Html.DisplayFor(model => contactMediaImageRel.Contact.ContactType.Name)</td>
+            </tr>
+        }
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateContactMediaImage", "Contacts", new { contactId = ViewData["ContactId"] == null ? -1 : (int)ViewData["ContactId"]  , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"]})" 
+                class="btnNew" 
+                data-title="New Relationship" 
+                data-refresh="true" 
+                data-action="@Url.Action("GetContactMediaImages", "Contacts", new {  contactId = ViewData["ContactId"] == null ? -1 : ViewData["ContactId"], mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>*@

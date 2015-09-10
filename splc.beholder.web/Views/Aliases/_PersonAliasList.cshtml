@@ -1,0 +1,51 @@
+﻿@model IEnumerable<splc.domain.Models.AliasPersonRel>
+@{
+    const string viewItem = "Aliases";
+    var commonPersonId = ViewBag.CommonPersonId; 
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    No Known Aliases
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    <strong>@item.Alias.AliasName</strong><br />
+                    @(item.PrimaryStatus != null ? item.PrimaryStatus.Name : "[Unknown]")
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditPersonAlias", "Aliases", new {id = item.Id})"
+                               class="btnEdit"
+                               data-title="Edit Alias"
+                               data-refresh="true"
+                               data-target="#personAliasList"
+                               data-action=@Url.Action("GetPersonAliases", "Aliases", new {id = commonPersonId})><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeletePersonAlias", "Aliases", new { id = item.Id })"
+                               class="btnDelete"
+                               data-title="Delete Alias"
+                               data-refresh="true"
+                               data-target="#personAliasList"
+                               data-action=@Url.Action("GetPersonAliases", "Aliases", new { id = commonPersonId })><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreatePersonAlias", "Aliases", new { personId = commonPersonId})"
+           class="btnNew"
+           data-title="New Alias"
+           data-refresh="true"
+           data-target="#personAliasList"
+           data-action="@Url.Action("GetPersonAliases", "Aliases", new { id = commonPersonId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

@@ -1,0 +1,157 @@
+@model Subscription
+@{
+    var searchterm = Session["searchterm"];
+    var page = Session["page"];
+    var pageSize = Session["pageSize"];
+    
+    ViewBag.Title = string.Format("Details - {0}", Model.PublicationName);
+}
+
+<h2 class="title-bar">@Model.PublicationName</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>@Html.ActionLink("Return to List", "Index", new { page, pageSize, searchterm })
+        </span>
+        <span class="pull-right">@Html.ActionLink("Edit", "Edit", "Subscriptions", new { Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "RemoveSubscription", "Subscriptions", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+</div>
+
+<div class="row">
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+                @if (Model.MediaImageSubscriptionRels.Count > 0)
+                {
+                    <img src="@Url.Action("ShowPrimaryImage", "Subscriptions", new { Model.Id })" alt="org image" class="thumbnail-img" height="270" width="500" />
+                }
+                else
+                {
+                     <img src="~/Content/images/image_unavailable.jpg" alt="" height="270" width="500" />
+                }
+            </div>   
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.RenewalPermissionDate).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.RenewalPermissionDate)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.SubscriptionRate).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.SubscriptionRate)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Status</td>
+                            <td>@(Model.ActiveStatus == null ? "None" : Model.ActiveStatus.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div id="subscriptionsAddresses">
+                @Html.Partial("../Addresses/_SubscriptionsAddressList", Model.AddressSubscriptionsRels.Where(x=>x.DateDeleted==null))
+            </div>
+        </li>
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="chapterSubscriptions">
+                @Html.Partial("../Chapters/_ChapterSubscriptionList", Model.ChapterSubscriptionRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationSubscriptions">
+                @Html.Partial("../Organizations/_OrganizationSubscriptionList", Model.OrganizationSubscriptionRels)
+            </div>
+        </li>
+        <li>
+            <div id="eventSubscriptions">
+                @Html.Partial("../Events/_EventSubscriptionList", Model.EventSubscriptionRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaWebsiteEGroupSubscriptions">
+                @Html.Partial("../MediaWebsiteEGroups/_MediaWebsiteEGroupSubscriptionList", Model.MediaWebsiteEGroupSubscriptionRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceSubscriptions">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceSubscriptionList", Model.MediaCorrespondenceSubscriptionRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaPublishedSubscriptions">
+                @Html.Partial("../MediaPublisheds/_MediaPublishedSubscriptionList", Model.MediaPublishedSubscriptionRels)
+            </div>
+        </li>
+        <li>
+            <div id="subscriptionSubscriptions">
+                @Html.Partial("../Subscriptions/_SubscriptionSubscriptionList", Model)
+            </div>
+        </li>
+    </ul>
+</div>
+<div class="row">
+    <div id="mediaImageSubscriptions">
+        @Html.Partial("../MediaImages/_MediaImageSubscriptionList", Model.MediaImageSubscriptionRels)
+    </div>
+</div>
+<div class="row">
+    <div id="mediaPublishedComments">
+        @Html.Partial("../Comments/_SubscriptionCommentList", Model.SubscriptionComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "SubscriptionId", Model.Id } })
+    </div>
+</div>
+
+<script>
+   
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroupId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        if ($("#MediaWebsiteEGroupId").data("kendoComboBox").value() === '-1') {
+            $("#MediaWebsiteEGroupId").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

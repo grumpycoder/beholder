@@ -1,0 +1,15 @@
+﻿@model MediaPublishedComment
+
+@{
+    ViewBag.Title = "Create";
+}
+<h2 class="page-title small">New Comment</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditMediaPublishedComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+<div>
+    @Html.ActionLink("Back", "Details", "MediaPublisheds", new { id = Model.MediaPublishedId }, null)
+</div>

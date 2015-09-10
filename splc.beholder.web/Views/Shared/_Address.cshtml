@@ -1,0 +1,13 @@
+﻿@model Address
+
+@if (@Model.State != null)
+{
+    @Model.State.StateName
+}
+
+@Model.Address1 @Model.Address2<br />
+@Model.City,  
+@(Model.State == null ? "Unknown" : Model.State.StateName)
+@Model.Zip5
+
+

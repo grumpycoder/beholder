@@ -1,0 +1,113 @@
+﻿@model IEnumerable<MediaWebsiteEGroupSubscriptionRel>
+@{
+    var viewItem = ViewBag.Controller == "MediaWebsiteEGroups" ? "Subscriptions" : "Website EGroups";
+    var source = ViewBag.Controller == "MediaWebsiteEGroups" ? "MediaWebsiteEGroups" : "Subscriptions";
+    var subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"];
+    var mediaWebsiteEGroupId =  ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"]; 
+    var showWebsiteEGroup = ViewBag.Controller == "Subscriptions";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showWebsiteEGroup){
+                       @Html.ActionLink(item.MediaWebsiteEGroup.Name, "Details", "MediaWebsiteEGroups", new { id = item.MediaWebsiteEGroup.Id }, null)<br/>
+                       @Html.DisplayFor(model => item.MediaWebsiteEGroup.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(item.Subscription.PublicationName, "Details", "Subscriptions", new { id = item.Subscription.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Subscription.SubscriptionRate)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditMediaWebsiteEGroupSubscription", "MediaWebsiteEGroups", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#mediaWebsiteEGroupSubscriptions"
+                               data-action="@Url.Action("GetMediaWebsiteEGroupSubscriptions", "MediaWebsiteEGroups", new { mediaWebsiteEGroupId = @mediaWebsiteEGroupId, subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteMediaWebsiteEGroupSubscription", "MediaWebsiteEGroups", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#mediaWebsiteEGroupSubscriptions"
+                               data-action="@Url.Action("GetMediaWebsiteEGroupSubscriptions", "MediaWebsiteEGroups", new { mediaWebsiteEGroupId = @mediaWebsiteEGroupId, subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateMediaWebsiteEGroupSubscription", "MediaWebsiteEGroups", new { mediaWebsiteEGroupId = @mediaWebsiteEGroupId, subscriptionId = @subscriptionId })" 
+           class="btnNew" 
+           data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#mediaWebsiteEGroupSubscriptions"
+           data-action="@Url.Action("GetMediaWebsiteEGroupSubscriptions", "MediaWebsiteEGroups", new { mediaWebsiteEGroupId = @mediaWebsiteEGroupId, subscriptionId = @subscriptionId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+@*<table class="table table-bordered">
+    <caption>
+        @(ViewData["Controller"] == "Subscriptions" ? string.Format("Website/EGroups ({0})", Model.Count().ToString()) : string.Format("Subscriptions ({0})", Model.Count().ToString()))
+    </caption>
+    
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td>@string.Format("No Known {0}",ViewData["Controller"] == "Subscriptions" ? "Website EGroups" : "Subscriptions")</td>
+        </tr>
+    }
+    @foreach (var mediaWebsiteEGroupSubscriptionRel in Model)
+    {
+        //string controller = ViewData["Controller"].ToString();
+        <tr>
+            <td class="nowrap">
+                <a href="@Url.Action("EditMediaWebsiteEGroupSubscription", "MediaWebsiteEGroups", new { id = mediaWebsiteEGroupSubscriptionRel.Id, source = ViewData["Controller"].ToString()})" 
+                    class="btnEdit" 
+                    data-title="Edit Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaWebsiteEGroupSubscriptions", "MediaWebsiteEGroups", new { mediaWebsiteEGroupId =  ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"] , subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"] })"><i class="icon-pencil icon-large"></i></a>
+                <a href="@Url.Action("DeleteMediaWebsiteEGroupSubscription", "MediaWebsiteEGroups", new { id = mediaWebsiteEGroupSubscriptionRel.Id})" 
+                    class="btnDelete" 
+                    data-title="Delete Relationship" 
+                    data-refresh="true" 
+                    data-action="@Url.Action("GetMediaWebsiteEGroupSubscriptions", "MediaWebsiteEGroups", new { mediaWebsiteEGroupId =  ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"]  , subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"] })"><i class="icon-trash icon-large"></i></a>
+            </td>
+            @if (ViewData["Controller"].ToString() == "Subscriptions")
+            {
+                <td>
+                    @Html.ActionLink(mediaWebsiteEGroupSubscriptionRel.MediaWebsiteEGroup.Name, "Details", "MediaWebsiteEGroups", new { id = mediaWebsiteEGroupSubscriptionRel.MediaWebsiteEGroup.Id }, null)
+                </td>
+                <td>@Html.DisplayFor(model => mediaWebsiteEGroupSubscriptionRel.MediaWebsiteEGroup.MovementClass.Name)</td>
+            }
+            else
+            {
+                <td>
+                    @Html.ActionLink(mediaWebsiteEGroupSubscriptionRel.Subscription.PublicationName, "Details", "Subscriptions", new { id = mediaWebsiteEGroupSubscriptionRel.Subscription.Id }, null)
+                </td>
+            }
+        </tr>
+    }
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateMediaWebsiteEGroupSubscription", "MediaWebsiteEGroups", new { mediaWebsiteEGroupId = ViewData["MediaWebsiteEGroupId"] == null ? -1 : (int)ViewData["MediaWebsiteEGroupId"]  , subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"]})" 
+                class="btnNew" 
+                data-title="New Relationship" 
+                data-refresh="true"
+                data-action="@Url.Action("GetMediaWebsiteEGroupSubscriptions", "MediaWebsiteEGroups", new { mediaWebsiteEGroupId = ViewData["MediaWebsiteEGroupId"] == null ? -1 : ViewData["MediaWebsiteEGroupId"], subscriptionId = ViewData["SubscriptionId"] == null ? -1 : (int)ViewData["SubscriptionId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>*@

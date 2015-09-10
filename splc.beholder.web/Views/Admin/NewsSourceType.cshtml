@@ -1,0 +1,8 @@
+﻿@model IEnumerable<splc.domain.Models.NewsSourceType>
+
+@{
+    ViewBag.Title = "News Source Types";
+    Layout = "~/Views/Admin/_LookupLayout.cshtml";
+}
+
+@Html.Partial("_NewsSourceTypeList", Model)

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<OrganizationMediaAudioVideoRel>
+@{
+    var viewItem = ViewBag.Controller == "Organizations" ? "Audio Videos" : "Organizations";
+    var source = ViewBag.Controller == "Organizations" ? "Organizations" : "MediaAudioVideos";
+    var mediaAudioVideoId =  ViewData["MediaAudioVideoId"] == null ? -1 : (int)ViewData["MediaAudioVideoId"];
+    var organizationId = ViewData["OrganizationId"] == null ? -1 : (int)ViewData["OrganizationId"];
+    var showOrganization = ViewBag.Controller == "MediaAudioVideos";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showOrganization){
+                        @Html.ActionLink(item.Organization.OrganizationName, "Details", "Organizations", new { id = item.Organization.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Organization.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(item.MediaAudioVideo.Title, "Details", "MediaAudioVideos", new { id = item.MediaAudioVideo.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaAudioVideo.MovementClass.Name)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            
+                            <a href="@Url.Action("EditOrganizationMediaAudioVideo", "Organizations", new { id = item.Id, source = @source })"
+                               class="btnEdit"
+                               data-title="Edit Relationship"
+                               data-refresh="true"
+                               data-target="#organizationMediaAudioVideos"
+                               data-action="@Url.Action("GetOrganizationMediaAudioVideos", "Organizations", new { organizationId =  @organizationId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteOrganizationMediaAudioVideo", "Organizations", new { id = item.Id})"
+                               class="btnDelete"
+                               data-title="Delete Relationship"
+                               data-refresh="true"
+                               data-target="#organizationMediaAudioVideos"
+                               data-action="@Url.Action("GetOrganizationMediaAudioVideos", "Organizations", new { organizationId =  @organizationId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateOrganizationMediaAudioVideo", "Organizations", new { organizationId = @organizationId, mediaAudioVideoId = @mediaAudioVideoId })"
+           class="btnNew"
+           data-title="New Relationship"
+           data-refresh="true"
+           data-target="#organizationMediaAudioVideos"
+           data-action="@Url.Action("GetOrganizationMediaAudioVideos", "Organizations", new { organizationId =  @organizationId, mediaAudioVideoId = @mediaAudioVideoId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

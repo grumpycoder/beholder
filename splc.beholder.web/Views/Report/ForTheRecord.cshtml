@@ -1,0 +1,123 @@
+﻿@{
+    ViewBag.Title = "For The Record Report";
+}
+
+<h2>For The Record Report</h2>
+
+@(Html.Kendo().Grid<EventReport>().Name("grid")
+                  .Columns(c =>
+                    {
+                        c.Bound("Id").Title("EventId").Filterable(f => f.Cell(cell => cell
+                            .ShowOperators(false)
+                            .InputWidth(100)));
+                        c.Bound("EventName");
+                        c.Bound("Summary").Hidden(true);
+                        c.Bound("City");
+                        c.Bound("State").Title("State").ClientGroupHeaderTemplate("#= value# : #=count#");
+                        c.Bound("EventDate").Format("{0:d}").ClientGroupHeaderTemplate("#= value# : #=count#"); ; ;
+                        c.Bound("WebIncidentType").ClientGroupHeaderTemplate("#= value# : #=count#"); ;
+                        c.Bound("ApprovalStatus").ClientGroupHeaderTemplate("#= value# : #=count#");
+                    })
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Excel();
+                        toolbar.Custom().Name("cmdCollapse").Text("Collapse All").HtmlAttributes(new { @id = "cmdCollapse" });
+                    })
+                  .ColumnMenu()
+                  .Selectable(sel => sel.Mode(GridSelectionMode.Single))
+                  .Pageable(pageable => pageable.Refresh(true).PageSizes(new int[] { 25, 50, 100, 250, 500 }))
+                  .Sortable()
+                  .Groupable()
+                  .Reorderable(reorder => reorder.Columns(true))
+                  .Resizable(resize => resize.Columns(true))
+                  .Excel(excel => excel
+                      .FileName("ForTheRecord.xlsx")
+                      .Filterable(true)
+                      .ProxyURL(Url.Action("Excel_Export_Save", "Report")).AllPages(true))
+                  .DataSource(ds => ds.Ajax()
+                      //.Group(g => g.Add(p => p.WebIncidentType))
+                      .Aggregates(aggregates =>
+                          {
+                              aggregates.Add(p => p.State).Count();
+                              aggregates.Add(p => p.EventDate).Count();
+                              aggregates.Add(p => p.WebIncidentType).Count();
+                              aggregates.Add(p => p.ApprovalStatus).Count();
+                          })
+                      .PageSize(25)
+                      .Model(m => m.Id(p => p.RowNum))
+                      .Read(r => r.Action("Events_Read", "Report")))
+                  .Pageable().Sortable()
+                      .Filterable(f => f.Mode(GridFilterMode.Row))
+                      .Events(ev => ev.DataBound("databound")
+                                      .ColumnMenuInit("filterNumericFormat"))
+)
+
+
+
+<script>
+    $(function () {
+        $(".k-filter-row th>span").find("[data-role=numerictextbox]").each(function () {
+            $(this).data("kendoNumericTextBox").setOptions({ format: "##", decimal: 0, spinners: false });
+        });
+    });
+
+    $('#cmdCollapse').click(function (e) {
+        var grid = $('#grid').data("kendoGrid");
+        grid.table.find(".k-grouping-row").each(function () {
+            grid.collapseGroup(this);
+        });
+        e.preventDefault();
+    });
+
+    function databound() {
+        //$(".k-filter-row th>span").find("[data-role=numerictextbox]").each(function () {
+        //    $(this).data("kendoNumericTextBox").setOptions({ format: "##", decimal: 0, spinners: false });
+        //});
+    }
+
+    function filterNumericFormat(element) {
+
+        $("#grid thead th[data-field]").each(function () {
+            if ($(this).data("kendoColumnMenu") != undefined) {
+                var f = $(this).data("kendoColumnMenu").filterMenu;
+
+                if (f != undefined) {
+                    $(f.form).find("[data-role=numerictextbox]").each(function () {
+
+                        $(this).data("kendoNumericTextBox").setOptions({
+                            format: "#",
+                            decimal: 0,
+                            spinners: false
+                        });
+
+                    });
+                }
+            };
+        });
+
+        //var filterMenu = $("#grid thead th[data-field=Id]").data("kendoColumnMenu").filterMenu;
+        //if (undefined != filterMenu) {
+        //    $(filterMenu.form).find("[data-role=numerictextbox]").each(function () {
+        //        $(this).data("kendoNumericTextBox").setOptions({
+        //            format: "#",
+        //            decimal: 0,
+        //            spinners: false
+        //        });
+        //    });
+        //}
+
+        //var filterMenu2 = $("#grid thead th[data-field=ActiveYear]").data("kendoColumnMenu").filterMenu;
+        //if (undefined != filterMenu2) {
+        //    $(filterMenu2.form).find("[data-role=numerictextbox]").each(function () {
+        //        $(this).data("kendoNumericTextBox").setOptions({
+        //            format: "#",
+        //            decimal: 0,
+        //            spinners: false
+        //        });
+        //    });
+        //}
+
+    }
+
+
+</script>

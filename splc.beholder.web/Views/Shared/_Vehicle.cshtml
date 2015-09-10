@@ -1,0 +1,39 @@
+﻿@model Vehicle
+
+<div class="span4 card">
+    <div class="title">
+            @Html.ActionLink(string.Format("{0} {1} {2}", Model.VehicleColor == null ? "Color??" : Model.VehicleColor.Name, Model.VehicleMake == null ? "Make??" : Model.VehicleMake.Name, Model.VehicleModel == null ? "Model??" : Model.VehicleModel.Name), "Details", "Vehicles", new { id = Model.Id }, null)
+    </div>
+    @*//TODO: Vehicle Image??? Just use grid*@
+    <div>
+        <img src="~/content/img/unknown-person.png" class="person-thumbnail" alt="no person image" />
+    </div>
+    <div>
+        <table class="table">
+            <tr>
+                <td>VIN</td>
+                <td>@Model.VIN</td>
+            </tr>
+            <tr>
+                <td>Color</td>
+                <td>@(Model.VehicleColor == null ? "Unknown" : Model.VehicleColor.Name)</td>
+            </tr>
+            <tr>
+                <td>Make</td>
+                <td>@(Model.VehicleMake == null ? "Unknown" : Model.VehicleMake.Name)</td>
+            </tr>
+            <tr>
+                <td>Model</td>
+                <td>@(Model.VehicleModel == null ? "Unknown" : Model.VehicleModel.Name)</td>
+            </tr>
+            <tr>
+                <td>Vehicle Type</td>
+                <td>@(Model.VehicleType == null ? "Unknown" : Model.VehicleType.Name)</td>
+            </tr>
+            <tr>
+                <td>Tag #</td>
+                <td>@(Model.VehicleTags.Count == 0 ? "Unknown" : Model.VehicleTags.First().TagNumber))</td>
+            </tr>
+        </table>
+    </div>
+</div>

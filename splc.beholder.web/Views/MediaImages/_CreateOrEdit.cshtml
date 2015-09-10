@@ -1,0 +1,273 @@
+@using System.Web.Razor.Parser.SyntaxTree
+@model MediaImage
+
+<div class="row">
+
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.HiddenFor(m => m.DateCreated)
+    @Html.HiddenFor(m => m.Image.Id)
+    @Html.HiddenFor(m => m.ImageId)
+    @Html.HiddenFor(m => m.Image.CreatedUserId)
+    @Html.HiddenFor(m => m.Image.DateCreated)
+    @Html.HiddenFor(m => m.Image.MimeTypeId)
+    @Html.HiddenFor(m => m.Image.MimeType.Name)
+    @Html.HiddenFor(m => m.Image.IMAGE1)
+
+    <fieldset class="col-sm-6">
+        <legend>Specifics</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ConfidentialityTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ConfidentialityTypeId, ((IEnumerable<ConfidentialityType>)ViewBag.PossibleConfidentialityTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.ConfidentialityTypeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ConfidentialityTypeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.MovementClassId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.MovementClassId, ((IEnumerable<MovementClass>)ViewBag.PossibleMovementClasses).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.MovementClassId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.MovementClassId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.Summary)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.Summary)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.Summary)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.DateTaken)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.DateTaken)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.DateTaken)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.DatePublished)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.DatePublished)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.DatePublished)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+        <legend>Renewal Info/Status</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.RenewalPermissionTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.RenewalPermissionTypeId, ((IEnumerable<RenewalPermmisionType>)ViewBag.PossibleRenewalPermissionTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.RenewalPermissionTypeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RenewalPermissionTypeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.DateRenewalPermission)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.DateRenewalPermission)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.DateRenewalPermission)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.RenewalPermission)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.RenewalPermission)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RenewalPermission)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+        <legend>Location</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ContactOwner)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.ContactOwner)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ContactOwner)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.City)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.City)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.City)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.County)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.County)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.County)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.StateId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.StateId, ((IEnumerable<State>)ViewBag.PossibleStates).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.StateName),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.StateId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.StateId)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+        <legend>Miscellaneous</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.PhotographerArtist)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.PhotographerArtist)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.PhotographerArtist)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.MediaTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.MediaTypeId, ((IEnumerable<MediaType>)ViewBag.PossibleMediaTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.MediaTypeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.MediaTypeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.RollFrameNumber)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.RollFrameNumber)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.RollFrameNumber)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.NewsSourceId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.NewsSourceId, ((IEnumerable<NewsSource>)ViewBag.PossibleNewsSources).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.NewsSourceName),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.NewsSourceId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.NewsSourceId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.BatchSortOrder)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.BatchSortOrder)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.BatchSortOrder)</span>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.CatalogId)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.CatalogId)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.CatalogId)</span>
+            </div>
+        </div>
+
+    </fieldset>
+
+    <fieldset class="col-sm-6">
+        <legend>Image</legend>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ImageTypeId)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(model => model.ImageTypeId, ((IEnumerable<ImageType>)ViewBag.PossibleImageTypes).Select(option => new SelectListItem
+                {
+                    Text = (option == null ? "None" : option.Name),
+                    Value = option.Id.ToString(),
+                    Selected = (Model != null) && (option.Id == Model.ImageTypeId)
+                }), "Choose...", new { @class = "form-control" })
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ImageTypeId)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ImageTitle)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.ImageTitle)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ImageTitle)</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(model => model.ImageFileName)
+            <div class="col-sm-8">
+                <div>
+                    @Html.EditorFor(model => model.ImageFileName)
+                </div>
+                @(Html.Kendo().Upload().Name("attachment")
+                      .Multiple(false)
+                      .ShowFileList(true)
+                      .Events(e => e.Select("select"))
+                      .Messages(m => m.HeaderStatusUploaded("").StatusUploaded("").Select("Select File...")))
+                <span class="help-block">@Html.ValidationMessageFor(model => model.ImageFileName)</span>
+            </div>
+        </div>
+
+
+        @if (@Model.ImageId != null)
+        {
+            <div class="form-group">
+                <div class="col-sm-8">
+                    <div>
+                        <img src="@Url.Action("ShowImage", "MediaImages", new { Id = Model.ImageId })" class="person-icon pull-left" alt="@Model.ImageTitle" />
+                    </div>
+                </div>
+            </div>
+        }
+
+    </fieldset>
+
+</div>
+
+<script>
+    function select(e) {
+        $.each(e.files, function(index, value) {
+            console.log(value.name);
+            $('#ImageFileName').val(value.name);
+
+        });
+    }
+</script>

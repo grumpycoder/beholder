@@ -1,0 +1,93 @@
+@model splc.domain.Models.Image
+
+@* This partial view defines form fields that will appear when creating and editing entities *@
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DateCreated)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateCreated)
+    @Html.ValidationMessageFor(model => model.DateCreated)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.CreatedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.CreatedUserId)
+    @Html.ValidationMessageFor(model => model.CreatedUserId)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DateModified)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateModified)
+    @Html.ValidationMessageFor(model => model.DateModified)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.ModifiedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.ModifiedUserId)
+    @Html.ValidationMessageFor(model => model.ModifiedUserId)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DateDeleted)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DateDeleted)
+    @Html.ValidationMessageFor(model => model.DateDeleted)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.DeletedUserId)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.DeletedUserId)
+    @Html.ValidationMessageFor(model => model.DeletedUserId)
+</div>
+
+<div class="editor-label">
+    @Html.LabelFor(model => model.OLD_OBJECT_ID)
+</div>
+<div class="editor-field">
+    @Html.EditorFor(model => model.OLD_OBJECT_ID)
+    @Html.ValidationMessageFor(model => model.OLD_OBJECT_ID)
+</div>
+
+<div class="editor-label">
+    MimeType
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.MimeTypeId, ((IEnumerable<splc.domain.Models.MimeType>)ViewBag.PossibleMimeTypes).Select(option => new SelectListItem {
+        Text = (option == null ? "None" : option.Name), 
+        Value = option.Id.ToString(),
+        Selected = (Model != null) && (option.Id == Model.MimeTypeId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.MimeTypeId)
+</div>
+<div class="editor-label">
+    ConfidentialityType
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.ConfidentialityTypeId, ((IEnumerable<splc.domain.Models.ConfidentialityType>)ViewBag.PossibleConfidentialityTypes).Select(option => new SelectListItem {
+        Text = (option == null ? "None" : option.Name), 
+        Value = option.Id.ToString(),
+        Selected = (Model != null) && (option.Id == Model.ConfidentialityTypeId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.ConfidentialityTypeId)
+</div>
+<div class="editor-label">
+    MediaImage
+</div>
+<div class="editor-field">
+    @Html.DropDownListFor(model => model.MediaImageId, ((IEnumerable<splc.domain.Models.MediaImage>)ViewBag.PossibleMediaImages).Select(option => new SelectListItem {
+        Text = Html.DisplayTextFor(_ => option).ToString(), 
+        Value = option.Id.ToString(),
+        Selected = (Model != null) && (option.Id == Model.MediaImageId)
+    }), "Choose...")
+    @Html.ValidationMessageFor(model => model.MediaImageId)
+</div>

@@ -1,0 +1,64 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@using splc.domain.Models
+@model Caseiro.Mvc.PagedList.PagedList<MediaAudioVideo>
+
+@{
+    ViewBag.Title = "Audio Video";
+
+    var pageSize = Session["pageSize"] ?? Request["pageSize"];
+    var audiovideotitle = Session["audiovideotitle"] ?? Request["audiovideotitle"];
+    var daterecordfrom = Session["daterecordfrom"] ?? Request["daterecordfrom"];
+    var daterecordto = Session["daterecordto"] ?? Request["daterecordto"];
+    var dateairfrom = Session["dateairfrom"] ?? Request["dateairfrom"];
+    var dateairto = Session["dateairto"] ?? Request["dateairto"];
+    var comment = Session["comment"] ?? Request["comment"];
+    var movementclassid = Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+
+}
+
+@if (!Model.Any())
+{
+    <h3>No Audio Videos found</h3>
+}
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, audiovideotitle, daterecordfrom, daterecordto, dateairfrom, dateairto, comment, movementclassid, movementclassid_string }))
+</div>
+
+<ul class="card-list">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="thumbnail">
+
+                <a href="@Url.Action("Details", "MediaAudioVideos", new { id = item.Id })">
+                    <h4 class="title-elliipsis" title="@string.Format("{0}", item.Title)">@string.Format("{0}", item.Title)</h4>
+                    <table class="table">
+                        <tr>
+                            <td>Movement</td>
+                            <td>@(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Date Received/Recorded</td>
+                            <td>@(item.DateReceivedRecorded == null ? "Unknown" : @String.Format("{0:d}", item.DateReceivedRecorded))</td>
+                        </tr>
+                        <tr>
+                            <td>Date Aired</td>
+                            <td>@(item.DateAired == null ? "Unknown" : @String.Format("{0:d}", item.DateAired))</td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </li>
+    }
+</ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, audiovideotitle, daterecordfrom, daterecordto, dateairfrom, dateairto, comment, movementclassid, movementclassid_string }))
+</div>

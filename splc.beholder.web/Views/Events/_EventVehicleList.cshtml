@@ -1,0 +1,60 @@
+﻿@model IEnumerable<EventVehicleRel>
+@{
+    var viewItem = ViewBag.Controller == "Events" ? "Vehicles" : "Events";
+    var source = ViewBag.Controller == "Events" ? "Events" : "Vehicles";
+    var vehicleId = ViewData["VehicleId"] == null ? -1 : (int) ViewData["VehicleId"];
+    var eventId = ViewData["EventId"] == null ? -1 : (int)ViewData["EventId"]; 
+    var showEvent = ViewBag.Controller == "Vehicles";
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    @if (showEvent){
+                        @Html.ActionLink(string.Format("{0}", item.Event.EventName), "Details", "Events", new { id = item.Event.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Event.MovementClass.Name)
+                    }
+                    else{
+                        @Html.ActionLink(string.Format("{0}", item.Vehicle), "Details", "Vehicles", new { id = item.Vehicle.Id }, null)<br/>
+                        @Html.DisplayFor(model => item.Vehicle.VIN)
+                    }
+                    <div class="clearfix">
+                        <span class="pull-right">
+                             <a href="@Url.Action("EditEventVehicle", "Events", new { id = item.Id, source = @source })" 
+                               class="btnEdit" 
+                               data-title="Edit Relationship" 
+                               data-refresh="true" 
+                               data-target="#eventVehicles"
+                               data-action="@Url.Action("GetEventVehicles", "Events", new { vehicleId = @vehicleId, eventId = @eventId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteEventVehicle", "Events", new { id = item.Id})" 
+                               class="btnDelete" 
+                               data-title="Delete Relationship" 
+                               data-refresh="true" 
+                               data-target="#eventVehicles"
+                               data-action="@Url.Action("GetEventVehicles", "Events", new { vehicleId = @vehicleId, eventId = @eventId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+         <a href="@Url.Action("CreateEventVehicle", "Events", new { vehicleId = @vehicleId, eventId = @eventId })" 
+           class="btnNew" data-title="New Relationship" 
+           data-refresh="true" 
+           data-target="#eventVehicles"
+           data-action="@Url.Action("GetEventVehicles", "Events", new { vehicleId = @vehicleId, eventId = @eventId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+

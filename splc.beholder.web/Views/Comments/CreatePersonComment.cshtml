@@ -1,0 +1,18 @@
+@model PersonComment
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2 class="page-title small">New Comment</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditPersonComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+<div>
+    @Html.ActionLink("Back", "Details", "Persons", new { id = Model.BeholderPersonId }, null)
+</div>
+
+

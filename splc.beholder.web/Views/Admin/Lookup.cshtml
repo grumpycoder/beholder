@@ -1,0 +1,110 @@
+﻿@using splc.beholder.web.Helpers
+
+@{
+    ViewBag.Title = "Manage Lookups";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .menu-list{
+        height:500px; 
+        overflow:auto;
+    }
+</style>
+
+<h2 class="title-bar">@ViewBag.Title</h2>
+@*<div class="col-md-3 col-lg-3 menu-list">
+    @Html.Partial("_LookupMenu")
+</div>
+<div class="col-md-9 col-lg-9">
+    @RenderBody()
+</div>
+*@
+
+<div class="row">
+    <div class="col-md-3 col-lg-3 menu-list">
+
+        <ul class="nav nav-pills nav-stacked">
+            <li>@Ajax.ActionLink("Active Statuses", "ActiveStatus", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Address Types", "AddressType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Approval Statuses", "ApprovalStatus", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Audio Video Types", "AudioVideoType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Chapter Types", "ChapterType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Confidentiality Types", "ConfidentialityType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Contact Information Types", "ContactInfoType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Correspondence Types", "CorrespondenceType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Event Documentation Types", "EventDocumentationType", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Eye Colors", "EyeColor", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Hair Colors", "HairColor", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Hair Patterns", "HairPattern", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Image Types", "ImageType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Library Category Types", "LibraryCategoryType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("License Types", "LicenseType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Marital Statuses", "MaritialStatus", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Media Types", "MediaType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Mime Types", "MimeType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Movement Classes", "MovementClass", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("News Source Types", "NewsSourceType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Organization Types", "OrganizationType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Prefixes", "Prefix", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Primary Statuses", "PrimaryStatus", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Published Types", "PublishedType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Races", "Race", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Relationship Types", "RelationshipType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Removal Statuses", "RemovalStatus", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Renewal Permission Types", "RenewalPermissionType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("States", "States", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Suffixes", "Suffix", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Tag Types", "TagType", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("User Types", "UserType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Vehicle Colors", "VehicleColor", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Vehicle Makes", "VehicleMake", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Vehicle Models", "VehicleModel", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Web Incident Types", "WebIncidentType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+            <li>@Ajax.ActionLink("Website Group Types", "WebsiteGroupType", "Admin", new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "lookupDetail" })</li>
+
+
+        @*    @Html.MenuLink("Active Statuses", "ActiveStatus", "Admin")
+            @Html.MenuLink("Address Types", "AddressType", "Admin")
+            @Html.MenuLink("Approval Statuses", "ApprovalStatus", "Admin")
+            @Html.MenuLink("Audio Video Types", "AudioVideoType", "Admin")
+            @Html.MenuLink("Chapter Types", "ChapterType", "Admin")
+            @Html.MenuLink("Confidentiality Types", "ConfidentialityType", "Admin")
+            @Html.MenuLink("Contact Info Types", "ContactInfoType", "Admin")
+            @Html.MenuLink("Correspondence Types", "CorrespondenceType", "Admin")
+            @Html.MenuLink("Event Documentation Types", "EventDocumentationType", "Admin")
+            @Html.MenuLink("Eye Colors", "EyeColor", "Admin")
+            @Html.MenuLink("Hair Colors", "HairColor", "Admin")
+            @Html.MenuLink("Hair Patterns", "HairPattern", "Admin")
+            @Html.MenuLink("Image Types", "ImageType", "Admin")
+            @Html.MenuLink("Library Category Types", "LibraryCategoryType", "Admin")
+            @Html.MenuLink("License Types", "LicenseType", "Admin")
+            @Html.MenuLink("Maritial Statuses", "MaritialStatus", "Admin")
+            @Html.MenuLink("Media Types", "MediaType", "Admin")
+            @Html.MenuLink("Mime Types", "MimeType", "Admin")
+            @Html.MenuLink("Movement Classes", "MovementClass", "Admin")
+            @Html.MenuLink("News Source Types", "NewsSourceType", "Admin")
+            @Html.MenuLink("Organization Types", "OrganizationType", "Admin")
+            @Html.MenuLink("Prefixes", "Prefix", "Admin")
+            @Html.MenuLink("Primary Statuses", "PrimaryStatus", "Admin")
+            @Html.MenuLink("Published Types", "PublishedType", "Admin")
+            @Html.MenuLink("Races", "Race", "Admin")
+            @Html.MenuLink("Relationship Types", "RelationshipType", "Admin")
+            @Html.MenuLink("Removal Statuses", "RemovalStatus", "Admin")
+            @Html.MenuLink("Renewal Permission Types", "RenewalPermissionType", "Admin")
+            @Html.MenuLink("States", "State", "Admin")
+            @Html.MenuLink("Suffixes", "Suffix", "Admin")
+            @Html.MenuLink("Tag Types", "TagType", "Admin")
+            @Html.MenuLink("User Types", "UserType", "Admin")
+            @Html.MenuLink("Vehicle Colors", "VehicleColor", "Admin")
+            @Html.MenuLink("Vehicle Makes", "VehicleMake", "Admin")
+            @Html.MenuLink("Vehicle Models", "VehicleModel", "Admin")
+            @Html.MenuLink("Web Incident Types", "WebIncidentType", "Admin")
+            @Html.MenuLink("Website Group Types", "WebsiteGroupType", "Admin")*@
+        </ul>
+
+    </div>
+    <div class="col-md-9 col-lg-9" id="lookupDetail">
+        <div class="well well-small">Choose from the options on the left to begin approvals.</div>
+    </div>
+
+</div>

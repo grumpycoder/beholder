@@ -1,0 +1,17 @@
+﻿@model EventComment
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditEventComment", Model)
+    <input type="submit" value="Save" />
+</div>
+
+
+<div>
+    @Html.ActionLink("Back", "Details", "Events", new { id = Model.EventId }, null)
+</div>

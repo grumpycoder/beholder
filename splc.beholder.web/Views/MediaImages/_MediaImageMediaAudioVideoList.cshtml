@@ -1,0 +1,124 @@
+﻿@model IEnumerable<MediaImageMediaAudioVideoRel>
+
+@{
+    var viewItem = ViewBag.Controller == "MediaAudioVideos" ? "Images" : "Audio Videos";
+    var source = ViewBag.Controller == "MediaAudioVideo" ? "MediaAudioVideo" : "MediaImages";
+    var mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"];
+    var mediaAudioVideoId = ViewData["mediaAudioVideoId"] ?? -1;
+
+    var showAudioVideo = ViewBag.Controller == "MediaImages";
+}
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+
+        @if (!Model.Any())
+        {
+            <ul class="list-group">
+                <li class="list-group-item">
+                    @string.Format("No Known {0} Relationships", viewItem)
+                </li>
+            </ul>
+        }
+
+
+        @if (showAudioVideo)
+        {
+            <ul class="list-group">
+                @foreach (var item in Model)
+                {
+                    <li class="list-group-item">
+                        @Html.ActionLink(string.Format("{0}", item.MediaAudioVideo.Title), "Details", "MediaAudioVideos", new { id = item.MediaAudioVideoId }, null)<br/>
+                        @Html.DisplayFor(model => item.MediaAudioVideo.MovementClass.Name)
+
+                        <div class="clearfix">
+                            <span class="pull-right">
+                                <a href="@Url.Action("EditMediaImageMediaAudioVideo", "MediaImages", new { id = item.Id, @source })"
+                                   class="btnEdit"
+                                   data-title="Edit Relationship"
+                                   data-refresh="true"
+                                   data-target="#mediaImageMediaAudioVideos"
+                                   data-action="@Url.Action("GetMediaImageMediaAudioVideos", "MediaImages", new { @mediaAudioVideoId, @mediaImageId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="@Url.Action("DeleteMediaImageMediaAudioVideo", "MediaImages", new { id = item.Id })"
+                                   class="btnDelete"
+                                   data-title="Delete Relationship"
+                                   data-refresh="true"
+                                   data-target="#mediaImageMediaAudioVideos"
+                                   data-action="@Url.Action("GetMediaImageMediaAudioVideos", "MediaImages", new { @mediaAudioVideoId, @mediaImageId })"><span class="glyphicon glyphicon-trash"></span></a>
+                            </span>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+
+            <div class="carousel slide media-carousel" id="media">
+
+                <div class="carousel-inner">
+                    @{
+            var items = Model.Take(6);
+            var iterations = 0;
+                    }
+                    @while (items.Any())
+                    {
+                        var active = iterations == 0 ? "active" : "";
+
+                        <div class="item @active" style="max-height: 240px;">
+                            <div class="row">
+                                @foreach (var item in items)
+                                {
+                                    <div class="col-md-2">
+                                        <div class="">
+                                            @Html.ActionLink(string.Format("{0}", @item.MediaImage.ImageTitle ?? "Unknown"), "Details", "MediaImages", new { id = item.MediaImageId }, new { @class = "image-title", @title = string.Format("{0}", @item.MediaImage.ImageTitle ?? "Unknown") })
+                                            @if (item.MediaImage.Image != null)
+                                            {
+                                                <img src="@Url.Action("ShowImage", "MediaImages", new { item.MediaImage.Image.Id })" width="100" height="190" />
+                                            }
+                                            @if (item.MediaImage.Image == null)
+                                            {
+                                                <img src="~/Content/images/image-missing.jpg" alt="" width="100" height="190" />
+                                            }
+                                            <div class="pull-right">
+                                                <a href="@Url.Action("DeleteMediaImageMediaAudioVideo", "MediaImages", new { id = item.Id })"
+                                                   class="btnDelete"
+                                                   data-title="Delete Relationship"
+                                                   data-refresh="true"
+                                                   data-target="#mediaImageMediaAudioVideos"
+                                                   data-action="@Url.Action("GetMediaImageMediaAudioVideos", "MediaImages", new { @mediaAudioVideoId, mediaImageId = -1 })"><span class="glyphicon glyphicon-trash"></span></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                }
+                            </div>
+                        </div>
+                                iterations++;
+                                items = Model.Skip(6 * iterations).Take(6);
+                    }
+                </div>
+
+                <a class="left carousel-control" href="#media" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#media" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+
+        }
+
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateMediaImageMediaAudioVideo", "MediaImages", new { @mediaAudioVideoId, @mediaImageId })"
+           class="btnNew"
+           data-title="New Relationship"
+           data-refresh="true"
+           data-target="#mediaImageMediaAudioVideos"
+           data-action="@Url.Action("GetMediaImageMediaAudioVideos", "MediaImages", new { @mediaAudioVideoId, @mediaImageId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>
+
+
+

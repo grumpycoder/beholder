@@ -1,0 +1,25 @@
+﻿CREATE TABLE [Beholder].[Chapter] (
+    [Id]                    INT           IDENTITY (1, 1) NOT NULL,
+    [ChapterName]           VARCHAR (100) NOT NULL,
+    [ChapterDesc]           VARCHAR (512) NULL,
+    [ChapterTypeId]         INT           NULL,
+    [ApprovalStatusId]      INT           NOT NULL,
+    [ActiveStatusId]        INT           NOT NULL,
+    [ActiveYear]            INT           NULL,
+    [ReportStatusFlag]      BIT           NOT NULL,
+    [FormedDate]            DATETIME2 (7) NULL,
+    [DisbandDate]           DATETIME2 (7) NULL,
+    [MovementClassId]       INT           NULL,
+    [ConfidentialityTypeId] INT           NULL,
+    [IsHeadquarters]        BIT           NOT NULL,
+    [DateCreated]           DATETIME2 (7) CONSTRAINT [DF_Chapter_DateCreated] DEFAULT (getdate()) NOT NULL,
+    [CreatedUserId]         INT           NOT NULL,
+    [DateModified]          DATETIME2 (7) NULL,
+    [ModifiedUserId]        INT           NULL,
+    [RemovalStatusId]       INT           NULL,
+    [RemovalReason]         VARCHAR (50)  NULL,
+    [DateDeleted]           DATETIME2 (7) NULL,
+    [DeletedUserId]         INT           NULL,
+    CONSTRAINT [PK_Chapter_1] PRIMARY KEY CLUSTERED ([Id] ASC) ON [BeholderData1]
+);
+

@@ -1,0 +1,277 @@
+@model MediaAudioVideo
+
+@{
+    ViewBag.Title = string.Format("Details - {0}", Model.Title);
+    
+    var page = Session["page"] ?? Request["page"];
+    var pageSize = Session["pageSize"] ?? Request["pageSize"];
+    var audiovideotitle = Session["audiovideotitle"] ?? Request["audiovideotitle"];
+    var daterecordfrom = Session["daterecordfrom"] ?? Request["daterecordfrom"];
+    var daterecordto = Session["daterecordto"] ?? Request["daterecordto"];
+    var dateairfrom = Session["dateairfrom"] ?? Request["dateairfrom"];
+    var dateairto = Session["dateairto"] ?? Request["dateairto"];
+    var comment = Session["comment"] ?? Request["comment"];
+    var movementclassid = Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+    
+}
+
+<h2 class="title-bar">@Model.Title</h2>
+<div class="search-bar">
+    <div class="row">
+        <span>@Html.ActionLink("Return to List", "Index", new { page, pageSize, audiovideotitle, daterecordfrom, daterecordto, dateairfrom, dateairto, comment, movementclassid, movementclassid_string })
+        </span>
+        <span class="pull-right">@Html.ActionLink("Edit", "Edit", "MediaAudioVideos", new {id = Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "RemoveAudioVideo", "MediaAudioVideos", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </span>
+    </div>
+</div>
+
+<div class="row">
+
+    <ul class="detail-list">
+        <li>
+            <div class="thumbnail">
+                @if (Model.MediaImageMediaAudioVideoRels.Count > 0)
+            {
+                    <img src="@Url.Action("ShowPrimaryImage", "MediaAudioVideo", new { Model.Id })" alt="org image" class="thumbnail-img" height="270" width="500" />
+            }
+                else
+                {
+                    <img src="~/Content/images/image_unavailable.jpg" alt="" height="270" width="500" />
+                }
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Details</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ConfidentialityTypeId).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.ConfidentialityType.Name).ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.MovementClassId).ToString()</td>
+                            <td>@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.Summary).ToString()</td>
+                            <td>@Model.Summary</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateReceivedRecorded).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateReceivedRecorded)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateAired).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateAired)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.NewsSourceId).ToString()</td>
+                            <td>@(Model.NewsSourceId == null ? "Unknown" : Model.NewsSource.NewsSourceName)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Status</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.ModifiedUser).ToString()</td>
+                            <td>@(Model.ModifiedUser == null ? "None" : Model.ModifiedUser.UserName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateModified).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateModified)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Miscellaneous</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.SpeakerCommentator).ToString()</td>
+                            <td>@Model.SpeakerCommentator</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.MediaTypeId).ToString()</td>
+                            <td>@(Model.MediaType == null ? "None" : Model.MediaType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.AudioVideoTypeId).ToString()</td>
+                            <td>@(Model.AudioVideoType == null ? "None" : Model.AudioVideoType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.MediaLength).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.MediaLength).ToString()</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.CatalogId).ToString()</td>
+                            <td>@Html.DisplayTextFor(_ => Model.CatalogId).ToString()</td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Renewal Information</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.RenewalPermmisionType).ToString()</td>
+                            <td>@(Model.RenewalPermmisionType == null ? "None" : Model.RenewalPermmisionType.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.DateRenewalPermission).ToString()</td>
+                            <td>@String.Format("{0:d}", Model.DateRenewalPermission)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.RenewalPermission).ToString()</td>
+                            <td>@(Model.RenewalPermission)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.NewsSourceId).ToString()</td>
+                            <td>@(Model.NewsSource == null ? "None" : Model.NewsSource.NewsSourceName)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="panel panel-primary">
+                <div class="panel panel-heading">Location</div>
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.City).ToString()</td>
+                            <td>@Model.City</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.County).ToString()</td>
+                            <td>@Model.County</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(_ => Model.StateId).ToString()</td>
+                            <td>@(Model.State == null ? "None" : Model.State.StateName)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </li>
+
+
+    </ul>
+
+    <h2 class="seperator-bar panel-primary">Relationships</h2>
+
+    <ul class="detail-list">
+        <li>
+            <div id="personMediaAudioVideos">
+                @Html.Partial("../Persons/_PersonMediaAudioVideoList", Model.PersonMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="chapterMediaAudioVideos">
+                @Html.Partial("../Chapters/_ChapterMediaAudioVideoList", Model.ChapterMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="organizationMediaAudioVideos">
+                @Html.Partial("../Organizations/_OrganizationMediaAudioVideoList", Model.OrganizationMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="eventMediaAudioVideos">
+                @Html.Partial("../Events/_EventMediaAudioVideoList", Model.EventMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaWebsiteEGroupMediaAudioVideos">
+                @Html.Partial("../MediaWebsiteEGroups/_MediaWebsiteEGroupMediaAudioVideoList", Model.MediaWebsiteEGroupMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaAudioVideoVehicles">
+                @Html.Partial("../MediaAudioVideos/_MediaAudioVideoVehicleList", Model.MediaAudioVideoVehicleRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaCorrespondenceMediaAudioVideos">
+                @Html.Partial("../MediaCorrespondences/_MediaCorrespondenceMediaAudioVideoList", Model.MediaCorrespondenceMediaAudioVideoRels)
+            </div>
+        </li>
+        <li>
+            <div id="mediaPublishedMediaAudioVideos">
+                @Html.Partial("../MediaPublisheds/_MediaPublishedMediaAudioVideoList", Model.MediaPublishedMediaAudioVideoRels)
+            </div>
+        </li>
+    </ul>
+
+</div>
+
+<div class="row">
+    <div id="mediaImageMediaAudioVideos">
+        @Html.Partial("../MediaImages/_MediaImageMediaAudioVideoList", Model.MediaImageMediaAudioVideoRels)
+    </div>
+</div>
+
+<div class="row" id="comments">
+    <div id="mediaAudioVideoComments">
+        @Html.Partial("../Comments/_MediaAudioVideoCommentList", Model.MediaAudioVideoComments.Where(x => x.DateDeleted == null).OrderByDescending(x => x.DateModified), new ViewDataDictionary { { "MediaAudioVideoId", Model.Id } })
+    </div>
+</div>
+
+
+<script>
+    function onAdditionalDataPersonList() {
+        return {
+            term: $("#PersonId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundPersonList() {
+        if ($("#PersonId").data("kendoComboBox").value() === '-1') {
+            $("#PersonId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalChapterList() {
+        return {
+            term: $("#ChapterId").data("kendoComboBox").text()
+        };
+    }
+
+    function databoundChapterList() {
+        if ($("#ChapterId").data("kendoComboBox").value() === '-1') {
+            $("#ChapterId").data("kendoComboBox").text('');
+        }
+    };
+
+    function onAdditionalDataWebsiteList() {
+        return {
+            term: $("#MediaWebsiteEGroupId").data("kendoComboBox").text()
+        };
+    };
+
+    function databoundWebsiteList() {
+        if ($("#MediaWebsiteEGroupId").data("kendoComboBox").value() === '-1') {
+            $("#MediaWebsiteEGroupId").data("kendoComboBox").text('');
+        }
+    };
+
+</script>

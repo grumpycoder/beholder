@@ -1,0 +1,129 @@
+﻿@model splc.beholder.web.Models.SearchResultViewModel
+@if (Model != null)
+{
+    <h3>People</h3>
+    if (!Model.BeholderPersons.Any())
+    {
+        <span>No people found</span>
+    }
+    else
+    {
+        foreach (var person in Model.BeholderPersons)
+        {
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <h4 class="list-group-item-heading">
+                        @Html.ActionLink(@person.CommonPerson.FullName, "DetailsLite", "Persons", new {id = @person.Id}, null)
+                    </h4>
+                    <p class="list-group-item-text">
+                        Location:
+                        @if (person.CommonPerson.AddressPersonRels.Any())
+                        {
+                            @person.CommonPerson.AddressPersonRels.First().Address.City<text>, </text>
+                            @(person.CommonPerson.AddressPersonRels.First().Address.State == null ? "Unknown" : person.CommonPerson.AddressPersonRels.First().Address.State.StateName)
+                        }
+                        else
+                        {
+                            <text>No known location</text>
+                        }
+                    </p>
+                    <p class="list-group-item-text">
+                        DOB: @(person.CommonPerson.DOB == null ? "Unknown" : @person.CommonPerson.DOB.ToString())
+                    </p>
+                    <p class="list-group-item-text">
+                        Alias:
+                        @if (person.CommonPerson.AliasPersonRels.Any())
+                        {
+                            var aliasList = person.CommonPerson.AliasPersonRels.Select(alias => alias.Alias.AliasName).ToList();
+                            <text>@String.Join(",", aliasList)</text>
+                        }
+                        else
+                        {
+                            <text>No known alias's</text>
+                        }
+                    </p>
+                    @if (person.PersonComments.Any())
+                    {
+                        <p class="list-group-item-text">@Html.Raw(@person.PersonComments.Last().Comment)</p>
+                    }
+                </li>
+            </ul>
+        }
+    }
+    
+    <h3>Organizations</h3>
+    if (!Model.Organizations.Any())
+     {
+         <span>No organizations found</span>
+     }
+     else
+     {
+         foreach (var org in Model.Organizations)
+         {
+             <ul class="list-group">
+                 <li class="list-group-item">
+                     <h4 class="list-group-item-heading">
+                         @Html.ActionLink(@org.OrganizationName, "DetailsLite", "Organizations", new {id = @org.Id}, null)
+                     </h4>
+                     <p class="list-group-item-text">
+                         Formed Date: @(org.FormedDate == null ? "Unknown" : string.Format("{0:d}", org.FormedDate))
+                     </p>
+                     <p class="list-group-item-text">
+                         Alias:
+                         @if (org.AliasOrganizationRels.Any())
+                         {
+                             var aliasList = org.AliasOrganizationRels.Select(alias => alias.Alias.AliasName).ToList();
+                             <text>@String.Join(",", aliasList)</text>
+                         }
+                         else
+                         {
+                             <text>No known alias's</text>
+                         }
+                     </p>
+                     @if (org.OrganizationComments.Any())
+                     {
+                         <p class="list-group-item-text">@org.OrganizationComments.Last().Comment</p>
+                     }
+                 </li>
+             </ul>
+         }
+     }
+
+    <h3>Chapters</h3>
+    if (!Model.Chapters.Any())
+    {
+        <span>No chapters found</span>
+    }
+    else
+    {
+        foreach (var chapter in Model.Chapters)
+        {
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <h4 class="list-group-item-heading">
+                        @Html.ActionLink(@chapter.ChapterName, "DetailsLite", "Chapters", new {id = @chapter.Id}, null)
+                    </h4>
+                    <p class="list-group-item-text">
+                        Formed Date: @(chapter.FormedDate == null ? "Unknown" : string.Format("{0:d}", chapter.FormedDate))
+                    </p>
+                    <p class="list-group-item-text">
+                        Alias:
+                        @if (chapter.AliasChapterRels.Any())
+                        {
+                            var aliasList = chapter.AliasChapterRels.Select(alias => alias.Alias.AliasName).ToList();
+                            <text>@String.Join(",", aliasList)</text>
+                        }
+                        else
+                        {
+                            <text>No known alias's</text>
+                        }
+                    </p>
+                    @if (chapter.ChapterComments.Any())
+                    {
+                        <p class="list-group-item-text">@chapter.ChapterComments.Last().Comment</p>
+                    }
+                </li>
+            </ul>
+        }
+    }
+}

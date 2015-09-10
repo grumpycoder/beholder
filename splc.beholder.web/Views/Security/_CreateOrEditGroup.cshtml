@@ -1,0 +1,28 @@
+﻿@model Group
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(m => m.CreatedUserId)
+
+    <fieldset>
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.Name)
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.BootstrapLabelFor(m => m.ConfidentialityType)
+            <div class="col-sm-8">
+                @Html.DropDownListFor(m => m.ConfidentialityTypeId, (SelectList)ViewBag.Confidentiality, "Choose Level", new { @class="form-control"})
+                @Html.ValidationMessageFor(model => model.ConfidentialityTypeId)
+            </div>
+
+        </div>
+    </fieldset>
+}

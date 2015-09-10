@@ -1,0 +1,59 @@
+﻿@model IEnumerable<splc.beholder.web.Models.ApprovalViewModel>
+
+@{
+    ViewBag.Title = "Approvals Reset";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    var activeyear = Session["activeyear"] ?? Request["activeyear"] ?? DateTime.Now.Year.ToString();
+}
+<h2 class="title-bar">@ViewBag.Title</h2>
+
+<div class="search-bar">
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            @using (Html.BeginForm("ApprovalResultReview", "Approval", FormMethod.Get, new { id = "approvalReset", @class = "form-inline" }))
+            {
+
+                <input type="number" id="activeyear" name="activeyear" class="form-control" placeholder="Active Year" value="@activeyear" />
+                <input type="submit" value="Search" class="btn btn-primary" />
+            }
+        </div>
+
+        <span>
+            <span class="pull-right">
+                @Html.ActionLink("Reset", "ApprovalReset", "Approval", new { @activeyear }, new { @class = "btn btn-danger" })
+            </span>
+        </span>
+    </div>
+</div>
+
+
+<div class="row">
+
+    @if (!Model.Any())
+    {
+        <h3>No approval records to reset.</h3>
+    }
+    else
+    {
+        <h3>Record for Active Year @activeyear</h3>
+        <table class="table table-condensed table-responsive table-striped">
+            <tr>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Active Year</th>
+                <th>Approval Status</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EntityType</td>
+                    <td>@item.Name</td>
+                    <td>@item.ActiveYear</td>
+                    <td>@item.ApprovalStatus.Name</td>
+                </tr>
+            }
+        </table>
+    }
+
+</div>

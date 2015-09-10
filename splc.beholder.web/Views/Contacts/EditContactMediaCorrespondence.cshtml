@@ -1,0 +1,16 @@
+﻿@model ContactMediaCorrespondenceRel
+
+@{
+    ViewBag.Title = "Edit";
+}
+<h2 class="page-title small">Edit Contact/Correspondence Relationship</h2>
+
+<div class="row">
+    @Html.Partial("_CreateOrEditContactMediaCorrespondence", Model)
+    <input type="submit" value="Create Relationship" class="btn btn-primary pull-right" />
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

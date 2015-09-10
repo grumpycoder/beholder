@@ -1,0 +1,43 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<Customer>
+
+@{
+    ViewBag.Title = "Index";
+    var pageSize = Session["pageSize"] ?? Request["pageSize"];
+    var searchTerm = Session["searchTerm"] ?? Request["searchTerm"];
+}
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("WhiteRevolution", new { page, pageSize, searchTerm }))
+</div>
+<div id="customerList">
+
+    <table class="table table-condensed table-hover table-responsive">
+        <tr>
+            <th></th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("WhiteRevolutionDetails", new { id = @customer.CustomerId })">Details</a>
+                </td>
+                <td>@customer.Firstname</td>
+                <td>@customer.Lastname</td>
+                <td>@string.Format("{0}, {1}, {2}, {3}", @customer.Addr1, @customer.City, @customer.State, @customer.Zip)</td>
+                <td>@customer.Email</td>
+                <td>@customer.Phone</td>
+            </tr>
+        }
+    </table>
+
+</div>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("WhiteRevolution", new { page, pageSize, searchTerm }))
+</div>

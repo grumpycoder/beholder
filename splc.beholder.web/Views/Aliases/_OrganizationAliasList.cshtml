@@ -1,0 +1,53 @@
+﻿@using splc.domain.Models
+@model IEnumerable<AliasOrganizationRel>
+
+@{
+    const string viewItem = "Aliases";
+    var organizationId = ViewData["OrganizationId"]; 
+}
+
+<div class="panel panel-primary">
+    <div class="panel panel-heading">@viewItem <span class="badge pull-right">@string.Format("{0}", Model.Count())</span></div>
+    <div class="panel-body">
+        <ul class="list-group">
+            @if (!Model.Any())
+            {
+                <li class="list-group-item">
+                    No Known Aliases
+                </li>
+            }
+            @foreach (var item in @Model)
+            {
+                <li class="list-group-item">
+                    <strong>@item.Alias.AliasName</strong><br />
+                    @(item.PrimaryStatus != null ? item.PrimaryStatus.Name : "[Unknown]")
+                    <div class="clearfix">
+                        <span class="pull-right">
+                            <a href="@Url.Action("EditOrganizationAlias", "Aliases", new { id = item.Id })" 
+                               class="btnEdit" 
+                               data-title="Edit Alias" 
+                               data-refresh="true" 
+                               data-target="#organizationAliases"
+                               data-action="@Url.Action("GetOrganizationAliases", "Aliases", new { id = item.OrganizationId })"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("DeleteOrganizationAlias", "Aliases", new { id = item.Id })" 
+                               class="btnDelete"
+                               data-title="Delete Alias" 
+                               data-refresh="true" 
+                               data-target="#organizationAliases"
+                               data-action="@Url.Action("GetOrganizationAliases", "Aliases", new { id = item.OrganizationId })"><span class="glyphicon glyphicon-trash"></span></a>
+                        </span>
+                    </div>
+                </li>
+
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("CreateOrganizationAlias", "Aliases", new { organizationId = @organizationId })" 
+           class="btnNew" 
+           data-refresh="true" 
+           data-target="#organizationAliases"
+           data-title="New Alias" 
+           data-action="@Url.Action("GetOrganizationAliases", "Aliases", new { id = @organizationId })"><span class="glyphicon glyphicon-plus"></span></a>
+    </div>
+</div>

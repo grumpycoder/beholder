@@ -1,0 +1,76 @@
+﻿@model splc.domain.Models.MediaImage
+
+<table class="table table-bordered">
+    <caption>
+        @string.Format("MediaImages ({0})", (Model.MediaImageMediaImageRels.Count() + Model.MediaImageMediaImageRels2.Count()).ToString())
+    </caption>
+    
+    @if (Model.MediaImageMediaImageRels.Count() + Model.MediaImageMediaImageRels2.Count() == 0)
+    {
+        <tr>
+            <td>No Known MediaImage Relationships</td>
+        </tr>
+    }
+
+    <tr>
+        <td colspan="3">
+            <div id="Carousel">
+                <ul id="slider">
+                    @foreach (var mediaImageMediaImageRel in Model.MediaImageMediaImageRels)
+                    {
+                        if (mediaImageMediaImageRel.MediaImage.Image != null || mediaImageMediaImageRel.MediaImage2.Image != null)
+                        {
+                            <li>
+                                @if ((int)ViewData["MediaImageId"] == mediaImageMediaImageRel.MediaImage2Id)
+                                {
+                                    var image = mediaImageMediaImageRel.MediaImage.Image;
+                                    <img src="@Url.Action("ShowImage", "MediaImages", new { Id = image.Id })"  />
+                                    <br/>
+                                    @Html.ActionLink(mediaImageMediaImageRel.MediaImage.ImageTitle, "Details", "MediaImages", new { id = mediaImageMediaImageRel.MediaImage.Id }, null)
+                                }
+                                else
+                                {
+                                    var image = mediaImageMediaImageRel.MediaImage2.Image;
+                                    <img src="@Url.Action("ShowImage", "MediaImages", new { Id = image.Id })"  />
+                                    <br/>
+                                    @Html.ActionLink(mediaImageMediaImageRel.MediaImage2.ImageTitle, "Details", "MediaImages", new { id = mediaImageMediaImageRel.MediaImage2.Id }, null)
+                                }
+                                <a href="@Url.Action("EditMediaImageMediaImage", "MediaImages", new { id = mediaImageMediaImageRel.Id, source = ViewData["Controller"].ToString()})" class="btnEdit" data-title="Edit Relationship" data-refresh="true" data-action="@Url.Action("GetMediaImageMediaImages", "MediaImages", new { vehicleId =  ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] })"><i class="icon-pencil icon-large"></i></a>
+                                <a href="@Url.Action("DeleteMediaImageMediaImage", "MediaImages", new { id = mediaImageMediaImageRel.Id})" class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetMediaImageMediaImages", "MediaImages", new { vehicleId =  ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"]  , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] })"><i class="icon-trash icon-large"></i></a>
+                            </li>
+                        }
+                    }
+                    @foreach (var mediaImageMediaImageRel in Model.MediaImageMediaImageRels2)
+                    {
+                        if (mediaImageMediaImageRel.MediaImage.Image != null || mediaImageMediaImageRel.MediaImage2.Image != null)
+                        {
+                            <li>
+                                @if ((int)ViewData["MediaImageId"] == mediaImageMediaImageRel.MediaImage2Id)
+                                {
+                                    var image = mediaImageMediaImageRel.MediaImage.Image;
+                                    <img src="@Url.Action("ShowImage", "MediaImages", new { Id = image.Id })"  />
+                                    <br/>
+                                    @Html.ActionLink(mediaImageMediaImageRel.MediaImage.ImageTitle, "Details", "MediaImages", new { id = mediaImageMediaImageRel.MediaImage.Id }, null)
+                                }
+                                else
+                                {
+                                    var image = mediaImageMediaImageRel.MediaImage2.Image;
+                                    <img src="@Url.Action("ShowImage", "MediaImages", new { Id = image.Id })"  />
+                                    <br/>
+                                    @Html.ActionLink(mediaImageMediaImageRel.MediaImage2.ImageTitle, "Details", "MediaImages", new { id = mediaImageMediaImageRel.MediaImage2.Id }, null)
+                                }
+                                <a href="@Url.Action("EditMediaImageMediaImage", "MediaImages", new { id = mediaImageMediaImageRel.Id, source = ViewData["Controller"].ToString()})" class="btnEdit" data-title="Edit Relationship" data-refresh="true" data-action="@Url.Action("GetMediaImageMediaImages", "MediaImages", new { vehicleId =  ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] })"><i class="icon-pencil icon-large"></i></a>
+                                <a href="@Url.Action("DeleteMediaImageMediaImage", "MediaImages", new { id = mediaImageMediaImageRel.Id})" class="btnDelete" data-title="Delete Relationship" data-refresh="true" data-action="@Url.Action("GetMediaImageMediaImages", "MediaImages", new { vehicleId =  ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"]  , mediaImageId = ViewData["MediaImageId"] == null ? -1 : (int)ViewData["MediaImageId"] })"><i class="icon-trash icon-large"></i></a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <a href="@Url.Action("CreateMediaImageMediaImage", "MediaImages", new { mediaimageId = (int)ViewData["MediaImageId"]})" class="btnNew" data-title="New Relationship" data-refresh="true" data-action="@Url.Action("GetMediaImageMediaImages", "MediaImages", new {  mediaimageId = (int)ViewData["MediaImageId"]})"><i class="icon-plus-sign icon-large"></i></a>
+        </td>
+    </tr>
+</table>

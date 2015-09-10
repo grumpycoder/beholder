@@ -1,0 +1,333 @@
+﻿html {
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.title-bar {
+    background-color: #484848;
+    color: #fff;
+    padding: 5px;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.seperator-bar {
+    background-color: #484848;
+    color: #fff;
+    padding: 5px;
+}
+
+.title-elliipsis {
+    -moz-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 225px;
+    white-space: nowrap;
+    line-height: inherit;
+}
+
+.card-ellipsis {
+    white-space: nowrap; 
+    width: 12em; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+ul.card-list li {
+    width: 250px;
+    display: inline-block;
+    vertical-align: top;
+    *display: inline;
+    *zoom: 1;
+    margin-right: 3px;
+}
+
+ul.detail-list > li {
+    width: 300px;
+    display: inline-block;
+    vertical-align: top;
+    *display: inline;
+    *zoom: 1;
+    margin-right: 3px;
+}
+
+table caption.sub-header {
+    text-align: left;
+    background-color: #484848;
+    color: #fff;
+    padding: 5px;
+    font-size: larger;
+}
+
+.brand-image {
+    background: url(images/beholder-logo-brand.png) no-repeat center right;
+    display: block;
+    height: 84px;
+    width: 264px;
+}
+
+.thumbnail > img, .thumbnail a > img.thumbnail-img {
+    width: 250px;
+    height: 175px;
+}
+
+.search-bar {
+    padding-bottom: 15px;
+}
+
+ul > li.thumbnail a {
+    text-decoration: none;
+}
+
+.detail-list .panel-body {
+    padding: 5px;
+    max-height: 285px;
+    overflow: auto;
+    min-height: 285px;
+}
+
+.detail-list .panel {
+    margin-bottom: 5px;
+}
+
+.navbar-header {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.nav.navbar-nav {
+    padding-left: 15px;
+}
+
+    .nav.navbar-nav.navbar-right {
+        padding-right: 15px;
+    }
+
+.loading {
+    display: none;
+    position: absolute;
+    background: #fff;
+}
+
+
+.progress-indicator {
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    text-align: center;
+    /* IE filter */
+    -webkit-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+    -moz-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+    -o-filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+    -moz-opacity: 0.5; /* Mozilla extension */
+    -khtml-opacity: 0.5; /* Safari/Conqueror extension */
+    -ms-opacity: 0.5;
+    opacity: 0.5; /* CSS3 */
+    z-index: 1000;
+    background-color: white;
+    display: none;
+}
+
+    .progress-indicator img {
+        margin-top: 75px;
+    }
+
+.panel.panel-body {
+    overflow: visible; /*This is the issue*/
+}
+
+#dropbox {
+    border: 2px dashed rgba(0,0,0,.3);
+    border-radius: 20px;
+    position: relative;
+    margin: 10px 10px 10px 10px;
+    min-height: 150px;
+    overflow: hidden;
+    padding-bottom: 10px;
+    width: 90%;
+    color: rgba(0,0,0,.3);
+}
+
+    #dropbox input {
+        /*Important*/
+        position: absolute;
+        /*Important*/
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    /*Important*/
+    #dropbox.mouse-over {
+        border: 2px dashed rgba(0,0,0,.5);
+        color: rgba(0,0,0,.5);
+    }
+
+    #dropbox .message {
+        text-align: center;
+        display: block;
+        font-size: 14px;
+    }
+
+        #dropbox .message i {
+            color: #e1e1e1;
+            font-size: 14px;
+        }
+
+    #dropbox:before {
+        border: 2px dashed rgba(0,0,0,.3);
+    }
+
+#imgGallery {
+    /*-------------------------
+    Progress Bars
+    --------------------------*/
+}
+
+    #imgGallery .preview {
+        height: 100%;
+        width: 100%;
+        float: left;
+        margin: 10px 10px 10px 10px;
+        position: relative;
+        text-align: center;
+    }
+
+        #imgGallery .preview img {
+            max-width: 240px;
+            max-height: 180px;
+            border: 3px solid #fff;
+            display: block;
+            box-shadow: 0 0 2px #000;
+            -webkit-box-shadow: 0 0 2px #000;
+            -moz-box-shadow: 0 0 2px #000;
+        }
+
+    #imgGallery .imageHolder {
+        display: inline-block;
+        position: relative;
+    }
+
+    #imgGallery .uploaded {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: url('../Content/Images/done.png') no-repeat center center rgba(255, 255, 255, 0.5);
+        display: none;
+    }
+
+    #imgGallery .done .uploaded {
+        display: block;
+    }
+
+    #imgGallery .progressHolder {
+        position: absolute;
+        background-color: #252f38;
+        height: 12px;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        -webkit-box-shadow: 0 0 2px #000;
+        -moz-box-shadow: 0 0 2px #000;
+        box-shadow: 0 0 2px #000;
+    }
+
+    #imgGallery .progress {
+        background-color: #2586d0;
+        position: absolute;
+        height: 100%;
+        left: 0;
+        width: 0;
+        -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.4) inset;
+        -moz-box-shadow: 0 0 1px rgba(255, 255, 255, 0.4) inset;
+        box-shadow: 0 0 1px rgba(255, 255, 255, 0.4) inset;
+        -moz-transition: 0.25s;
+        -webkit-transition: 0.25s;
+        -o-transition: 0.25s;
+        transition: 0.25s;
+    }
+
+    #imgGallery .done .progress {
+        width: 100% !important;
+    }
+
+
+.carousel-inner img {
+    width: 100%;
+    max-height: 460px;
+}
+
+.carousel-control {
+    width: 0;
+}
+
+    .carousel-control.left span,
+    .carousel-control.right span {
+        background-color: #000;
+    }
+
+.table-no-border > thead > tr > th,
+.table-no-border > tbody > tr > th,
+.table-no-border > tfoot > tr > th,
+.table-no-border > thead > tr > td,
+.table-no-border > tbody > tr > td,
+.table-no-border > tfoot > tr > td {
+    border-top: none;
+}
+
+#fileContent {
+    -moz-min-width: 700px;
+    -ms-min-width: 700px;
+    -o-min-width: 700px;
+    -webkit-min-width: 700px;
+    min-width: 700px;
+}

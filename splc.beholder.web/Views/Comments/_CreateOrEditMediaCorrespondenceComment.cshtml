@@ -1,0 +1,21 @@
+﻿@model MediaCorrespondenceComment
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+
+    @* This partial view defines form fields that will appear when creating and editing entities *@
+    @Html.HiddenFor(m => m.MediaCorrespondenceId)
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.CreatedUserId)
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <div class="form-group">
+            @*@Html.BootstrapLabelFor(m => m.Comment)*@
+            <div class="col-sm-8">
+                @Html.EditorFor(model => model.Comment)
+                <span class="help-block">@Html.ValidationMessageFor(model => model.Comment)</span>
+            </div>
+        </div>
+
+    </fieldset>
+}

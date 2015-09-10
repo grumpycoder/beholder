@@ -1,0 +1,86 @@
+@model Organization
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Organization</legend>
+
+    <div class="display-label">OrganizationName</div>
+    <div class="display-field">@Model.OrganizationName</div>
+
+    <div class="display-label">OrganizationDesc</div>
+    <div class="display-field">@Model.OrganizationDesc</div>
+
+    <div class="display-label">ActiveYear</div>
+    <div class="display-field">@Model.ActiveYear</div>
+
+    <div class="display-label">ReportStatusFlag</div>
+    <div class="display-field">@Model.ReportStatusFlag</div>
+
+    <div class="display-label">FormedDate</div>
+    <div class="display-field">@String.Format("{0:d}", Model.FormedDate)</div>
+
+    <div class="display-label">DisbandDate</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DisbandDate)</div>
+
+    <div class="display-label">DateCreated</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateCreated)</div>
+
+    <div class="display-label">CreatedUserId</div>
+    <div class="display-field">@Model.CreatedUserId</div>
+
+    <div class="display-label">DateModified</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateModified)</div>
+
+    <div class="display-label">ModifiedUserId</div>
+    <div class="display-field">@Model.ModifiedUserId</div>
+
+    <div class="display-label">RemovalStatusId</div>
+    <div class="display-field">@Model.RemovalStatusId</div>
+
+    <div class="display-label">RemovalReason</div>
+    <div class="display-field">@Model.RemovalReason</div>
+
+    <div class="display-label">DateDeleted</div>
+    <div class="display-field">@String.Format("{0:d}", Model.DateDeleted)</div>
+
+    <div class="display-label">DeletedUserId</div>
+    <div class="display-field">@Model.DeletedUserId</div>
+
+    <div class="display-label">ActiveStatus</div>
+    <div class="display-field">@(Model.ActiveStatus == null ? "None" : Model.ActiveStatus.Name)</div>
+
+    <div class="display-label">AliasOrganizationRels</div>
+    <div class="display-field">@(Model.AliasOrganizationRels == null ? "None" : Model.AliasOrganizationRels.Count.ToString())</div>
+
+    <div class="display-label">ApprovalStatus</div>
+    <div class="display-field">@(Model.ApprovalStatus == null ? "None" : Model.ApprovalStatus.Name)</div>
+
+    <div class="display-label">Chapters</div>
+    <div class="display-field">@(Model.Chapters == null ? "None" : Model.Chapters.Count.ToString())</div>
+
+    <div class="display-label">ConfidentialityType</div>
+    <div class="display-field">@(Model.ConfidentialityType == null ? "None" : Model.ConfidentialityType.Name)</div>
+
+    <div class="display-label">MovementClass</div>
+    <div class="display-field">@(Model.MovementClass == null ? "None" : Model.MovementClass.Name)</div>
+
+    <div class="display-label">OrganizationType</div>
+    <div class="display-field">@(Model.OrganizationType == null ? "None" : Model.OrganizationType.Name)</div>
+
+    <div class="display-label">OrganizationPersonRels</div>
+    <div class="display-field">@(Model.OrganizationPersonRels == null ? "None" : Model.OrganizationPersonRels.Count.ToString())</div>
+</fieldset>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" })) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+
+

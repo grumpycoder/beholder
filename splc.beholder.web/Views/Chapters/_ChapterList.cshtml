@@ -1,0 +1,87 @@
+﻿@using Caseiro.Mvc.PagedList.Helpers
+@model Caseiro.Mvc.PagedList.PagedList<Chapter>
+
+@{
+    ViewBag.Title = "Chapters";
+
+    var pageSize = Request["pageSize"];
+    var chaptername = Request["chaptername"];
+    var activeyear = Request["activeyear"];
+    var activestatusid = Request["activestatusid"];
+    var location = Request["location"];
+    var movementclassid = Request["movementclassid"];
+
+    var movementclassid_string = "";
+    if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
+    {
+        movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+    var stateid_string = "";
+    if ((Session["stateid"] ?? Request["stateid"]) != null)
+    {
+        stateid_string = string.Join(",", (List<int>)(Session["stateid"] ?? Request["stateid"]));
+    }
+    
+}
+
+@if (!Model.Any())
+{
+    <h3>No Chapters found</h3>
+}
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, stateid_string, activeyear, activestatusid, location }))
+</div>
+
+
+<ul class="card-list">
+    @foreach (var item in Model)
+    {
+        <li>
+            <div class="thumbnail">
+
+                <a href="@Url.Action("Details", "Chapters", new { id = item.Id })">
+
+                    @if (item.ChapterMediaImageRels.Count > 0)
+                    {
+                        <img src="@Url.Action("ShowPrimaryImage", "Chapters", new { Id = item.Id })" alt="org image" class="thumbnail-img" height="175" width="250" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/images/image_unavailable.jpg" alt="" class="thumbnail-img" height="175" width="250" />
+                    }
+
+                    <h4 class="title-elliipsis" title="@string.Format("{0}", item.ChapterName)">@string.Format("{0}", item.ChapterName)</h4>
+                    <table class="table">
+                        <tr>
+                            <td>Movement</td>
+                            <td>@(item.MovementClass == null ? "Unknown" : item.MovementClass.Name)</td>
+                        </tr>
+                        <tr>
+                            <td>Location</td>
+                            <td>
+                                @(item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1) != null ?
+                                @String.Format("{0}, {1}", item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.City, item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State == null ? "Unknown" : item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State.StateCode)
+                                :
+                                @item.AddressChapterRels.FirstOrDefault() == null ? "Unknown" :
+                                @String.Format("{0}, {1}", item.AddressChapterRels.FirstOrDefault().Address.City, item.AddressChapterRels.FirstOrDefault().Address.State == null ? "Unknown" : item.AddressChapterRels.FirstOrDefault().Address.State.StateCode)
+                                )
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="nowrap">Active Year</td>
+                            <td>@(item.ActiveYear == null ? "Unknown" : item.ActiveYear.ToString())</td>
+                        </tr>
+                        <tr>
+                            <td>Active</td>
+                            <td>@(item.ActiveStatusId == null ? "Unknown" : item.ActiveStatus.Name)</td>
+                        </tr>
+                    </table>
+                </a>
+            </div>
+        </li>
+    }
+</ul>
+
+<div class="row">
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, stateid_string, activeyear, activestatusid, location }))
+</div>

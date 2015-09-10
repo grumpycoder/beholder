@@ -1,0 +1,30 @@
+﻿@model User
+
+<script src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" })) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+       
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.PersonId, new { @required="required", data_val_required="Person is required. "})
+
+
+        <div class="editor-label">
+            @Html.BootstrapLabelFor(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.UserName)
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+              
+      
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
