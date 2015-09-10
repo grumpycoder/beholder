@@ -1,4 +1,0 @@
-﻿CREATE PARTITION FUNCTION [BeholderFileStreamFunction](INT)
-    AS RANGE
-    FOR VALUES (75000, 150000);
-
