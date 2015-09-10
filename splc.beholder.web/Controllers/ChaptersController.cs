@@ -178,7 +178,7 @@ namespace splc.beholder.web.Controllers
                         && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
                         && (location.Length == 0 || x.AddressChapterRels.Any(m => m.Address.City.Contains(location)))
                         && (x.AddressChapterRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId)))
-                        ).OrderBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
+                        ).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
                 }
                 else
                 {
@@ -187,7 +187,7 @@ namespace splc.beholder.web.Controllers
                         && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
                         && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
                         && (location.Length == 0 || x.AddressChapterRels.Any(m => m.Address.City.Contains(location)))
-                        ).OrderBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
+                        ).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
                 }
             }
             else
@@ -201,7 +201,7 @@ namespace splc.beholder.web.Controllers
                         && (movementclassid.Contains((int)x.MovementClassId))
                         && (location.Length == 0 || x.AddressChapterRels.Any(m => m.Address.City.Contains(location)))
                         && (x.AddressChapterRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId)))
-                        ).OrderBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
+                        ).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
 
                 }
                 else
@@ -212,7 +212,7 @@ namespace splc.beholder.web.Controllers
                                                               && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
                                                               && (movementclassid.Contains((int)x.MovementClassId))
                                                               && (location.Length == 0 || x.AddressChapterRels.Any(m => m.Address.City.Contains(location)))
-                                                              ).OrderBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
+                                                              ).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
                 }
             }
 
