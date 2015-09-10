@@ -68,6 +68,17 @@
                             </td>
                         </tr>
                         <tr>
+                            <td>County</td>    
+                            <td>
+                                @(item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1) != null ?
+                                @String.Format("{0}", item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.County)
+                                :
+                                @item.AddressChapterRels.FirstOrDefault() == null ? "Unknown" :
+                                @String.Format("{0}", item.AddressChapterRels.FirstOrDefault().Address.County)
+                                )
+                            </td>
+                        </tr>
+                        <tr>
                             <td class="nowrap">Active Year</td>
                             <td>@(item.ActiveYear == null ? "Unknown" : item.ActiveYear.ToString())</td>
                         </tr>
