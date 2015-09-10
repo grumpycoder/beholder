@@ -32,7 +32,6 @@ namespace splc.domain.Models
         public int? WebsiteEGroupTypeId { get; set; }
         [Required]
         public string Name { get; set; }
-        [Url]
         [Required]
         public string URL { get; set; }
         [Display(Name = "Date Discovered")]
