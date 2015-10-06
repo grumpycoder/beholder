@@ -8,11 +8,17 @@
     var activestatusid = Session["activestatusid"] ?? Request["activestatusid"];
     var location = Session["location"];
     var movementclassid = Request["movementclassid"];
+    var approvalstatusid = Request["approvalstatusid"];
 
     var movementclassid_string = "";
     if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
     {
         movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
+    }
+    var approvalstatusid_string = "";
+    if ((Session["approvalstatusid"] ?? Request["approvalstatusid"]) != null)
+    {
+        approvalstatusid_string = string.Join(",", (List<int>)(Session["approvalstatusid"] ?? Request["approvalstatusid"]));
     }
 
     var personId = ViewBag.PersonId;
@@ -25,7 +31,7 @@
 <div class="search-bar">
     <div class="row">
         <span>
-            @Html.ActionLink("Return to List", "Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, activeyear, activestatusid, location })
+            @Html.ActionLink("Return to List", "Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, approvalstatusid, approvalstatusid_string, activeyear, activestatusid, location })
         </span>
         <span class="pull-right">
             @Html.ActionLink("Edit", "Edit", "Chapters", new { id = Model.Id }, new { @class = "btn btn-default" })

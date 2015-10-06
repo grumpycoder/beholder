@@ -21,6 +21,10 @@ textarea {
     max-width: 280px;
 }
 
+.isPrimaryAddress {
+    background-color: rgb(230, 230, 230);
+    font-weight: 900;
+}
 
 /* styles for validation helpers */
 .field-validation-error {
@@ -72,10 +76,10 @@ input[type="checkbox"].input-validation-error {
 }
 
 .card-ellipsis {
-    white-space: nowrap; 
-    width: 12em; 
+    white-space: nowrap;
+    width: 12em;
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
 }
 
 ul.card-list li {

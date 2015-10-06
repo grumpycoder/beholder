@@ -1,5 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System.Web;
+using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using Antlr.Runtime.Misc;
 
 namespace splc.beholder.web.Helpers
 {
@@ -19,6 +21,20 @@ namespace splc.beholder.web.Helpers
                 builder.AddCssClass("active");
 
             return new MvcHtmlString(builder.ToString());
+        }
+
+        public static MvcHtmlString Attr(this HtmlHelper helper, string name, string value, Func<bool> condition = null)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value))
+            {
+                return MvcHtmlString.Empty;
+            }
+
+            var render = condition != null ? condition() : true;
+
+            return render ?
+                new MvcHtmlString(string.Format("{0}=\"{1}\"", name, HttpUtility.HtmlAttributeEncode(value))) :
+                MvcHtmlString.Empty;
         }
     }
 }

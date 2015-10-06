@@ -17,23 +17,25 @@
             }
             @foreach (var item in @Model)
             {
-                <li class="list-group-item">
+                <li class="list-group-item @(item.PrimaryStatusId == 1 ? "isPrimaryAddress" : "")">
+
+                    @(item.PrimaryStatus == null ? "[Primary Status]" : item.PrimaryStatus.Name)<br />
                     @(item.AddressType == null ? "[AddressType]" : item.AddressType.Name)<br />
-                    @(item.Address == null ? "[Address]" : string.Format("{0} {1}", String.IsNullOrEmpty(item.Address.Address1) ? "[Address]" : item.Address.Address1, item.Address.Address2) ) <br/>
-                    @(item.Address == null ? "[City]" : string.Format("{0},{1}  {2}-{3}",item.Address.City, item.Address.State == null ? "[State]" : item.Address.State.StateCode, item.Address.Zip5, item.Address.Zip4) ) 
+                    @(item.Address == null ? "[Address]" : string.Format("{0} {1}", String.IsNullOrEmpty(item.Address.Address1) ? "[Address]" : item.Address.Address1, item.Address.Address2)) <br />
+                    @(item.Address == null ? "[City]" : string.Format("{0},{1}  {2}-{3}", item.Address.City, item.Address.State == null ? "[State]" : item.Address.State.StateCode, item.Address.Zip5, item.Address.Zip4))
                     <div class="clearfix">
                         <span class="pull-right">
-                            <a href="@Url.Action("EditPersonAddress", "Addresses", new { id = item.Id })" 
-                               class="btnEdit" 
-                               data-title="Update Address" 
+                            <a href="@Url.Action("EditPersonAddress", "Addresses", new { id = item.Id })"
+                               class="btnEdit"
+                               data-title="Update Address"
                                data-target="#personAddresses"
-                               data-refresh="true" 
+                               data-refresh="true"
                                data-action="@Url.Action("GetPersonAddresses", "Addresses", new { id = commonPersonId })"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a href="@Url.Action("DeletePersonAddress", "Addresses", new { id = item.Id })" 
-                               class="btnDelete" 
-                               data-title="Delete Address" 
+                            <a href="@Url.Action("DeletePersonAddress", "Addresses", new { id = item.Id })"
+                               class="btnDelete"
+                               data-title="Delete Address"
                                data-target="#personAddresses"
-                               data-refresh="true" 
+                               data-refresh="true"
                                data-action="@Url.Action("GetPersonAddresses", "Addresses", new { id = commonPersonId })"><span class="glyphicon glyphicon-trash"></span></a>
                         </span>
                     </div>

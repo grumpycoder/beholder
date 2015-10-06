@@ -13,6 +13,7 @@ using splc.domain.Models;
 using System.Linq;
 using System.Web.Mvc;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace splc.beholder.web.Controllers
 {
@@ -39,6 +40,22 @@ namespace splc.beholder.web.Controllers
             ViewBag.PossibleContactInfoTypes = lookupRepo.GetContactInfoTypes();
             ViewBag.PossiblePrimaryStatus = _lookupRepo.GetPrimaryStatuses();
         }
+
+
+        #region "ExpressionBuilders"
+
+        public Expression<Func<Chapter, bool>> NamePred(params string[] keywords)
+        {
+            var predicate = PredicateBuilder.False<Chapter>();
+            foreach (string keyword in keywords)
+            {
+                string temp = keyword;
+                predicate = predicate.Or(p => p.ChapterName.Contains(temp));
+            }
+            return predicate;
+        }
+        #endregion
+
 
         public JsonResult GetChapterList(string term)
         {
@@ -69,7 +86,7 @@ namespace splc.beholder.web.Controllers
                     c.Id,
                     c.AddressChapterRels.FirstOrDefault().Address.City,
                     State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
-                    Movement = c.MovementClass.Name, 
+                    Movement = c.MovementClass.Name,
                     ActiveYear = c.ActiveYear
                 });
 
@@ -80,7 +97,7 @@ namespace splc.beholder.web.Controllers
                     x.City,
                     x.State,
                     x.Movement,
-                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State), 
+                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State),
                     x.ActiveYear
                 });
 
@@ -96,7 +113,7 @@ namespace splc.beholder.web.Controllers
                     c.Id,
                     c.AddressChapterRels.FirstOrDefault().Address.City,
                     State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
-                    Movement = c.MovementClass.Name, 
+                    Movement = c.MovementClass.Name,
                     ActiveYear = c.ActiveYear
                 });
 
@@ -107,7 +124,7 @@ namespace splc.beholder.web.Controllers
                     x.City,
                     x.State,
                     x.Movement,
-                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State), 
+                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State),
                     x.ActiveYear
                 });
                 return Json(items, JsonRequestBehavior.AllowGet);
@@ -121,7 +138,7 @@ namespace splc.beholder.web.Controllers
                     c.Id,
                     c.AddressChapterRels.FirstOrDefault().Address.City,
                     State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
-                    Movement = c.MovementClass.Name, 
+                    Movement = c.MovementClass.Name,
                     ActiveYear = c.ActiveYear
                 });
                 var items = list.ToList().Select(x => new
@@ -131,7 +148,7 @@ namespace splc.beholder.web.Controllers
                     x.City,
                     x.State,
                     x.Movement,
-                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State), 
+                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State),
                     x.ActiveYear
                 });
                 return Json(items, JsonRequestBehavior.AllowGet);
@@ -147,12 +164,20 @@ namespace splc.beholder.web.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Index(int? activeyear, int? activestatusid, string chaptername = "", List<int> movementclassid = null, string movementclassid_string = "", List<int> stateid = null, string stateid_string = "", string location = "", int? page = 1, int? pageSize = 15)
+        public ActionResult Index(int? activeyear, int? activestatusid, string chaptername = "",
+            List<int> movementclassid = null, string movementclassid_string = "", List<int> approvalstatusid = null,
+            string approvalstatusid_string = "", List<int> stateid = null, string stateid_string = "",
+            string location = "", int? page = 1, int? pageSize = 15)
         {
             if (!String.IsNullOrWhiteSpace(movementclassid_string))
             {
                 movementclassid = ((List<int>)movementclassid_string.Split(',').Select(int.Parse).ToList());
             }
+            if (!String.IsNullOrWhiteSpace(approvalstatusid_string))
+            {
+                approvalstatusid = ((List<int>)approvalstatusid_string.Split(',').Select(int.Parse).ToList());
+            }
+
             if (!String.IsNullOrWhiteSpace(stateid_string))
             {
                 stateid = stateid_string.Split(',').Select(int.Parse).ToList();
@@ -160,6 +185,7 @@ namespace splc.beholder.web.Controllers
 
             Session["stateid"] = stateid;
             Session["movementclassid"] = movementclassid;
+            Session["approvalstatusid"] = approvalstatusid;
             Session["chaptername"] = chaptername;
             Session["location"] = location;
             Session["activeyear"] = activeyear;
@@ -168,53 +194,16 @@ namespace splc.beholder.web.Controllers
             Session["pageSize"] = pageSize;
 
             PagedList<Chapter> list = null;
-            if (movementclassid == null)
-            {
-                if (stateid != null)
-                {
-                    list = _chapterRepo.GetChapters(currentUser, x =>
-                        x.ChapterName.Contains(chaptername)
-                        && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                        && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                        && (location.Length == 0 || x.AddressChapterRels.Any(m => m.Address.City.Contains(location)))
-                        && (x.AddressChapterRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId)))
-                        ).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-                else
-                {
-                    list = _chapterRepo.GetChapters(currentUser, x =>
-                        x.ChapterName.Contains(chaptername)
-                        && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                        && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                        && (location.Length == 0 || x.AddressChapterRels.Any(m => m.Address.City.Contains(location)))
-                        ).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-            }
-            else
-            {
-                if (stateid != null)
-                {
-                    list = _chapterRepo.GetChapters(currentUser, x =>
-                        x.ChapterName.Contains(chaptername)
-                        && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                        && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                        && (movementclassid.Contains((int)x.MovementClassId))
-                        && (location.Length == 0 || x.AddressChapterRels.Any(m => m.Address.City.Contains(location)))
-                        && (x.AddressChapterRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId)))
-                        ).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
+            var pred = PredicateBuilder.True<Chapter>();
+            pred = pred.And(c => c.ChapterName.Contains(chaptername));
+            pred = pred.And(c => c.ActiveStatusId == (activestatusid.HasValue ? activestatusid : c.ActiveStatusId));
+            pred = pred.And(c => c.ActiveYear == (activeyear.HasValue ? activeyear : c.ActiveYear));
+            if (movementclassid != null) pred = pred.And(c => (movementclassid.Contains((int)c.MovementClassId)));
+            if (approvalstatusid != null) pred = pred.And(c => (approvalstatusid.Contains(c.ApprovalStatusId)));
+            if (location != "") pred = pred.And(c => location.Length == 0 || c.AddressChapterRels.Any(m => m.Address.City.Contains(location)));
+            if (stateid != null) pred = pred.And(c => (c.AddressChapterRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId))));
 
-                }
-                else
-                {
-                    list = _chapterRepo.GetChapters(currentUser, x =>
-                                                                 x.ChapterName.Contains(chaptername)
-                                                              && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                              && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                                                              && (movementclassid.Contains((int)x.MovementClassId))
-                                                              && (location.Length == 0 || x.AddressChapterRels.Any(m => m.Address.City.Contains(location)))
-                                                              ).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-            }
+            list = _chapterRepo.GetChapters(currentUser, pred).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
@@ -272,8 +261,10 @@ namespace splc.beholder.web.Controllers
         [HttpPost]
         public ActionResult Create(Chapter chapter)
         {
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
             if (ModelState.IsValid)
             {
+
                 _chapterRepo.InsertOrUpdate(chapter);
                 _chapterRepo.Save();
                 return RedirectToAction("Details", "Chapters", new { id = chapter.Id });

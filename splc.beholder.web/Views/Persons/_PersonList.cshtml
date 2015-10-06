@@ -71,10 +71,10 @@
                         <tr>
                             <td>Location</td>
                             <td>
-                                @(item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatusId == 1) != null ?
+                                @(item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatusId == 1 && x.DateDeleted == null) != null ?
                                 @String.Format("{0}, {1}", item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.City, item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State == null ? "Unknown" : item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State.StateCode)
                                 :
-                                @item.CommonPerson.AddressPersonRels.FirstOrDefault() == null ? "Unknown" :
+                                @item.CommonPerson.AddressPersonRels.FirstOrDefault(x => x.PrimaryStatusId != 1 && x.DateDeleted == null) == null ? "Unknown" :
                                 @String.Format("{0}, {1}", item.CommonPerson.AddressPersonRels.FirstOrDefault().Address.City, item.CommonPerson.AddressPersonRels.FirstOrDefault().Address.State == null ? "Unknown" : item.CommonPerson.AddressPersonRels.FirstOrDefault().Address.State.StateCode)
                                 )
                             </td>

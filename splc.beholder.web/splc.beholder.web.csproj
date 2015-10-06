@@ -294,6 +294,7 @@
     <Compile Include="Utility\ControllerExtensions.cs" />
     <Compile Include="Utility\ImageHelper.cs" />
     <Compile Include="Utility\ImageResult.cs" />
+    <Compile Include="Utility\PredicateBuilder.cs" />
     <Compile Include="Utility\StringHelper.cs" />
   </ItemGroup>
   <ItemGroup>

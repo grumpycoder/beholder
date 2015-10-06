@@ -10,18 +10,25 @@
     var activestatusid = Request["activestatusid"];
     var location = Request["location"];
     var movementclassid = Request["movementclassid"];
+    var approvalstatusid = Request["approvalstatusid"];
 
     var movementclassid_string = "";
     if ((Session["movementclassid"] ?? Request["movementclassid"]) != null)
     {
         movementclassid_string = string.Join(",", (List<int>)(Session["movementclassid"] ?? Request["movementclassid"]));
     }
+    var approvalstatusid_string = "";
+    if ((Session["approvalstatusid"] ?? Request["approvalstatusid"]) != null)
+    {
+        approvalstatusid_string = string.Join(",", (List<int>)(Session["approvalstatusid"] ?? Request["approvalstatusid"]));
+    }
+
     var stateid_string = "";
     if ((Session["stateid"] ?? Request["stateid"]) != null)
     {
         stateid_string = string.Join(",", (List<int>)(Session["stateid"] ?? Request["stateid"]));
     }
-    
+
 }
 
 @if (!Model.Any())
@@ -29,7 +36,7 @@
     <h3>No Chapters found</h3>
 }
 <div class="row">
-    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, stateid_string, activeyear, activestatusid, location }))
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, approvalstatusid, approvalstatusid_string, stateid_string, activeyear, activestatusid, location }))
 </div>
 
 
@@ -59,21 +66,21 @@
                         <tr>
                             <td>Location</td>
                             <td>
-                                @(item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1) != null ?
+                                @(item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1 && x.DateDeleted == null) != null ?
                                 @String.Format("{0}, {1}", item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.City, item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State == null ? "Unknown" : item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State.StateCode)
                                 :
-                                @item.AddressChapterRels.FirstOrDefault() == null ? "Unknown" :
+                                @item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId != 1 && x.DateDeleted == null) == null ? "Unknown" :
                                 @String.Format("{0}, {1}", item.AddressChapterRels.FirstOrDefault().Address.City, item.AddressChapterRels.FirstOrDefault().Address.State == null ? "Unknown" : item.AddressChapterRels.FirstOrDefault().Address.State.StateCode)
                                 )
                             </td>
                         </tr>
                         <tr>
-                            <td>County</td>    
+                            <td>County</td>
                             <td>
-                                @(item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1) != null ?
+                                @(item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1 && x.DateDeleted == null) != null ?
                                 @String.Format("{0}", item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.County)
                                 :
-                                @item.AddressChapterRels.FirstOrDefault() == null ? "Unknown" :
+                                @item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId != 1 && x.DateDeleted == null) == null ? "Unknown" :
                                 @String.Format("{0}", item.AddressChapterRels.FirstOrDefault().Address.County)
                                 )
                             </td>
@@ -94,5 +101,5 @@
 </ul>
 
 <div class="row">
-    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, stateid_string, activeyear, activestatusid, location }))
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, chaptername, movementclassid, movementclassid_string, approvalstatusid, approvalstatusid_string, stateid_string, activeyear, activestatusid, location }))
 </div>
