@@ -131,12 +131,15 @@ namespace splc.beholder.web.Controllers
             }
             else
             {
-                //var list = _chapterRepo.GetChapters(x => x.ChapterName.Contains(chaptername) && (x.AddressChapterRels.Any(a => a.Address.State.StateCode.Contains(state) && a.Address.City.Contains(city)))).Select(c => new
-                var list = _chapterRepo.GetChapters(x => x.ChapterName.Contains(chaptername) && (x.AddressChapterRels.FirstOrDefault().Address.State.StateCode.Contains(state) && x.AddressChapterRels.FirstOrDefault().Address.City.Contains(city))).Select(c => new
+                var pred = PredicateBuilder.True<Chapter>();
+                pred = pred.And(c => c.ChapterName.Contains(chaptername));
+                pred = pred.And(c => c.AddressChapterRels.Any(x => x.Address.City.Contains(city)));
+                pred = pred.And(c => c.AddressChapterRels.Any(x => x.Address.State.StateCode.Contains(state)));
+                var list = _chapterRepo.GetChapters(pred).Take(50).Select(c => new
                 {
                     c.ChapterName,
                     c.Id,
-                    c.AddressChapterRels.FirstOrDefault().Address.City,
+                    c.AddressChapterRels.Where(r => r.PrimaryStatusId == 1).FirstOrDefault(x => x.Address.State.StateCode.Contains(state) && x.Address.City.Contains(city)).Address.City,
                     State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
                     Movement = c.MovementClass.Name,
                     ActiveYear = c.ActiveYear
@@ -154,6 +157,10 @@ namespace splc.beholder.web.Controllers
                 return Json(items, JsonRequestBehavior.AllowGet);
 
             }
+
+
+
+
         }
 
         // GET: Search for Chapters 

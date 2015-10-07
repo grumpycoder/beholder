@@ -2,7 +2,6 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
-    @* This partial view defines form fields that will appear when creating and editing entities *@
     @Html.HiddenFor(model => model.Id)
     @Html.HiddenFor(model => model.OrganizationId, new { @required = "required", data_val_required = "Organization is required. " })
 
@@ -20,13 +19,12 @@
                             .DataSource(s =>
                               s.Read(r => r.Action("GetChapterList", "Chapters")).ServerFiltering(true)))
                     <span class="help-block">ex.Name:State:City</span>
-                    
                     @Html.HiddenFor(model => model.ChapterId)
 
                     <span class="help-block">@Html.ValidationMessageFor(model => model.ChapterId)</span>
                 </div>
             </div>
-        
+
         }
 
         @if (ViewBag.Controller == "Chapters")
