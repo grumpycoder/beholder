@@ -64,103 +64,46 @@ namespace splc.beholder.web.Controllers
             string state = string.Empty;
             string city = string.Empty;
 
+            //Get term from request parameters if not passed in by url
             if (term == null)
             {
                 term = Request.Params["filter[filters][0][value]"];
                 if (term != null)
                 {
                     var searchParams = term.Split(':').ToList();
-
                     chaptername = searchParams[0].Trim();
-                    //state = searchParams.ElementAtOrDefault(1);
                     state = searchParams.Count() > 1 ? searchParams[1].Trim() : string.Empty;
                     city = searchParams.Count() > 2 ? searchParams[2].Trim() : string.Empty;
                 }
             }
 
-            if (string.IsNullOrWhiteSpace(term) || term == "-1")
+            var pred = PredicateBuilder.True<Chapter>();
+            pred = pred.And(c => c.ChapterName.Contains(chaptername));
+            if (term.IsInt()) pred.And(c => c.Id == Convert.ToInt32(term));
+            if (city != String.Empty) pred = pred.And(c => c.AddressChapterRels.Any(x => x.Address.City.Contains(city)));
+            if (state != string.Empty) pred = pred.And(c => c.AddressChapterRels.Any(x => x.Address.State.StateCode.Contains(state)));
+
+            var list = _chapterRepo.GetChapters(pred).Take(50).Select(c => new
             {
-                var list = _chapterRepo.GetChapters().OrderBy(x => x.ChapterName).Take(50).OrderBy(x => x.ChapterName).Take(50).Select(c => new
-                {
-                    c.ChapterName,
-                    c.Id,
-                    c.AddressChapterRels.FirstOrDefault().Address.City,
-                    State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
-                    Movement = c.MovementClass.Name,
-                    ActiveYear = c.ActiveYear
-                });
-
-                var items = list.ToList().Select(x => new
-                {
-                    Name = x.ChapterName,
-                    x.Id,
-                    x.City,
-                    x.State,
-                    x.Movement,
-                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State),
-                    x.ActiveYear
-                });
-
-                return Json(items, JsonRequestBehavior.AllowGet);
-
-            }
-            if (term.IsInt())
+                c.ChapterName,
+                c.Id,
+                c.AddressChapterRels.Where(r => r.PrimaryStatusId == 1).FirstOrDefault(x => x.Address.State.StateCode.Contains(state) && x.Address.City.Contains(city)).Address.City,
+                State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
+                Movement = c.MovementClass.Name,
+                ActiveYear = c.ActiveYear
+            });
+            var items = list.ToList().Select(x => new
             {
-                var id = Convert.ToInt32(term);
-                var list = _chapterRepo.GetChapters(x => x.Id == id).Select(c => new
-                {
-                    c.ChapterName,
-                    c.Id,
-                    c.AddressChapterRels.FirstOrDefault().Address.City,
-                    State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
-                    Movement = c.MovementClass.Name,
-                    ActiveYear = c.ActiveYear
-                });
-
-                var items = list.ToList().Select(x => new
-                {
-                    Name = x.ChapterName,
-                    x.Id,
-                    x.City,
-                    x.State,
-                    x.Movement,
-                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State),
-                    x.ActiveYear
-                });
-                return Json(items, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                var pred = PredicateBuilder.True<Chapter>();
-                pred = pred.And(c => c.ChapterName.Contains(chaptername));
-                pred = pred.And(c => c.AddressChapterRels.Any(x => x.Address.City.Contains(city)));
-                pred = pred.And(c => c.AddressChapterRels.Any(x => x.Address.State.StateCode.Contains(state)));
-                var list = _chapterRepo.GetChapters(pred).Take(50).Select(c => new
-                {
-                    c.ChapterName,
-                    c.Id,
-                    c.AddressChapterRels.Where(r => r.PrimaryStatusId == 1).FirstOrDefault(x => x.Address.State.StateCode.Contains(state) && x.Address.City.Contains(city)).Address.City,
-                    State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
-                    Movement = c.MovementClass.Name,
-                    ActiveYear = c.ActiveYear
-                });
-                var items = list.ToList().Select(x => new
-                {
-                    Name = x.ChapterName,
-                    x.Id,
-                    x.City,
-                    x.State,
-                    x.Movement,
-                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State),
-                    x.ActiveYear
-                });
-                return Json(items, JsonRequestBehavior.AllowGet);
-
-            }
-
-
-
-
+                Name = x.ChapterName,
+                x.Id,
+                x.City,
+                x.State,
+                x.Movement,
+                Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State),
+                x.ActiveYear
+            });
+            return Json(items, JsonRequestBehavior.AllowGet);
+            
         }
 
         // GET: Search for Chapters 
