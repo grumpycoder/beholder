@@ -31,14 +31,14 @@ namespace splc.domain.Models
         public int? PrefixId { get; set; }
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "First Name required")]
-        [RegularExpression(@"^([a-zA-Z]+\s)*[a-zA-Z]+$", ErrorMessage = "Only characters A-Z allowed")]
+        [RegularExpression(@"^([a-zA-Z\-]+\s)*[a-zA-Z\-]+$", ErrorMessage = "Only characters A-Z allowed")]
         public string FName { get; set; }
         [Display(Name = "Middle Name")]
-        [RegularExpression(@"^([a-zA-Z]+\s)*[a-zA-Z]+$", ErrorMessage = "Only characters A-Z allowed")]
+        [RegularExpression(@"^([a-zA-Z\-]+\s)*[a-zA-Z\-]+$", ErrorMessage = "Only characters A-Z allowed")]
         public string MName { get; set; }
         [Display(Name = "Last Name")]
         [Required(ErrorMessage = "Last Name required")]
-        [RegularExpression(@"^([a-zA-Z]+\s)*[a-zA-Z]+$", ErrorMessage = "Only characters A-Z allowed")]
+        [RegularExpression(@"^([a-zA-Z\-]+\s)*[a-zA-Z\-]+$", ErrorMessage = "Only characters A-Z allowed")]
         public string LName { get; set; }
         [Display(Name = "Suffix")]
         public int? SuffixId { get; set; }
