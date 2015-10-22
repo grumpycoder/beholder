@@ -16,7 +16,7 @@ namespace splc.domain.Models.Mapping
                 .HasMaxLength(100);
 
             this.Property(t => t.OrganizationDesc)
-                .HasMaxLength(256);
+                .HasMaxLength(512);
 
             this.Property(t => t.RemovalReason)
                 .HasMaxLength(50);
