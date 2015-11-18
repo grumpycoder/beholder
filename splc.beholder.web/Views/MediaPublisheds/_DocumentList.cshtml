@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MediaPublishedContext>
+﻿@model IEnumerable<splc.beholder.web.Models.PublishedContextViewModel>
 @{
     Layout = null;
 }
@@ -18,7 +18,6 @@
                data-target="#documentList"
                data-action="@Url.Action("GetContextList", "MediaPublisheds", new { mediaPublishedId = @item.MediaPublishedId })">&nbsp;<span class="glyphicon glyphicon-remove pull-right"></span></a>
         </li>
-
     }
 
 </ul>

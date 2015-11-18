@@ -15,6 +15,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
+using splc.beholder.web.Models;
 
 namespace splc.beholder.web.Controllers
 {
@@ -51,9 +52,18 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult GetContextList(int websiteEgroupId)
         {
-            var list = db.MediaWebsiteEGroupContexts.Where(x => x.MediaWebsiteEGroupId == websiteEgroupId).ToList();
+            //            var list = db.MediaWebsiteEGroupContexts.Where(x => x.MediaWebsiteEGroupId == websiteEgroupId).ToList();
+            var list = db.MediaWebsiteEGroupContexts.Where(x => x.MediaWebsiteEGroupId == websiteEgroupId).Select(s =>
+            new WebsiteContextViewModel()
+            {
+                Id = s.Id,
+                FileName = s.FileName,
+                MediaWebsiteEGroupId = s.MediaWebsiteEGroupId
+            }).ToList();
             return View("_DocumentList", list);
         }
+
+
 
         [HttpPost]
         public JsonResult SaveTextAsContent(int websiteEgroupId, string filename, string content)
@@ -285,7 +295,7 @@ namespace splc.beholder.web.Controllers
                                                                                          && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
                                                                                          && (comment.Length == 0 ? true : x.MediaWebsiteEGroupComments.Any(m => m.Comment.Contains(comment)))
                                                                                          && (x.MediaWebsiteEGroupContext_Indexes.Any(m => m.ContextText.Contains(s)))
-                        //&& x.MediaWebsiteEGroupContext_Index.ContextText.Contains(s)
+                                                                            //&& x.MediaWebsiteEGroupContext_Index.ContextText.Contains(s)
                                                                             ).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
                 }
                 else
@@ -297,7 +307,7 @@ namespace splc.beholder.web.Controllers
                                                                                          && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
                                                                                          && (comment.Length == 0 ? true : x.MediaWebsiteEGroupComments.Any(m => m.Comment.Contains(comment)))
                                                                                          && (x.MediaWebsiteEGroupContext_Indexes.Any(m => m.ContextText.Contains(s)))
-                        //&& x.MediaWebsiteEGroupContext_Index.ContextText.Contains(s)
+                                                                            //&& x.MediaWebsiteEGroupContext_Index.ContextText.Contains(s)
                                                                             ).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
                 }
             }
@@ -490,7 +500,7 @@ namespace splc.beholder.web.Controllers
                     {
                         foreach (var file in attachments)
                         {
-                            if(file == null) break;
+                            if (file == null) break;
                             var filename = Path.GetFileName(file.FileName);
                             if (filename != null)
                             {

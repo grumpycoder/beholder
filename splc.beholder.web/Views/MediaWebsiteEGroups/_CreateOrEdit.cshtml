@@ -230,7 +230,8 @@
             <div id="uploadFile">
                 @if (@Model.Id != 0)
                 {
-                    @Html.Kendo().Upload().Name("attachments").Async(a => a.Save("SaveAttachments", "MediaWebsiteEGroups", new { websiteEgroupId = @Model.Id })).ShowFileList(false).Events(e => e.Complete(@<text> function(e){LoadView("#documentList","@Url.Action("GetContextList", "MediaWebsiteEGroups", new { websiteEgroupId = Model.Id })")}</text>)).Messages(m => m.HeaderStatusUploaded("").StatusUploaded("").Select("Choose"))
+                    @Html.Kendo().Upload().Name("attachments").Async(a => a.Save("SaveAttachments", "MediaWebsiteEGroups",
+                   new { websiteEgroupId = @Model.Id })).ShowFileList(false).Events(e => e.Complete(@<text> function(e){LoadView("#documentList","@Url.Action("GetContextList", "MediaWebsiteEGroups", new { websiteEgroupId = Model.Id })")}</text>)).Messages(m => m.HeaderStatusUploaded("").StatusUploaded("").Select("Choose"))
                 }
                 else
                 {
@@ -247,11 +248,11 @@
                     }
                     else
                     {
-                 
+
                         <a href="@Url.Action("SaveTextAsContent", "MediaWebsiteEGroups")" id="btnSaveContext"
                            class="btn btn-warning"
                            data-target="#documentList"
-                           data-modelid = "@Model.Id"
+                           data-modelid="@Model.Id"
                            data-action="@Url.Action("GetContextList", "MediaWebsiteEGroups", new { websiteEgroupId = Model.Id })">Save as file</a>
                     }
                 </div>
@@ -259,6 +260,10 @@
         </div>
 
     </fieldset>
+
+
+
+
 
 
 </div>
@@ -297,7 +302,7 @@
         });
 
         $(function () {
-            $('#attachments').kendoUpload();
+//            $('#attachments').kendoUpload();
         });
 
     });

@@ -14,6 +14,7 @@ using System.Web;
 using System.Data.Entity.Validation;
 using splc.data.Utility;
 using System.Text;
+using splc.beholder.web.Models;
 
 namespace splc.beholder.web.Controllers
 {
@@ -51,7 +52,14 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult GetContextList(int MediaPublishedId)
         {
-            var list = db.MediaPublishedContexts.Where(x => x.MediaPublishedId == MediaPublishedId).ToList();
+            //            var list = db.MediaPublishedContexts.Where(x => x.MediaPublishedId == MediaPublishedId).ToList();
+            var list = db.MediaPublishedContexts.Where(x => x.MediaPublishedId == MediaPublishedId).Select(s =>
+            new PublishedContextViewModel()
+            {
+                Id = s.Id,
+                FileName = s.FileName,
+                MediaPublishedId = s.MediaPublishedId
+            }).ToList();
             return View("_DocumentList", list);
         }
 

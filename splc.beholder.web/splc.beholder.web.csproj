@@ -261,7 +261,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\ContactsController.cs" />
+    <Compile Include="Models\CorrespondenceContextViewModel.cs" />
     <Compile Include="Controllers\MediaWebsiteEGroupsController.cs" />
+    <Compile Include="Models\PublishedContextViewModel.cs" />
     <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\ResearchController.cs" />
     <Compile Include="Controllers\SecurityController.cs" />
@@ -278,6 +280,7 @@
     <Compile Include="Controllers\SearchesController.cs" />
     <Compile Include="Controllers\ValidationController.cs" />
     <Compile Include="Controllers\VehiclesController.cs" />
+    <Compile Include="Models\WebsiteContextViewModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

@@ -14,6 +14,7 @@ using System.Web;
 using System.Data.Entity.Validation;
 using splc.data.Utility;
 using System.Text;
+using splc.beholder.web.Models;
 
 namespace splc.beholder.web.Controllers
 {
@@ -22,17 +23,17 @@ namespace splc.beholder.web.Controllers
     {
         private readonly ILookupRepository _lookupRepo;
         private readonly IMediaCorrespondenceRepository _mediaCorrespondenceRepo;
-        private readonly IUserRepository _userRepository; 
+        private readonly IUserRepository _userRepository;
         private readonly ACDBContext db;
 
         public MediaCorrespondencesController(
             ILookupRepository lookupRepo,
             IMediaCorrespondenceRepository mediaCorrespondenceRepo,
-            IUserRepository userRepository, 
+            IUserRepository userRepository,
             ACDBContext _db)
         {
             _lookupRepo = lookupRepo;
-            _userRepository = userRepository; 
+            _userRepository = userRepository;
             _mediaCorrespondenceRepo = mediaCorrespondenceRepo;
             db = _db;
 
@@ -48,14 +49,22 @@ namespace splc.beholder.web.Controllers
 
             ViewBag.PossibleStates = _lookupRepo.GetStates();
             ViewBag.PossibleRemovalStatuses = _lookupRepo.GetRemovalStatus();
-            ViewBag.Users = _userRepository.GetUsers(); 
+            ViewBag.Users = _userRepository.GetUsers();
         }
 
         #region Base
 
         public ActionResult GetContextList(int correspondenceId)
         {
-            var list = db.MediaCorrespondenceContexts.Where(x => x.MediaCorrespondenceId == correspondenceId).ToList();
+            //            var list = db.MediaCorrespondenceContexts.Where(x => x.MediaCorrespondenceId == correspondenceId).ToList();
+            var list = db.MediaCorrespondenceContexts.Where(x => x.MediaCorrespondenceId == correspondenceId).Select(s =>
+            new CorrespondenceContextViewModel()
+            {
+                Id = s.Id,
+                FileName = s.FileName,
+                MediaCorrespondenceId = s.MediaCorrespondenceId
+            }).ToList();
+
             return View("_DocumentList", list);
         }
 
@@ -86,7 +95,7 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult SaveAttachments(IEnumerable<HttpPostedFileBase> attachments, int correspondenceId)
         {
-        
+
             if (attachments != null)
             {
                 foreach (var file in attachments)
@@ -161,7 +170,7 @@ namespace splc.beholder.web.Controllers
         //
         // GET: /Organizations/
         //public ViewResult Index()
-        public ActionResult Index(int? userid, string correspondencename = "", string fromname = "", DateTime? datefrom = null, DateTime? dateto = null, 
+        public ActionResult Index(int? userid, string correspondencename = "", string fromname = "", DateTime? datefrom = null, DateTime? dateto = null,
             List<int> correspondencetypeid = null, string correspondencetypeid_string = "", string docsearch = "", int? page = 1, int? pageSize = 15)
         {
             if (!String.IsNullOrWhiteSpace(correspondencetypeid_string))
@@ -201,7 +210,7 @@ namespace splc.beholder.web.Controllers
                 {
                     list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser,
                         x => (fromname.Length == 0 || x.FromName.Contains(fromname))
-                             && (x.CreatedUserId == (userid ?? x.CreatedUserId)) 
+                             && (x.CreatedUserId == (userid ?? x.CreatedUserId))
                              && (correspondencename.Length == 0 || x.CorrespondenceName.Contains(correspondencename))
                              && (x.DateReceived ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DateReceived ?? DateTime.MinValue))
                              && (x.DateReceived ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DateReceived ?? DateTime.MinValue))
@@ -212,7 +221,7 @@ namespace splc.beholder.web.Controllers
                 {
                     list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser,
                         x => (fromname.Length == 0 || x.FromName.Contains(fromname))
-                             && (x.CreatedUserId == (userid ?? x.CreatedUserId)) 
+                             && (x.CreatedUserId == (userid ?? x.CreatedUserId))
                              && (correspondencename.Length == 0 || x.CorrespondenceName.Contains(correspondencename))
                              && (x.DateReceived ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DateReceived ?? DateTime.MinValue))
                              && (x.DateReceived ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DateReceived ?? DateTime.MinValue))
@@ -227,7 +236,7 @@ namespace splc.beholder.web.Controllers
                 {
                     list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser,
                         x => (fromname.Length == 0 || x.FromName.Contains(fromname))
-                             && (x.CreatedUserId == (userid ?? x.CreatedUserId)) 
+                             && (x.CreatedUserId == (userid ?? x.CreatedUserId))
                              && (correspondencename.Length == 0 || x.CorrespondenceName.Contains(correspondencename))
                              && (x.DateReceived ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DateReceived ?? DateTime.MinValue))
                              && (x.DateReceived ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DateReceived ?? DateTime.MinValue))
@@ -240,7 +249,7 @@ namespace splc.beholder.web.Controllers
                 {
                     list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser,
                         x => (fromname.Length == 0 || x.FromName.Contains(fromname))
-                             && (x.CreatedUserId == (userid ?? x.CreatedUserId)) 
+                             && (x.CreatedUserId == (userid ?? x.CreatedUserId))
                              && (correspondencename.Length == 0 || x.CorrespondenceName.Contains(correspondencename))
                              && (x.DateReceived ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DateReceived ?? DateTime.MinValue))
                              && (x.DateReceived ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DateReceived ?? DateTime.MinValue))
@@ -349,7 +358,7 @@ namespace splc.beholder.web.Controllers
                 while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     ms.Write(buffer, 0, read);
-                }    
+                }
                 stream.Close();
                 tmp = ms.ToArray();
             }
