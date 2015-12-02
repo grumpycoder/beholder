@@ -129,7 +129,7 @@
                         @*<a href="@Url.Action("Download", "MediaPublisheds", new { Id = pub.MediaPublished.MediaPublishedContextId })" target="_blank">
                             @string.Format("{0} ({1:d})", pub.MediaPublished.Name, pub.MediaPublished.DatePublished)
                         </a>*@
-                        <a href="@Url.Action("Download", "MediaPublisheds", new { Id = pub.MediaPublished.MediaPublishedContextId ?? pub.MediaPublished.MediaPublishedContexts.FirstOrDefault().Id })" target="_blank">
+                        <a href="@Url.Action("Download", "MediaPublisheds", new { Id = pub.MediaPublished.MediaPublishedContextId })" target="_blank">
                             @string.Format("{0} ({1:d})", pub.MediaPublished.Name, pub.MediaPublished.DatePublished)
                         </a>
                     </strong><br />
