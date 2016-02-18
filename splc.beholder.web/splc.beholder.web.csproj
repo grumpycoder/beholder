@@ -72,10 +72,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Foolproof, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Foolproof Validation\Foolproof\bin\Release\Foolproof.dll</HintPath>
-    </Reference>
     <Reference Include="GridMvc, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Grid.Mvc.3.0.0\lib\net40\GridMvc.dll</HintPath>
@@ -119,9 +115,6 @@
     <Reference Include="Microsoft.Web.Mvc, Version=5.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.Futures.5.1.0-rc1\lib\net40\Microsoft.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="MVC Foolproof Validation">
-      <HintPath>..\packages\foolproof.0.9.4517\lib\MVC Foolproof Validation.dll</HintPath>
     </Reference>
     <Reference Include="MvcContrib">
       <HintPath>..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>

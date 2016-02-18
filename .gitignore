@@ -187,3 +187,11 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+/splc.domain/Migrations/201509270225231_ChapterTableChange.resx
+/splc.domain/Migrations/201509270225231_ChapterTableChange.Designer.cs
+/splc.domain/Migrations/201509270225231_ChapterTableChange.cs
+/splc.beholder.web/Views/_ChapterList.cshtml
+/splc.beholder.web/Models/PersonListViewModel.cs
+/splc.beholder.web/Infrastructure/Mapping/IMapFrom.cs
+/splc.beholder.web/Infrastructure/Mapping/IHaveCustomMappings.cs
+/splc.beholder.web/App_Start/AutoMapperConfig.cs

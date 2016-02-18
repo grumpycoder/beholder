@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25008.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "splc.beholder.web", "splc.beholder.web\splc.beholder.web.csproj", "{F3351802-B1D4-4A47-957A-D593729CF7E4}"
 EndProject
@@ -14,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "splc.data", "splc.data\splc.data.csproj", "{5AA2A25D-6AA1-474E-AD42-EBE171545D34}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "splc.domain", "splc.domain\splc.domain.csproj", "{C1B01921-9073-44B9-890E-948BDC9DF72D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Foolproof", "Foolproof\Foolproof.csproj", "{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,14 +47,6 @@ Global
 		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Stage|Any CPU.Build.0 = Stage|Any CPU
 		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Test|Any CPU.ActiveCfg = Test|Any CPU
 		{C1B01921-9073-44B9-890E-948BDC9DF72D}.Test|Any CPU.Build.0 = Test|Any CPU
-		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Stage|Any CPU.ActiveCfg = Release|Any CPU
-		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Stage|Any CPU.Build.0 = Release|Any CPU
-		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{D2D9C8A8-78BD-4647-95CA-AA92DCC3DBD9}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
