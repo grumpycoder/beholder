@@ -13,6 +13,7 @@ using splc.domain.Models;
 using System.Linq;
 using System.Web.Mvc;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq.Expressions;
 
 namespace splc.beholder.web.Controllers
@@ -83,15 +84,16 @@ namespace splc.beholder.web.Controllers
             if (city != String.Empty) pred = pred.And(c => c.AddressChapterRels.Any(x => x.Address.City.Contains(city)));
             if (state != string.Empty) pred = pred.And(c => c.AddressChapterRels.Any(x => x.Address.State.StateCode.Contains(state)));
 
-            var list = _chapterRepo.GetChapters(pred).Take(50).Select(c => new
+            var list = _chapterRepo.GetChapters(pred).Include(a => a.AddressChapterRels).Take(50).Select(c => new
             {
                 c.ChapterName,
                 c.Id,
                 c.AddressChapterRels.Where(r => r.PrimaryStatusId == 1).FirstOrDefault(x => x.Address.State.StateCode.Contains(state) && x.Address.City.Contains(city)).Address.City,
-                State = c.AddressChapterRels.FirstOrDefault().Address.State.StateCode,
+                State = c.AddressChapterRels.Where(r => r.PrimaryStatusId == 1).FirstOrDefault(x => x.Address.State.StateCode.Contains(state) && x.Address.City.Contains(city)).Address.State.StateCode,
                 Movement = c.MovementClass.Name,
                 ActiveYear = c.ActiveYear
             });
+            
             var items = list.ToList().Select(x => new
             {
                 Name = x.ChapterName,
