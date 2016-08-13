@@ -148,15 +148,19 @@ namespace splc.beholder.web.Controllers
         [HttpPost]
         public ActionResult Create(Event evnt, string[] eventTypes)
         {
-            var l = eventTypes.ToList().Select(int.Parse).ToList();
-            var types = _lookupRepo.GetEventTypes().Where(x => l.Contains(x.Id)).ToList();
+
 
             if (ModelState.IsValid)
             {
                 _eventRepo.InsertOrUpdate(evnt);
                 _eventRepo.Save();
-                _eventRepo.InsertOrUpdate(evnt, types);
-                _eventRepo.Save();
+                if (eventTypes != null)
+                {
+                    var l = eventTypes.ToList().Select(int.Parse).ToList();
+                    var types = _lookupRepo.GetEventTypes().Where(x => l.Contains(x.Id)).ToList();
+                    _eventRepo.InsertOrUpdate(evnt, types);
+                    _eventRepo.Save();
+                }
                 return RedirectToAction("Details", new { id = evnt.Id });
             }
             else
@@ -201,12 +205,19 @@ namespace splc.beholder.web.Controllers
         [HttpPost]
         public ActionResult Edit(Event eventincident, string[] eventTypes)
         {
-            var l = eventTypes.ToList().Select(int.Parse).ToList();
-            var types = _lookupRepo.GetEventTypes().Where(x => l.Contains(x.Id)).ToList();
-
             if (ModelState.IsValid)
             {
-                _eventRepo.InsertOrUpdate(eventincident, types);
+                if (eventTypes != null)
+                {
+                    var l = eventTypes.ToList().Select(int.Parse).ToList();
+                    var types = _lookupRepo.GetEventTypes().Where(x => l.Contains(x.Id)).ToList();
+                    _eventRepo.InsertOrUpdate(eventincident, types);
+
+                }
+                else
+                {
+                    _eventRepo.InsertOrUpdate(eventincident);
+                }
                 _eventRepo.Save();
 
                 return RedirectToAction("Details", new { id = eventincident.Id });
@@ -287,12 +298,12 @@ namespace splc.beholder.web.Controllers
         {
             var approvalStatusId = _lookupRepo.GetApprovalStatuses().SingleOrDefault(p => p.Name.Equals("New")).Id;
             var eventVehicleRel = new EventVehicleRel
-                {
-                    VehicleId = vehicleId,
-                    EventId = eventId,
-                    ApprovalStatusId = approvalStatusId,
-                    DateStart = System.DateTime.Now,
-                };
+            {
+                VehicleId = vehicleId,
+                EventId = eventId,
+                ApprovalStatusId = approvalStatusId,
+                DateStart = System.DateTime.Now,
+            };
 
             if (vehicleId == -1)
             {
@@ -440,12 +451,12 @@ namespace splc.beholder.web.Controllers
         {
             var approvalStatusId = _lookupRepo.GetApprovalStatuses().SingleOrDefault(p => p.Name.Equals("New")).Id;
             var eventMediaImageRel = new EventMediaImageRel
-                {
-                    MediaImageId = mediaImageId,
-                    EventId = eventId,
-                    ApprovalStatusId = approvalStatusId,
-                    DateStart = DateTime.Now,
-                };
+            {
+                MediaImageId = mediaImageId,
+                EventId = eventId,
+                ApprovalStatusId = approvalStatusId,
+                DateStart = DateTime.Now,
+            };
 
             if (mediaImageId == -1)
             {
@@ -592,12 +603,12 @@ namespace splc.beholder.web.Controllers
         {
             var approvalStatusId = _lookupRepo.GetApprovalStatuses().SingleOrDefault(p => p.Name.Equals("New")).Id;
             var eventEventRel = new EventEventRel
-                {
-                    EventId = eventId,
-                    ApprovalStatusId = approvalStatusId,
-                    DateStart = DateTime.Now,
-                    Event2 = new Event(),
-                };
+            {
+                EventId = eventId,
+                ApprovalStatusId = approvalStatusId,
+                DateStart = DateTime.Now,
+                Event2 = new Event(),
+            };
 
             ViewBag.PossibleRelationshipTypes = _lookupRepo.GetRelationshipTypes().Where(x => x.ObjectFrom.Equals("Event") && x.ObjectTo.Equals("Event")).OrderBy(x => x.SortOrder);
             ViewBag.EventId = eventId;
