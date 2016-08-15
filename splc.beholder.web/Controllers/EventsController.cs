@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Caseiro.Mvc.PagedList;
+using Caseiro.Mvc.PagedList.Extensions;
+using splc.data;
+using splc.data.repository;
+using splc.domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using splc.domain.Models;
-using splc.data;
-using splc.data.repository;
-using Caseiro.Mvc.PagedList.Extensions;
-using Caseiro.Mvc.PagedList;
 
 namespace splc.beholder.web.Controllers
 {
@@ -148,8 +148,6 @@ namespace splc.beholder.web.Controllers
         [HttpPost]
         public ActionResult Create(Event evnt, string[] eventTypes)
         {
-
-
             if (ModelState.IsValid)
             {
                 _eventRepo.InsertOrUpdate(evnt);
@@ -163,10 +161,7 @@ namespace splc.beholder.web.Controllers
                 }
                 return RedirectToAction("Details", new { id = evnt.Id });
             }
-            else
-            {
-                return View();
-            }
+            return View();
         }
 
         //
@@ -205,24 +200,20 @@ namespace splc.beholder.web.Controllers
         [HttpPost]
         public ActionResult Edit(Event eventincident, string[] eventTypes)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View();
+            if (eventTypes != null)
             {
-                if (eventTypes != null)
-                {
-                    var l = eventTypes.ToList().Select(int.Parse).ToList();
-                    var types = _lookupRepo.GetEventTypes().Where(x => l.Contains(x.Id)).ToList();
-                    _eventRepo.InsertOrUpdate(eventincident, types);
-
-                }
-                else
-                {
-                    _eventRepo.InsertOrUpdate(eventincident);
-                }
-                _eventRepo.Save();
-
-                return RedirectToAction("Details", new { id = eventincident.Id });
+                var l = eventTypes.ToList().Select(int.Parse).ToList();
+                var types = _lookupRepo.GetEventTypes().Where(x => l.Contains(x.Id)).ToList();
+                _eventRepo.InsertOrUpdate(eventincident, types);
             }
-            return View();
+            else
+            {
+                _eventRepo.InsertOrUpdate(eventincident);
+            }
+            _eventRepo.Save();
+
+            return RedirectToAction("Details", new { id = eventincident.Id });
         }
 
         public ActionResult RemoveEvent(int id)
