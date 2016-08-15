@@ -23,5 +23,6 @@ namespace splc.beholder.web
             log4net.Config.XmlConfigurator.Configure();
 
         }
+        
     }
 }
