@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Foolproof;
 
 namespace splc.domain.Models
 {
@@ -20,11 +19,11 @@ namespace splc.domain.Models
         public int Id { get; set; }
         [Display(Name = "Organization Type")]
         public int OrganizationTypeId { get; set; }
-        [Display(Name="Name")]
+        [Display(Name = "Name")]
         [Required(ErrorMessage = "Organization Name is required.")]
         public string OrganizationName { get; set; }
-        [Display(Name="Description")]
-        [DataType(DataType.MultilineText)]
+        [Display(Name = "Description")]
+        [DataType(DataType.MultilineText), MaxLength(512, ErrorMessage = "Must be less than 512 characters.")]
         public string OrganizationDesc { get; set; }
         [Display(Name = "Approval Status")]
         public int ApprovalStatusId { get; set; }
