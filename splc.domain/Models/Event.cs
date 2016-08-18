@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace splc.domain.Models
@@ -52,7 +51,7 @@ namespace splc.domain.Models
         [Display(Name = "Confidentiality Type")]
         public int? ConfidentialityTypeId { get; set; }
         public string Religion { get; set; }
-        [DataType(DataType.MultilineText)]
+        [DataType(DataType.MultilineText), MaxLength(4000, ErrorMessage = "Must be less than 4000 characters.")]
         public string Summary { get; set; }
         [Display(Name = "Web Incident Type")]
         public int? WebIncidentTypeId { get; set; }

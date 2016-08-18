@@ -1,8 +1,7 @@
+using splc.domain.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Foolproof;
-using splc.domain.Validators;
 
 namespace splc.domain.Models
 {
@@ -57,7 +56,7 @@ namespace splc.domain.Models
         public int? RenewalPermissionTypeId { get; set; }
         [Display(Name = "Renewal Permission")]
         public string RenewalPermission { get; set; }
-        [DataType(DataType.MultilineText)]
+        [DataType(DataType.MultilineText), MaxLength(4000, ErrorMessage = "Must be less than 4000 characters.")]
         public string Summary { get; set; }
         [RegularExpression(@"^([a-zA-Z]+\s)*[a-zA-Z]+$", ErrorMessage = "Enter a valid City. Letter characters only")]
         public string City { get; set; }

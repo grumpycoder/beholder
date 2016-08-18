@@ -50,6 +50,7 @@ namespace splc.domain.Models
         public int? RenewalPermissionTypeId { get; set; }
         [Display(Name = "Renewal Permission")]
         public string RenewalPermission { get; set; }
+        [DataType(DataType.MultilineText), MaxLength(4000, ErrorMessage = "Must be less than 4000 characters.")]
         public string Summary { get; set; }
         [RegularExpression(@"^([a-zA-Z]+\s)*[a-zA-Z]+$", ErrorMessage = "Enter a valid City. Letter characters only")]
         public string City { get; set; }
@@ -74,7 +75,7 @@ namespace splc.domain.Models
         public virtual RemovalStatus RemovalStatus { get; set; }
         public virtual RenewalPermmisionType RenewalPermmisionType { get; set; }
         public virtual State State { get; set; }
-        
+
         public virtual ICollection<MediaAudioVideoComment> MediaAudioVideoComments { get; set; }
         public virtual ICollection<ChapterMediaAudioVideoRel> ChapterMediaAudioVideoRels { get; set; }
         public virtual ICollection<OrganizationMediaAudioVideoRel> OrganizationMediaAudioVideoRels { get; set; }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Foolproof;
 
 namespace splc.domain.Models
 {
@@ -24,7 +23,7 @@ namespace splc.domain.Models
         [Required(ErrorMessage = "Name is required.")]
         public string ChapterName { get; set; }
         [Display(Name = "Description")]
-        [DataType(DataType.MultilineText)]
+        [DataType(DataType.MultilineText), MaxLength(512, ErrorMessage = "Must be less than 512 characters.")]
         public string ChapterDesc { get; set; }
         [Display(Name = "Chapter Type")]
         public int? ChapterTypeId { get; set; }
@@ -90,7 +89,7 @@ namespace splc.domain.Models
                 yield return new ValidationResult("Test Validation.", new[] { "ChapterName" });
 
             }
-        } 
+        }
 
     }
 }

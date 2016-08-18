@@ -67,7 +67,7 @@ namespace splc.domain.Models
         public int? ApprovalStatusId { get; set; }
         [Display(Name = "WhoIs Info")]
         public string WhoIsInfo { get; set; }
-        [DataType(DataType.MultilineText)]
+        [DataType(DataType.MultilineText), MaxLength(4000, ErrorMessage = "Must be less than 4000 characters.")]
         public string Summary { get; set; }
         [RegularExpression(@"^([a-zA-Z]+\s)*[a-zA-Z]+$", ErrorMessage = "Enter a valid City. Letter characters only")]
         public string City { get; set; }
