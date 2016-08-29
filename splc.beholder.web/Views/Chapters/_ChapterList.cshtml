@@ -66,23 +66,24 @@
                         <tr>
                             <td>Location</td>
                             <td>
-                                @(item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1 && x.DateDeleted == null) != null ?
-                                @String.Format("{0}, {1}", item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.City, item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State == null ? "Unknown" : item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.State.StateCode)
-                                :
-                                @item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId != 1 && x.DateDeleted == null) == null ? "Unknown" :
-                                @String.Format("{0}, {1}", item.AddressChapterRels.FirstOrDefault().Address.City, item.AddressChapterRels.FirstOrDefault().Address.State == null ? "Unknown" : item.AddressChapterRels.FirstOrDefault().Address.State.StateCode)
-                                )
+                                @{
+                                    var address = new Address();
+                                    var rel = item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1 && x.DateDeleted == null) ?? item.AddressChapterRels.FirstOrDefault(x => x.DateDeleted == null);
+
+                                    if (rel != null)
+                                    {
+                                        address = rel.Address;
+                                    }
+                                }
+
+                                @string.Format("{0}, {1}", address.City ?? "Unknown", address.State.StateCode ?? "Unknown")
                             </td>
+
                         </tr>
                         <tr>
                             <td>County</td>
                             <td>
-                                @(item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId == 1 && x.DateDeleted == null) != null ?
-                                @String.Format("{0}", item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatus.Name == "Primary").Address.County)
-                                :
-                                @item.AddressChapterRels.FirstOrDefault(x => x.PrimaryStatusId != 1 && x.DateDeleted == null) == null ? "Unknown" :
-                                @String.Format("{0}", item.AddressChapterRels.FirstOrDefault().Address.County)
-                                )
+                                    @string.Format("{0}", address.County ?? "Unknown")
                             </td>
                         </tr>
                         <tr>
@@ -97,7 +98,7 @@
                 </a>
             </div>
         </li>
-    }
+                                    }
 </ul>
 
 <div class="row">
