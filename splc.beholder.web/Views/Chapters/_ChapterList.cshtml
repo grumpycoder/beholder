@@ -75,15 +75,35 @@
                                         address = rel.Address;
                                     }
                                 }
+                                @{
+                                    var city = "";
+                                    var state = "";
+                                }
+                                @if (address.City != null)
+                                {
+                                    city = address.City;
+                                }
+                                else
+                                {
+                                    city = "Unknown";
+                                }
+                                @if (address.State != null)
+                                {
+                                    state = address.State.StateCode;
+                                }
+                                else
+                                {
+                                    state = "Unknown";
+                                }
 
-                                @string.Format("{0}, {1}", address.City ?? "Unknown", address.State.StateCode ?? "Unknown")
+                                @string.Format("{0}, {1}", city, state)
                             </td>
 
                         </tr>
                         <tr>
                             <td>County</td>
                             <td>
-                                    @string.Format("{0}", address.County ?? "Unknown")
+                                @string.Format("{0}", address.County ?? "Unknown")
                             </td>
                         </tr>
                         <tr>
