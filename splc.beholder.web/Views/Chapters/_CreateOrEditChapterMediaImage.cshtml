@@ -3,6 +3,7 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.MediaImageId, new { @required = "required", @data_val_required = "Image is required." })
 
     <fieldset>
 
