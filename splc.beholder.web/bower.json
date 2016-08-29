@@ -1,0 +1,22 @@
+{
+  "name": "splc.beholder.web",
+  "description": "",
+  "main": "gulpfile.js",
+  "authors": [
+    "Mark Lawrence"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/southernpovertylawcenter/beholder",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^1.10.0",
+    "filedrop": "*"
+  }
+}

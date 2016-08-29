@@ -196,3 +196,4 @@ ModelManifest.xml
 /splc.beholder.web/Infrastructure/Mapping/IHaveCustomMappings.cs
 /splc.beholder.web/App_Start/AutoMapperConfig.cs
 /migrateToAutomaticPackageRestore.ps1
+/splc.beholder.web/lib
