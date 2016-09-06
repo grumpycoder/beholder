@@ -31,7 +31,12 @@
 
                 </td>
                 <td>@item.NewsSourceName</td>
-                <td>@(item.NewsSourceType.Name)</td>
+                <td>
+                    @if (item.NewsSourceType != null)
+                    {
+                        @(item.NewsSourceType.Name)
+                    }
+                </td>
             </tr>
         }
 

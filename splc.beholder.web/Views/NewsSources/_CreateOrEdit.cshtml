@@ -23,7 +23,7 @@
                           Text = (option == null ? "None" : option.Name),
                           Value = option.Id.ToString(),
                           Selected = (Model != null) && (option.Id == Model.NewsSourceTypeId)
-                      }), "Choose...", new { @class = "form-control" })
+                      }), "Choose...", new { @class = "form-control", required = "required" })
                 <span class="help-block">@Html.ValidationMessageFor(model => model.NewsSourceTypeId)</span>
             </div>
         </div>

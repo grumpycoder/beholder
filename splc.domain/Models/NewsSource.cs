@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +7,7 @@ namespace splc.domain.Models
     {
         [Key]
         public int Id { get; set; }
-        [Display(Name = "News Source Name")]
+        [Display(Name = "News Source Name"), Required]
         public string NewsSourceName { get; set; }
         [Display(Name = "News Source Type")]
         public int? NewsSourceTypeId { get; set; }
