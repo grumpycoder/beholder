@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
-using System.Web.Mvc;
-using System.Web.Security;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using splc.beholder.web.Models;
+using splc.data;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.Security;
 
 namespace splc.beholder.web.Controllers
 {
@@ -36,14 +38,24 @@ namespace splc.beholder.web.Controllers
 
             if (Membership.ValidateUser(model.UserName, model.Password))
             {
-                FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
-                if (!string.IsNullOrEmpty(returnUrl))
+                var context = new ACDBContext();
+                var user = context.Users.FirstOrDefault(x => x.UserName == model.UserName);
+                if (user != null)
                 {
-                    return Redirect(returnUrl);
+
+                    FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
+                    if (!string.IsNullOrEmpty(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    return RedirectToAction("Index", "Searches");
                 }
-                return RedirectToAction("Index", "Searches");
+                ModelState.AddModelError("", "You are not authorized. Contact Administrator");
             }
-            ModelState.AddModelError("", "Invalid username or password.");
+            else
+            {
+                ModelState.AddModelError("", "Invalid username or password.");
+            }
 
             // If we got this far, something failed, redisplay form
             return View(model);
@@ -55,7 +67,7 @@ namespace splc.beholder.web.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Index", "Searches");
         }
-        
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && UserManager != null)
@@ -65,6 +77,6 @@ namespace splc.beholder.web.Controllers
             }
             base.Dispose(disposing);
         }
-        
+
     }
 }
