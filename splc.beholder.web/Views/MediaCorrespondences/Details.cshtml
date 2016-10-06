@@ -1,7 +1,7 @@
 @model MediaCorrespondence
 
 @{
-    ViewBag.Title = string.Format("Details - {0}", Model.CorrespondenceName == "Unspecified On Conversion" ? (Model.Summary).Substring(0, 20) : Model.CorrespondenceName);
+    ViewBag.Title = Model.CorrespondenceName;
     var page = Session["page"] ?? Request["page"];
     var pageSize = Session["pageSize"] ?? Request["pageSize"];
     var correspondencename = Session["correspondencename"] ?? Request["correspondencename"];
