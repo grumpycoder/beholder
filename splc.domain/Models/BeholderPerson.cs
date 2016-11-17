@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace splc.domain.Models
 {
@@ -29,7 +27,7 @@ namespace splc.domain.Models
         public string DistinguishableMarks { get; set; }
         [Display(Name = "Removal Status")]
         public int? RemovalStatusId { get; set; }
-        [Display(Name = "Removal Reason")]
+        [Display(Name = "Removal Reason"), MaxLength(50, ErrorMessage = "Reason cannot be more than 50 characters.")]
         [DataType(DataType.MultilineText)]
         public string RemovalReason { get; set; }
 

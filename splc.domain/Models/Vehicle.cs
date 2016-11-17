@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -49,7 +48,7 @@ namespace splc.domain.Models
         public int? VehicleYear { get; set; }
         [Display(Name = "Removal Status")]
         public int? RemovalStatusId { get; set; }
-        [Display(Name = "Removal Reason")]
+        [Display(Name = "Removal Reason"), MaxLength(50, ErrorMessage = "Reason cannot be more than 50 characters.")]
         [DataType(DataType.MultilineText)]
         public string RemovalReason { get; set; }
         [Display(Name = "Removal Status")]
@@ -77,7 +76,7 @@ namespace splc.domain.Models
 
         public override string ToString()
         {
-            return string.Format("{0}|{1}|{2}|{3}", VehicleYear, VehicleColor != null  ? VehicleColor.Name : "No Color", VehicleMake != null ? VehicleMake.Name : "No Make", VehicleModel != null ? VehicleModel.Name : "No Model");
+            return string.Format("{0}|{1}|{2}|{3}", VehicleYear, VehicleColor != null ? VehicleColor.Name : "No Color", VehicleMake != null ? VehicleMake.Name : "No Make", VehicleModel != null ? VehicleModel.Name : "No Model");
         }
     }
 }
