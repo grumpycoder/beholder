@@ -1,15 +1,14 @@
+using Caseiro.Mvc.PagedList.Extensions;
+using splc.beholder.web.Utility;
+using splc.data;
+using splc.data.repository;
+using splc.domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.WebPages;
-using Caseiro.Mvc.PagedList;
-using Caseiro.Mvc.PagedList.Extensions;
-using splc.domain.Models;
-using splc.data.repository;
-using splc.beholder.web.Utility;
-using splc.data;
 
 namespace splc.beholder.web.Controllers
 {
@@ -152,7 +151,7 @@ namespace splc.beholder.web.Controllers
         public ActionResult Index(string fname = "", string lname = "", string location = "", List<int> stateid = null, string stateid_string = "", int? page = 1, int? pageSize = 15)
         {
             //Store page in session to allow returning back from details action link
-            if (!String.IsNullOrWhiteSpace(stateid_string))
+            if (!string.IsNullOrWhiteSpace(stateid_string))
             {
                 stateid = stateid_string.Split(',').Select(int.Parse).ToList();
             }
@@ -167,25 +166,14 @@ namespace splc.beholder.web.Controllers
             Session["lname"] = lname;
             Session["location"] = location;
 
-            PagedList<Contact> list = null;
+            var pred = PredicateBuilder.True<Contact>();
 
-            if (stateid != null)
-            {
-                list = _contactRepo.GetContacts(currentUser, x =>
-                    x.CommonPerson.LName.Contains(lname)
-                 && x.CommonPerson.FName.Contains(fname)
-                 && (location.Length == 0 || x.AddressContactRels.Any(m => m.Address.City.Contains(location)))
-                 && (x.AddressContactRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId)))
-                 ).OrderBy(m => m.CommonPerson.LName).ToPagedList(page ?? 1, pageSize ?? 15);
-            }
-            else
-            {
-                list = _contactRepo.GetContacts(currentUser, x =>
-                    x.CommonPerson.LName.Contains(lname)
-                 && x.CommonPerson.FName.Contains(fname)
-                 && (location.Length == 0 || x.AddressContactRels.Any(m => m.Address.City.Contains(location)))
-                 ).OrderBy(m => m.CommonPerson.LName).ToPagedList(page ?? 1, pageSize ?? 15);
-            }
+            if (stateid != null) pred = pred.And(p => p.AddressContactRels.Any(c => stateid.Contains((int)c.Address.StateId)));
+            if (!string.IsNullOrWhiteSpace(fname)) pred = pred.And(p => p.CommonPerson.FName.Contains(fname));
+            if (!string.IsNullOrWhiteSpace(lname)) pred = pred.And(p => p.CommonPerson.LName.Contains(lname));
+            if (!string.IsNullOrWhiteSpace(location)) pred = pred.And(p => p.AddressContactRels.Any(c => c.Address.City.Contains(location)));
+
+            var list = _contactRepo.GetContacts(currentUser, pred).OrderBy(m => m.CommonPerson.LName).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
