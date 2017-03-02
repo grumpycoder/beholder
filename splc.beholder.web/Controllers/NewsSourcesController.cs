@@ -1,10 +1,10 @@
 using Caseiro.Mvc.PagedList.Extensions;
-using MvcContrib.Pagination;
+using splc.beholder.web.Utility;
+using splc.data.repository;
+using splc.domain.Models;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
-using splc.domain.Models;
-using splc.data.repository;
-using System.Data.Entity.Validation;
 
 namespace splc.beholder.web.Controllers
 {
@@ -39,9 +39,10 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page ?? 1;
             Session["searchTerm"] = searchTerm;
 
-            var list = searchTerm == null
-                ? _newsSourceRepo.GetNewsSources().OrderBy(m => m.NewsSourceName).ToPagedList(page ?? 1, pageSize ?? 15)
-                : _newsSourceRepo.GetNewsSources(x => x.NewsSourceName.Contains(searchTerm)).OrderBy(m => m.NewsSourceName).ToPagedList(page ?? 1, pageSize ?? 15);
+            var pred = PredicateBuilder.True<NewsSource>();
+            if (!string.IsNullOrWhiteSpace(searchTerm)) pred = pred.And(x => x.NewsSourceName.Contains(searchTerm));
+
+            var list = _newsSourceRepo.GetNewsSources(pred).OrderBy(m => m.NewsSourceName).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
@@ -55,11 +56,7 @@ namespace splc.beholder.web.Controllers
         {
             term = term.Trim();
             var list = _newsSourceRepo.GetNewsSources(p => p.NewsSourceName.Contains(term)).ToArray().Select(
-                e => new
-                {
-                    Id = e.Id,
-                    label = e.NewsSourceName
-                });
+                e => new { e.Id, label = e.NewsSourceName });
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 

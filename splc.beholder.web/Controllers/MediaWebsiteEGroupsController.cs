@@ -1,5 +1,6 @@
-using Caseiro.Mvc.PagedList;
 using Caseiro.Mvc.PagedList.Extensions;
+using splc.beholder.web.Models;
+using splc.beholder.web.Utility;
 using splc.data;
 using splc.data.repository;
 using splc.data.Utility;
@@ -15,7 +16,6 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
-using splc.beholder.web.Models;
 
 namespace splc.beholder.web.Controllers
 {
@@ -52,7 +52,6 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult GetContextList(int websiteEgroupId)
         {
-            //            var list = db.MediaWebsiteEGroupContexts.Where(x => x.MediaWebsiteEGroupId == websiteEgroupId).ToList();
             var list = db.MediaWebsiteEGroupContexts.Where(x => x.MediaWebsiteEGroupId == websiteEgroupId).Select(s =>
             new WebsiteContextViewModel()
             {
@@ -67,7 +66,6 @@ namespace splc.beholder.web.Controllers
 
         [HttpPost]
         public JsonResult SaveTextAsContent(int websiteEgroupId, string filename, string content)
-        //public ActionResult SaveTextAsContent(FormCollection form)
         {
             var context = new MediaWebsiteEGroupContext()
             {
@@ -233,9 +231,9 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Index(int? activeyear, int? activestatusid, List<int> movementclassid = null, string movementclassid_string = "", string name = "", string mediaurl = "", string comment = "", string docsearch = "", int? page = 1, int? pageSize = 15)
         {
-            if (!String.IsNullOrWhiteSpace(movementclassid_string))
+            if (!string.IsNullOrWhiteSpace(movementclassid_string))
             {
-                movementclassid = ((List<int>)movementclassid_string.Split(',').Select(int.Parse).ToList());
+                movementclassid = movementclassid_string.Split(',').Select(int.Parse).ToList();
             }
 
             name = name.Trim();
@@ -256,70 +254,20 @@ namespace splc.beholder.web.Controllers
             //TODO:  need to handle multiple search expressions.
             //this is to prepare the search term for full text index search.  s variable is used for full text index search.
             string s = null;
-            if (!String.IsNullOrEmpty(docsearch))
-            {
-                s = String.Format("\"{0}\"", FtsInterceptor.Fts(docsearch.Replace("\"", "")));
-            }
+            if (!string.IsNullOrEmpty(docsearch)) { s = string.Format("\"{0}\"", FtsInterceptor.Fts(docsearch.Replace("\"", ""))); }
 
             //TODO: WebsiteEGroupContext errors
-            PagedList<MediaWebsiteEGroup> list = null;
-            if (s == null)
-            {
-                if (movementclassid == null)
-                {
-                    list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, x => x.Name.Contains(name)
-                                                                                         && (mediaurl.Length == 0 ? true : x.URL.Contains(mediaurl))
-                                                                                         && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                                                         && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                                                                                         && (comment.Length == 0 ? true : x.MediaWebsiteEGroupComments.Any(m => m.Comment.Contains(comment)))
-                                                                            ).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-                else
-                {
-                    list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, x => x.Name.Contains(name)
-                                                                                         && (mediaurl.Length == 0 ? true : x.URL.Contains(mediaurl))
-                                                                                         && (movementclassid.Contains((int)x.MovementClassId))
-                                                                                         && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                                                         && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                                                                                         && (comment.Length == 0 ? true : x.MediaWebsiteEGroupComments.Any(m => m.Comment.Contains(comment)))
-                                                                            ).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-            }
-            else
-            {
-                if (movementclassid == null)
-                {
-                    list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, x => x.Name.Contains(name)
-                                                                                         && (mediaurl.Length == 0 ? true : x.URL.Contains(mediaurl))
-                                                                                         && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                                                         && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                                                                                         && (comment.Length == 0 ? true : x.MediaWebsiteEGroupComments.Any(m => m.Comment.Contains(comment)))
-                                                                                         && (x.MediaWebsiteEGroupContext_Indexes.Any(m => m.ContextText.Contains(s)))
-                                                                            //&& x.MediaWebsiteEGroupContext_Index.ContextText.Contains(s)
-                                                                            ).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-                else
-                {
-                    list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, x => x.Name.Contains(name)
-                                                                                         && (mediaurl.Length == 0 ? true : x.URL.Contains(mediaurl))
-                                                                                         && (movementclassid.Contains((int)x.MovementClassId))
-                                                                                         && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                                                         && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                                                                                         && (comment.Length == 0 ? true : x.MediaWebsiteEGroupComments.Any(m => m.Comment.Contains(comment)))
-                                                                                         && (x.MediaWebsiteEGroupContext_Indexes.Any(m => m.ContextText.Contains(s)))
-                                                                            //&& x.MediaWebsiteEGroupContext_Index.ContextText.Contains(s)
-                                                                            ).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-            }
-            //var list = searchTerm == null ?
-            //  _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15) :
-            //  _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, x => x.Name.Contains(name) 
-            //                                                                && x.URL.Contains(url)
-            //                                                                && x.MovementClassId == (movementclassid.HasValue ? movementclassid : x.MovementClassId)
-            //                                                                //&& x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-            //                                                                && x.MediaWebsiteEGroupComments.Any(m => m.Comment.Contains(comment))
-            //                                                                && x.MediaWebsiteEGroupContext_Index.ContextText.Contains(s))
-            //      .OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15); ;
+
+            var pred = PredicateBuilder.True<MediaWebsiteEGroup>();
+            if (movementclassid != null) pred = pred.And(p => movementclassid.Contains((int)p.MovementClassId));
+            if (!string.IsNullOrWhiteSpace(name)) pred = pred.And(p => p.Name.Contains(name));
+            if (!string.IsNullOrWhiteSpace(mediaurl)) pred = pred.And(p => p.URL.Contains(mediaurl));
+            if (activeyear != null) pred = pred.And(p => p.ActiveYear == activeyear);
+            if (activestatusid != null) pred = pred.And(p => p.ActiveStatusId == activestatusid);
+            if (!string.IsNullOrWhiteSpace(comment)) pred = pred.And(p => p.MediaWebsiteEGroupComments.Any(c => c.Comment.Contains(comment)));
+            if (!string.IsNullOrWhiteSpace(s)) pred = pred.And(p => p.MediaWebsiteEGroupContext_Indexes.Any(m => m.ContextText.Contains(s)));
+
+            var list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, pred).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
 
             //slj had to move filter of deleted records here because having the filter build here for the full context search and in the repository for the date deleted filter was messing up the full context search and causing an error.
 
@@ -336,11 +284,7 @@ namespace splc.beholder.web.Controllers
         {
             term = term.Trim();
             var list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(p => p.Name.Contains(term) || p.URL.Contains(term)).ToArray().Select(
-                e => new
-                {
-                    Id = e.Id,
-                    label = e.Name
-                });
+                e => new { e.Id, label = e.Name });
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 

@@ -10,6 +10,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Core.Objects.DataClasses;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Infrastructure.Interception;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -27,7 +28,6 @@ namespace splc.data
         {
             DbInterception.Add(new FtsInterceptor());
             Database.SetInitializer<ACDBContext>(null);
-
         }
 
         private int userId;
@@ -36,6 +36,7 @@ namespace splc.data
             : base("Name=ACDBContext")
         {
             userName = HttpContext.Current.User.Identity.Name;
+            Database.Log = msg => Debug.WriteLine(msg);
             //userId = Convert.ToInt32(HttpContext.Current.Session["UserId"]);
         }
 

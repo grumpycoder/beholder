@@ -1,20 +1,15 @@
-using System;
-using System.Collections;
-using System.Net;
-using System.Web.WebPages;
-using Caseiro.Mvc.PagedList;
 using Caseiro.Mvc.PagedList.Extensions;
-using Kendo.Mvc.Extensions;
-using splc.beholder.web.Models;
 using splc.beholder.web.Utility;
-using splc.data;
 using splc.data.repository;
 using splc.domain.Models;
-using System.Linq;
-using System.Web.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
+using System.Web.Mvc;
+using System.Web.WebPages;
 
 namespace splc.beholder.web.Controllers
 {
@@ -91,9 +86,9 @@ namespace splc.beholder.web.Controllers
                 c.AddressChapterRels.Where(r => r.PrimaryStatusId == 1).FirstOrDefault(x => x.Address.State.StateCode.Contains(state) && x.Address.City.Contains(city)).Address.City,
                 State = c.AddressChapterRels.Where(r => r.PrimaryStatusId == 1).FirstOrDefault(x => x.Address.State.StateCode.Contains(state) && x.Address.City.Contains(city)).Address.State.StateCode,
                 Movement = c.MovementClass.Name,
-                ActiveYear = c.ActiveYear
+                c.ActiveYear
             });
-            
+
             var items = list.ToList().Select(x => new
             {
                 Name = x.ChapterName,
@@ -105,7 +100,7 @@ namespace splc.beholder.web.Controllers
                 x.ActiveYear
             });
             return Json(items, JsonRequestBehavior.AllowGet);
-            
+
         }
 
         // GET: Search for Chapters 
@@ -121,16 +116,16 @@ namespace splc.beholder.web.Controllers
             string approvalstatusid_string = "", List<int> stateid = null, string stateid_string = "",
             string location = "", int? page = 1, int? pageSize = 15)
         {
-            if (!String.IsNullOrWhiteSpace(movementclassid_string))
+            if (!string.IsNullOrWhiteSpace(movementclassid_string))
             {
-                movementclassid = ((List<int>)movementclassid_string.Split(',').Select(int.Parse).ToList());
+                movementclassid = movementclassid_string.Split(',').Select(int.Parse).ToList();
             }
-            if (!String.IsNullOrWhiteSpace(approvalstatusid_string))
+            if (!string.IsNullOrWhiteSpace(approvalstatusid_string))
             {
-                approvalstatusid = ((List<int>)approvalstatusid_string.Split(',').Select(int.Parse).ToList());
+                approvalstatusid = approvalstatusid_string.Split(',').Select(int.Parse).ToList();
             }
 
-            if (!String.IsNullOrWhiteSpace(stateid_string))
+            if (!string.IsNullOrWhiteSpace(stateid_string))
             {
                 stateid = stateid_string.Split(',').Select(int.Parse).ToList();
             }
@@ -145,7 +140,6 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page;
             Session["pageSize"] = pageSize;
 
-            PagedList<Chapter> list = null;
             var pred = PredicateBuilder.True<Chapter>();
             pred = pred.And(c => c.ChapterName.Contains(chaptername));
             pred = pred.And(c => c.ActiveStatusId == (activestatusid.HasValue ? activestatusid : c.ActiveStatusId));
@@ -155,7 +149,7 @@ namespace splc.beholder.web.Controllers
             if (location != "") pred = pred.And(c => location.Length == 0 || c.AddressChapterRels.Any(m => m.Address.City.Contains(location)));
             if (stateid != null) pred = pred.And(c => (c.AddressChapterRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId))));
 
-            list = _chapterRepo.GetChapters(currentUser, pred).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
+            var list = _chapterRepo.GetChapters(currentUser, pred).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
@@ -166,35 +160,6 @@ namespace splc.beholder.web.Controllers
 
         }
 
-        //[HttpPost]
-        //public ActionResult Index(FormCollection form, int? page, int? pageSize)
-        //{
-        //    //Store page and searchTerm in session to allow returning back from details action link
-        //    Session["page"] = page ?? 1;
-        //    Session["formcollection"] = form;
-
-        //    string chaptername = string.IsNullOrWhiteSpace(form["ChapterName"]) ? "" : form["ChapterName"];
-        //    int? activeyear = string.IsNullOrWhiteSpace(form["ActiveYear"]) ? (int?)null : Convert.ToInt16(form["ActiveYear"]);
-        //    int? movementclassid = string.IsNullOrWhiteSpace(form["MovementClassId"]) ? (int?)null : Convert.ToInt16(form["MovementClassId"]);
-        //    var city = string.IsNullOrWhiteSpace(form["txtLocation"]) ? string.Empty : form["txtLocation"];
-
-        //    var list = _chapterRepo.GetChapters(currentUser, x => x.ChapterName.Contains(chaptername)
-        //                                                                 && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-        //                                                                 && x.MovementClassId == (movementclassid.HasValue ? movementclassid : x.MovementClassId)
-        //                                              && x.AddressChapterRels.Any(m => m.Address.City.Contains(city)))
-        //        .OrderBy(m => m.ChapterName).AsPagination(page ?? 1, pageSize ?? 15);
-
-        //    if (Request.IsAjaxRequest())
-        //    {
-        //        return list.Any() ? PartialView("_ChapterList", list) : PartialView("Chapter404");
-        //    }
-
-        //    return View("Index", list);
-
-        //}
-
-
-        // GET: /Organizations/Create
         public ActionResult Create()
         {
             ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
@@ -308,7 +273,7 @@ namespace splc.beholder.web.Controllers
         public ImageResult ShowPrimaryImage(int id)
         {
             byte[] picture;
-            string contentType = null;
+            string contentType;
             Image image = null;
 
             var mediaImage = _chapterRepo.GetPrimaryImage(id);

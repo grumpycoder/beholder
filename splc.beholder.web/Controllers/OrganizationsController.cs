@@ -1,11 +1,10 @@
-using System.Collections.Generic;
-using Caseiro.Mvc.PagedList;
 using Caseiro.Mvc.PagedList.Extensions;
 using MvcContrib.Pagination;
 using splc.beholder.web.Utility;
 using splc.data.repository;
 using splc.domain.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -64,7 +63,7 @@ namespace splc.beholder.web.Controllers
         //public ViewResult Index()
         public ActionResult Index(int? activeyear, int? activestatusid, List<int> movementclassid = null, string movementclassid_string = "", string organizationname = "", int? page = 1, int? pageSize = 15)
         {
-            if (!String.IsNullOrWhiteSpace(movementclassid_string))
+            if (!string.IsNullOrWhiteSpace(movementclassid_string))
             {
                 movementclassid = ((List<int>)movementclassid_string.Split(',').Select(int.Parse).ToList());
             }
@@ -77,22 +76,15 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page;
             Session["pageSize"] = pageSize;
 
-            PagedList<Organization> list = null;
-            if (movementclassid == null)
-            {
-                list = _organizationRepo.GetOrganizations(currentUser, x => x.OrganizationName.Contains(organizationname)
-                                                                         && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                                         && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId))
-                                                          .OrderBy(m => m.OrganizationName).ToPagedList(page ?? 1, pageSize ?? 15);
-            }
-            else
-            {
-                list = _organizationRepo.GetOrganizations(currentUser, x => x.OrganizationName.Contains(organizationname)
-                                                                         && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                                         && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                                                                         && (movementclassid.Contains((int)x.MovementClassId)))
-                                                          .OrderBy(m => m.OrganizationName).ToPagedList(page ?? 1, pageSize ?? 15);
-            }
+            var pred = PredicateBuilder.True<Organization>();
+            if (movementclassid != null) pred = pred.And(p => movementclassid.Contains((int)p.MovementClassId));
+            if (!string.IsNullOrWhiteSpace(organizationname)) pred = pred.And(p => p.OrganizationName.Contains(organizationname));
+            if (activeyear != null) pred = pred.And(p => p.ActiveYear == activeyear);
+            if (activestatusid != null) pred = pred.And(p => p.ActiveStatusId == activestatusid);
+
+            var list = _organizationRepo.GetOrganizations(currentUser, pred)
+                .OrderBy(m => m.OrganizationName).ToPagedList(page ?? 1, pageSize ?? 15);
+
             if (Request.IsAjaxRequest())
             {
                 return list.Any() ? PartialView("_OrganizationList", list) : PartialView("Organization404");
@@ -100,31 +92,6 @@ namespace splc.beholder.web.Controllers
 
             return View("Index", list);
         }
-
-        //[HttpPost]
-        //public ActionResult Index(FormCollection form, int? page, int? pageSize)
-        //{
-        //    //Store page and searchTerm in session to allow returning back from details action link
-        //    Session["page"] = page ?? 1;
-        //    Session["formcollection"] = form;
-
-        //    string organizationname = string.IsNullOrWhiteSpace(form["OrganizationName"]) ? "" : form["OrganizationName"];
-        //    int? activeyear = string.IsNullOrWhiteSpace(form["ActiveYear"]) ? (int?)null : Convert.ToInt16(form["ActiveYear"]);
-        //    int? movementclassid = string.IsNullOrWhiteSpace(form["MovementClassId"]) ? (int?)null : Convert.ToInt16(form["MovementClassId"]);
-
-        //    var list = _organizationRepo.GetOrganizations(currentUser, x => x.OrganizationName.Contains(organizationname)
-        //                                                                 && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-        //                                                                 && x.MovementClassId == (movementclassid.HasValue ? movementclassid : x.MovementClassId))
-        //        .OrderBy(m => m.OrganizationName).AsPagination(page ?? 1, pageSize ?? 15);
-
-        //    if (Request.IsAjaxRequest())
-        //    {
-        //        return list.Any() ? PartialView("_OrganizationList", list) : PartialView("Organization404");
-        //    }
-
-        //    return View("Index", list);
-
-        //}
 
         public ImageResult ShowPrimaryImage(int id)
         {
@@ -186,13 +153,13 @@ namespace splc.beholder.web.Controllers
         {
             ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
             var organization = new Organization
-                {
-                    //OrganizationTypeId = Queryable.SingleOrDefault(_lookupRepo.GetOrganizationTypes(), p => p.Name.Equals("Physical")).Id,
-                    //ApprovalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id,
-                    //ActiveStatusId = Queryable.SingleOrDefault(_lookupRepo.GetActiveStatuses(), p => p.Name.Equals("Active")).Id,
-                    ActiveYear = DateTime.Now.Year,
-                    ReportStatusFlag = false
-                };
+            {
+                //OrganizationTypeId = Queryable.SingleOrDefault(_lookupRepo.GetOrganizationTypes(), p => p.Name.Equals("Physical")).Id,
+                //ApprovalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id,
+                //ActiveStatusId = Queryable.SingleOrDefault(_lookupRepo.GetActiveStatuses(), p => p.Name.Equals("Active")).Id,
+                ActiveYear = DateTime.Now.Year,
+                ReportStatusFlag = false
+            };
             return View(organization);
 
         }
@@ -425,8 +392,8 @@ namespace splc.beholder.web.Controllers
                 //{
                 //    //reset the chapter object.  This is only added from Organization, not ChapterOrganizationRel.
                 //    organizationPersonRel.BeholderPerson = null;
-                    _organizationRepo.InsertOrUpdateOrganizationPerson(organizationPersonRel);
-                    _organizationRepo.Save();
+                _organizationRepo.InsertOrUpdateOrganizationPerson(organizationPersonRel);
+                _organizationRepo.Save();
                 //    return RedirectToAction("Details", "Organizations", new { id = organizationPersonRel.OrganizationId });
                 //}
                 ////reset the organization object.  This is only added from Organization, not ChapterOrganizationRel.
@@ -472,7 +439,7 @@ namespace splc.beholder.web.Controllers
 
             //if (Request.IsAjaxRequest())
             //{
-                return PartialView("_OrganizationEventList", organizationEvents);
+            return PartialView("_OrganizationEventList", organizationEvents);
             //}
             //return View(organizationEvents);
         }
@@ -620,7 +587,7 @@ namespace splc.beholder.web.Controllers
 
             //if (Request.IsAjaxRequest())
             //{
-                return PartialView("_OrganizationMediaImageList", organizationMediaImages);
+            return PartialView("_OrganizationMediaImageList", organizationMediaImages);
             //}
             //return View(organizationMediaImages);
         }
@@ -925,12 +892,12 @@ namespace splc.beholder.web.Controllers
             var org = _organizationRepo.GetOrganization(organizationId);
             var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
             var organizationOrganizationRel = new OrganizationOrganizationRel
-                {
-                    OrganizationId = organizationId,
-                    Organization = org,
-                    ApprovalStatusId = approvalStatusId,
-                    DateStart = DateTime.Now
-                };
+            {
+                OrganizationId = organizationId,
+                Organization = org,
+                ApprovalStatusId = approvalStatusId,
+                DateStart = DateTime.Now
+            };
 
             ViewBag.PossibleRelationshipTypes = _lookupRepo.GetRelationshipTypes().Where(x => x.ObjectFrom.Equals("Group") && x.ObjectTo.Equals("Group")).OrderBy(x => x.SortOrder);
             ViewBag.OrganizationId = organizationId;
@@ -1067,10 +1034,10 @@ namespace splc.beholder.web.Controllers
         {
             if (ModelState.IsValid)
             {
-                    _organizationRepo.InsertOrUpdateOrganizationMediaAudioVideo(organizationMediaAudioVideoRel);
-                    _organizationRepo.Save();
+                _organizationRepo.InsertOrUpdateOrganizationMediaAudioVideo(organizationMediaAudioVideoRel);
+                _organizationRepo.Save();
                 return null;
-                }
+            }
             return View(organizationMediaAudioVideoRel);
 
         }
@@ -1206,8 +1173,8 @@ namespace splc.beholder.web.Controllers
                 //if (organizationMediaCorrespondenceRel.Organization == null)
                 //{
                 //    organizationMediaCorrespondenceRel.MediaCorrespondence = null;
-                    _organizationRepo.InsertOrUpdateOrganizationMediaCorrespondence(organizationMediaCorrespondenceRel);
-                    _organizationRepo.Save();
+                _organizationRepo.InsertOrUpdateOrganizationMediaCorrespondence(organizationMediaCorrespondenceRel);
+                _organizationRepo.Save();
                 return null;
                 //    return RedirectToAction("Details", "Organizations", new { id = organizationMediaCorrespondenceRel.OrganizationId });
                 //}
@@ -1219,7 +1186,7 @@ namespace splc.beholder.web.Controllers
                 //    _organizationRepo.Save();
                 //    return RedirectToAction("Details", "MediaCorrespondences", new { id = organizationMediaCorrespondenceRel.MediaCorrespondenceId });
                 //}
-                }
+            }
             return View(organizationMediaCorrespondenceRel);
 
         }
@@ -1356,8 +1323,8 @@ namespace splc.beholder.web.Controllers
                 //if (organizationMediaPublishedRel.Organization == null)
                 //{
                 //    organizationMediaPublishedRel.MediaPublished = null;
-                    _organizationRepo.InsertOrUpdateOrganizationMediaPublished(organizationMediaPublishedRel);
-                    _organizationRepo.Save();
+                _organizationRepo.InsertOrUpdateOrganizationMediaPublished(organizationMediaPublishedRel);
+                _organizationRepo.Save();
                 return null;
                 //    return RedirectToAction("Details", "Organizations", new { id = organizationMediaPublishedRel.OrganizationId });
                 //}

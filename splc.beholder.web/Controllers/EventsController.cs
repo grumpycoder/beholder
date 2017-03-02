@@ -1,5 +1,6 @@
 ﻿using Caseiro.Mvc.PagedList;
 using Caseiro.Mvc.PagedList.Extensions;
+using splc.beholder.web.Utility;
 using splc.data;
 using splc.data.repository;
 using splc.domain.Models;
@@ -69,30 +70,20 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page;
             Session["pageSize"] = pageSize;
 
-            PagedList<Event> list = null;
-            if (eventtypeid == null)
-            {
-                list = _eventRepo.GetEvents(currentUser, x =>
-                                                             x.EventName.Contains(eventname)
-                                                          && x.EventDate >= (datefrom.HasValue ? datefrom : x.EventDate)
-                                                          && x.EventDate <= (dateto.HasValue ? dateto : x.EventDate)
-                                                          && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                          && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                                                          && x.ApprovalStatusId == (approvalstatusid.HasValue ? approvalstatusid : x.ApprovalStatusId)
-                                                          ).OrderBy(m => m.EventDate).ToPagedList(page ?? 1, pageSize ?? 15);
-            }
-            else
-            {
-                list = _eventRepo.GetEvents(currentUser, x =>
-                                                             x.EventName.Contains(eventname)
-                                                          && x.EventDate >= (datefrom.HasValue ? datefrom : x.EventDate)
-                                                          && x.EventDate >= (dateto.HasValue ? dateto : x.EventDate)
-                                                          && x.ActiveYear == (activeyear.HasValue ? activeyear : x.ActiveYear)
-                                                          && x.ActiveStatusId == (activestatusid.HasValue ? activestatusid : x.ActiveStatusId)
-                                                          && x.ApprovalStatusId == (approvalstatusid.HasValue ? approvalstatusid : x.ApprovalStatusId)
-                                                          && (x.EventEventTypeRels.Count(m => eventtypeid.Contains(m.EventTypeId)) > 0)
-                                                          ).OrderBy(m => m.EventDate).ToPagedList(page ?? 1, pageSize ?? 15);
-            }
+            var pred = PredicateBuilder.True<Event>();
+            if (eventtypeid != null) pred = pred.And(p => eventtypeid.Contains((int)p.MovementClassId));
+
+            if (!string.IsNullOrWhiteSpace(eventname)) pred = pred.And(p => p.EventName.Contains(eventname));
+            if (activeyear != null) pred = pred.And(p => p.ActiveYear == activeyear);
+            if (activestatusid != null) pred = pred.And(p => p.ActiveStatusId == activestatusid);
+            if (approvalstatusid != null) pred = pred.And(p => p.ApprovalStatusId == approvalstatusid);
+            if (dateto != null) pred = pred.And(p => dateto >= p.EventDate);
+            if (datefrom != null) pred = pred.And(p => datefrom <= p.EventDate);
+
+
+            var list = _eventRepo.GetEvents(currentUser, pred)
+                .OrderBy(m => m.EventDate).ToPagedList(page ?? 1, pageSize ?? 15);
+
             return View("Index", list);
         }
 

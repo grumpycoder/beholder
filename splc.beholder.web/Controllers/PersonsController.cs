@@ -1,16 +1,15 @@
+using Caseiro.Mvc.PagedList.Extensions;
+using splc.beholder.web.Utility;
+using splc.data.repository;
+using splc.domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.WebPages;
-using Caseiro.Mvc.PagedList;
-using Caseiro.Mvc.PagedList.Extensions;
-using splc.domain.Models;
-using splc.data.repository;
-using splc.beholder.web.Utility;
-using System.Data.Entity.Validation;
-using System.Data.Entity.Infrastructure;
 
 namespace splc.beholder.web.Controllers
 {
@@ -80,15 +79,15 @@ namespace splc.beholder.web.Controllers
 
 
                 var items = list.ToList().Select(x => new
-                                        {
-                                            x.Name,
-                                            x.Id,
-                                            x.City,
-                                            x.State,
-                                            DOB = x.DOB != null ? Convert.ToDateTime(x.DOB).ToShortDateString() : "Unknown",
-                                            Movement = x.MovementClass,
-                                            Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State)
-                                        });
+                {
+                    x.Name,
+                    x.Id,
+                    x.City,
+                    x.State,
+                    DOB = x.DOB != null ? Convert.ToDateTime(x.DOB).ToShortDateString() : "Unknown",
+                    Movement = x.MovementClass,
+                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State)
+                });
 
                 return Json(items, JsonRequestBehavior.AllowGet);
             }
@@ -107,15 +106,15 @@ namespace splc.beholder.web.Controllers
                                         });
 
                 var items = list.ToList().Select(x => new
-                                            {
-                                                x.Name,
-                                                x.Id,
-                                                x.City,
-                                                x.State,
-                                                DOB = x.DOB != null ? Convert.ToDateTime(x.DOB).ToShortDateString() : "Unknown",
-                                                Movement = x.MovementClass,
-                                                Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State)
-                                            });
+                {
+                    x.Name,
+                    x.Id,
+                    x.City,
+                    x.State,
+                    DOB = x.DOB != null ? Convert.ToDateTime(x.DOB).ToShortDateString() : "Unknown",
+                    Movement = x.MovementClass,
+                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State)
+                });
 
                 return Json(items, JsonRequestBehavior.AllowGet);
             }
@@ -134,15 +133,15 @@ namespace splc.beholder.web.Controllers
                                         });
 
                 var items = list.ToList().Select(x => new
-                                            {
-                                                x.Name,
-                                                x.Id,
-                                                x.City,
-                                                x.State,
-                                                DOB = x.DOB != null ? Convert.ToDateTime(x.DOB).ToShortDateString() : "Unknown",
-                                                Movement = x.MovementClass,
-                                                Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State)
-                                            });
+                {
+                    x.Name,
+                    x.Id,
+                    x.City,
+                    x.State,
+                    DOB = x.DOB != null ? Convert.ToDateTime(x.DOB).ToShortDateString() : "Unknown",
+                    Movement = x.MovementClass,
+                    Location = string.Format("{0}{1} {2}", x.City, (!string.IsNullOrWhiteSpace(x.City) && !string.IsNullOrWhiteSpace(x.State)) ? "," : "", x.State)
+                });
 
                 return Json(items, JsonRequestBehavior.AllowGet);
             }
@@ -190,12 +189,12 @@ namespace splc.beholder.web.Controllers
         // GET: /BeholderPersons/
         public ActionResult Index(List<int> movementclassid = null, string movementclassid_string = "", List<int> stateid = null, string stateid_string = "", string fname = "", string lname = "", string alias = "", string location = "", int? page = 1, int? pageSize = 15)
         {
-            if (!String.IsNullOrWhiteSpace(movementclassid_string))
+            if (!string.IsNullOrWhiteSpace(movementclassid_string))
             {
                 movementclassid = movementclassid_string.Split(',').Select(int.Parse).ToList();
             }
 
-            if (!String.IsNullOrWhiteSpace(stateid_string))
+            if (!string.IsNullOrWhiteSpace(stateid_string))
             {
                 stateid = stateid_string.Split(',').Select(int.Parse).ToList();
             }
@@ -214,98 +213,23 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page;
             Session["pageSize"] = pageSize;
 
-            PagedList<BeholderPerson> list = null;
+            var pred = PredicateBuilder.True<BeholderPerson>();
+            if (movementclassid != null) pred = pred.And(p => movementclassid.Contains((int)p.MovementClassId));
+            if (!string.IsNullOrWhiteSpace(fname)) pred = pred.And(p => p.CommonPerson.FName.Contains(fname));
+            if (!string.IsNullOrWhiteSpace(lname)) pred = pred.And(p => p.CommonPerson.LName.Contains(lname));
+            if (!string.IsNullOrWhiteSpace(alias)) pred = pred.And(p => p.CommonPerson.AliasPersonRels.Any(c => c.Alias.AliasName.Contains(alias)));
+            if (!string.IsNullOrWhiteSpace(location)) pred = pred.And(p => p.CommonPerson.AddressPersonRels.Any(c => c.Address.City.Contains(location)));
+            if (stateid != null) pred = pred.And(p => p.CommonPerson.AddressPersonRels.Any(c => stateid.Contains((int)c.Address.StateId)));
 
-            if (movementclassid == null)
-            {
-                if (stateid != null)
-                {
-                    list = _personRepo.Get(currentUser, x =>
-                           x.CommonPerson.FName.Contains(fname)
-                        && x.CommonPerson.LName.Contains(lname)
-                        && (alias.Length == 0 || x.CommonPerson.AliasPersonRels.Any(m => m.Alias.AliasName.Contains(alias)))
-                        && (location.Length == 0 || x.CommonPerson.AddressPersonRels.Any(m => m.Address.City.Contains(location)))
-                        && (x.CommonPerson.AddressPersonRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId)))
-                        ).OrderBy(m => m.CommonPerson.LName)
-                         .ThenBy(n => n.CommonPerson.FName)
-                         .ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-                else
-                {
-                    list = _personRepo.Get(currentUser, x =>
-                           x.CommonPerson.FName.Contains(fname)
-                        && x.CommonPerson.LName.Contains(lname)
-                        && (alias.Length == 0 || x.CommonPerson.AliasPersonRels.Any(m => m.Alias.AliasName.Contains(alias)))
-                        && (location.Length == 0 || x.CommonPerson.AddressPersonRels.Any(m => m.Address.City.Contains(location)))
-                        ).OrderBy(m => m.CommonPerson.LName)
-                         .ThenBy(n => n.CommonPerson.FName)
-                         .ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-            }
-            else
-            {
-                if (stateid != null)
-                {
-                    list = _personRepo.Get(currentUser, x =>
-                        x.CommonPerson.FName.Contains(fname)
-                        && x.CommonPerson.LName.Contains(lname)
-                        && (movementclassid.Contains((int)x.MovementClassId))
-                        && (alias.Length == 0 || x.CommonPerson.AliasPersonRels.Any(m => m.Alias.AliasName.Contains(alias)))
-                        && (location.Length == 0 || x.CommonPerson.AddressPersonRels.Any(m => m.Address.City.Contains(location)))
-                        && (x.CommonPerson.AddressPersonRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId)))
-                        ).OrderBy(m => m.CommonPerson.LName)
-                         .ThenBy(n => n.CommonPerson.FName)
-                         .ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-                else
-                {
-                    list = _personRepo.Get(currentUser, x =>
-                        x.CommonPerson.FName.Contains(fname)
-                        && x.CommonPerson.LName.Contains(lname)
-                        && (movementclassid.Contains((int)x.MovementClassId))
-                        && (alias.Length == 0 || x.CommonPerson.AliasPersonRels.Any(m => m.Alias.AliasName.Contains(alias)))
-                        && (location.Length == 0 || x.CommonPerson.AddressPersonRels.Any(m => m.Address.City.Contains(location)))
-                        ).OrderBy(m => m.CommonPerson.LName)
-                         .ThenBy(n => n.CommonPerson.FName)
-                         .ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-            }
+            var list = _personRepo.Get(currentUser, pred).OrderBy(m => m.CommonPerson.LName)
+                .ThenBy(n => n.CommonPerson.FName)
+                .ToPagedList(page ?? 1, pageSize ?? 15);
 
             return View("Index", list);
         }
 
-        //[HttpPost]
-        //public ActionResult Index(FormCollection form, int? page = 1, int? pageSize = 15)
-        //{
-        //    //Store page and searchTerm in session to allow returning back from details action link
-        //    Session["page"] = page ?? 1;
-        //    Session["formcollection"] = form;
-
-        //    var firstname = string.IsNullOrWhiteSpace(form["txtFName"]) ? string.Empty : form["txtFName"];
-        //    var lastname = string.IsNullOrWhiteSpace(form["txtLName"]) ? string.Empty : form["txtLName"];
-        //    var alias = string.IsNullOrWhiteSpace(form["txtAlias"]) ? string.Empty : form["txtAlias"];
-        //    var city = string.IsNullOrWhiteSpace(form["txtLocation"]) ? string.Empty : form["txtLocation"];
-
-        //    var movementclassid = String.IsNullOrWhiteSpace(form["MovementClassId"]) ? (int?)null : Convert.ToInt32(form["MovementClassId"]);
-
-        //    var list = _personRepo.Get(currentUser, x => 
-        //                                                 x.CommonPerson.FName.Contains(firstname)
-        //                                              && x.CommonPerson.LName.Contains(lastname)
-        //                                              && x.MovementClassId == (movementclassid.HasValue ? movementclassid : x.MovementClassId)
-        //                                              && x.CommonPerson.AliasPersonRels.Any(m => m.Alias.AliasName.Contains(alias))
-        //                                              && x.CommonPerson.AddressPersonRels.Any(m => m.Address.City.Contains(city)))
-        //        .OrderBy(m => m.CommonPerson.LName).ThenBy(n => n.CommonPerson.FName).ToPagedList(page ?? 1, pageSize ?? 15);
-
-        //    if (Request.IsAjaxRequest())
-        //    {
-        //        return list.Any() ? PartialView("_PersonList", list) : PartialView("Person404");
-        //    }
-        //    return View("Index", list);
-        //}
-
         //
         // GET: /BeholderPersons/Details/5
-
         public ViewResult DetailsLite(int id)
         {
             //ViewBag.BeholderPersonId = id; 
