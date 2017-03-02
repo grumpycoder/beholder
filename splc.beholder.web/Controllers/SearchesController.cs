@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using Microsoft.Ajax.Utilities;
+﻿using Microsoft.Ajax.Utilities;
 using splc.beholder.web.Models;
+using splc.data;
 using splc.data.repository;
 using splc.domain.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using splc.data;
+using splc.beholder.web.Utility;
 
 namespace splc.beholder.web.Controllers
 {
@@ -13,11 +14,11 @@ namespace splc.beholder.web.Controllers
     public class SearchesController : BaseController
     {
         private readonly ISearchRepository _searchRepository;
-        private readonly ACDBContext context;
+        private readonly ACDBContext _context;
 
-        public SearchesController(ACDBContext Context, ISearchRepository searchRepository)
+        public SearchesController(ACDBContext context, ISearchRepository searchRepository)
         {
-            context = Context;
+            _context = context;
             _searchRepository = searchRepository;
         }
 
@@ -25,8 +26,8 @@ namespace splc.beholder.web.Controllers
         {
             searchTerm = searchTerm.Trim();
 
-            Session["searchTerm"] = searchTerm; 
-            string firstName, lastName; 
+            Session["searchTerm"] = searchTerm;
+            string firstName, lastName;
             var persons = new List<BeholderPerson>();
             if (searchTerm.Contains(","))
             {
@@ -34,7 +35,7 @@ namespace splc.beholder.web.Controllers
                 {
                     lastName = searchTerm.Split(',')[0];
                     firstName = searchTerm.Split(',')[1];
-                    persons = context.BeholderPersons.Where(
+                    persons = _context.BeholderPersons.Where(
                         x => x.CommonPerson.LName == lastName.Trim() && x.CommonPerson.FName == firstName.Trim()).OrderBy(p => p.CommonPerson.LName).ThenBy(p => p.CommonPerson.FName)
                         .ToList();
                 }
@@ -45,21 +46,21 @@ namespace splc.beholder.web.Controllers
                 {
                     lastName = searchTerm.Split(' ')[1];
                     firstName = searchTerm.Split(' ')[0];
-                    persons = context.BeholderPersons.Where(
+                    persons = _context.BeholderPersons.Where(
                         x => x.CommonPerson.LName.Contains(lastName.Trim()) && x.CommonPerson.FName.Contains(firstName.Trim())).OrderBy(p => p.CommonPerson.LName).ThenBy(p => p.CommonPerson.FName).ToList();
                 }
             }
             else if (!searchTerm.Trim().Contains(" "))
             {
-                persons = context.BeholderPersons.Where(
+                persons = _context.BeholderPersons.Where(
                         x => x.CommonPerson.LName.Contains(searchTerm.Trim()) || x.CommonPerson.FName.Contains(searchTerm.Trim())).OrderBy(p => p.CommonPerson.LName).ThenBy(p => p.CommonPerson.FName).ToList();
             }
 
-            var organizations = context.Organizations.Where(x => x.OrganizationName.Contains(searchTerm)).OrderBy(x => x.OrganizationName).ToList();
+            var organizations = _context.Organizations.Where(x => x.OrganizationName.Contains(searchTerm)).OrderBy(x => x.OrganizationName).ToList();
 
-            var chapters = context.Chapters.Where(x => x.ChapterName.Contains(searchTerm)).OrderBy(x => x.ChapterName).ToList();
+            var chapters = _context.Chapters.Where(x => x.ChapterName.Contains(searchTerm)).OrderBy(x => x.ChapterName).ToList();
 
-            var viewModel = new SearchResultViewModel {BeholderPersons = persons, Organizations = organizations, Chapters = chapters};
+            var viewModel = new SearchResultViewModel { BeholderPersons = persons, Organizations = organizations, Chapters = chapters };
             if (Request.IsAjaxRequest())
             {
                 return View("_searchResultList", viewModel);
@@ -67,52 +68,46 @@ namespace splc.beholder.web.Controllers
             return View("Index");
 
         }
-        
+
         public ActionResult Index(string searchterm, int? page, int? pageSize)
         {
-        
+
             if (searchterm.IsNullOrWhiteSpace())
             {
                 return View("Index");
             }
+
             searchterm = searchterm.Trim();
 
             Session["searchTerm"] = searchterm;
             string firstName, lastName;
-            var persons = new List<BeholderPerson>();
+            
+            var names = new string[] { };
+
+            if (searchterm.Contains(",")) names = searchterm.Split(',');
+            if (!searchterm.Contains(",")) names = searchterm.Split(' ');
+
             if (searchterm.Contains(","))
             {
-                if (searchterm.Split(',').Length > 0)
-                {
-                    lastName = searchterm.Split(',')[0];
-                    firstName = searchterm.Split(',')[1];
-                    persons = context.BeholderPersons.Where(
-                        x => x.CommonPerson.LName == lastName.Trim() && x.CommonPerson.FName == firstName.Trim()).OrderBy(p => p.CommonPerson.LName).ThenBy(p => p.CommonPerson.FName)
-                        .ToList();
-                }
+                lastName = names[0].Trim();
+                firstName = names[1].Trim();
             }
-            else if (searchterm.Trim().Contains(" ") && !searchterm.Contains(","))
+            else
             {
-                if (searchterm.Split(' ').Length > 0)
-                {
-                    lastName = searchterm.Split(' ')[1];
-                    firstName = searchterm.Split(' ')[0];
-                    persons = context.BeholderPersons.Where(
-                        x => x.CommonPerson.LName.Contains(lastName.Trim()) && x.CommonPerson.FName.Contains(firstName.Trim())).OrderBy(p => p.CommonPerson.LName).ThenBy(p => p.CommonPerson.FName)
-                        .ToList();
-                }
-            }
-            else if (!searchterm.Trim().Contains(" "))
-            {
-                persons = context.BeholderPersons.Where(
-                        x => x.CommonPerson.LName.Contains(searchterm.Trim()) || x.CommonPerson.FName.Contains(searchterm.Trim())).OrderBy(p => p.CommonPerson.LName).ThenBy(p => p.CommonPerson.FName)
-                        .ToList();
+                firstName = names[0].Trim();
+                lastName = names[1].Trim();
             }
 
-            var organizations = context.Organizations.Where(x => x.OrganizationName.Contains(searchterm)).OrderBy(x => x.OrganizationName).ToList();
-            var chapters = context.Chapters.Where(x => x.ChapterName.Contains(searchterm)).OrderBy(x => x.ChapterName).ToList();
+            var personPred =
+                PredicateBuilder.True<BeholderPerson>()
+                    .And(e => e.CommonPerson.FName == firstName && e.CommonPerson.LName == lastName); 
 
-            var viewModel = new SearchResultViewModel { BeholderPersons = persons, Organizations = organizations, Chapters = chapters};
+            var persons = _context.BeholderPersons.Where(personPred).OrderBy(e => e.CommonPerson.LName).ToList();
+
+            var organizations = _context.Organizations.Where(x => x.OrganizationName.Contains(searchterm)).OrderBy(x => x.OrganizationName).ToList();
+            var chapters = _context.Chapters.Where(x => x.ChapterName.Contains(searchterm)).OrderBy(x => x.ChapterName).ToList();
+
+            var viewModel = new SearchResultViewModel { BeholderPersons = persons, Organizations = organizations, Chapters = chapters };
             if (Request.IsAjaxRequest())
             {
                 return View("_searchResultList", viewModel);
