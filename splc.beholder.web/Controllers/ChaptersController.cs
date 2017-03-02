@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Web.Mvc;
 using System.Web.WebPages;
@@ -36,22 +35,6 @@ namespace splc.beholder.web.Controllers
             ViewBag.PossibleContactInfoTypes = lookupRepo.GetContactInfoTypes();
             ViewBag.PossiblePrimaryStatus = _lookupRepo.GetPrimaryStatuses();
         }
-
-
-        #region "ExpressionBuilders"
-
-        public Expression<Func<Chapter, bool>> NamePred(params string[] keywords)
-        {
-            var predicate = PredicateBuilder.False<Chapter>();
-            foreach (string keyword in keywords)
-            {
-                string temp = keyword;
-                predicate = predicate.Or(p => p.ChapterName.Contains(temp));
-            }
-            return predicate;
-        }
-        #endregion
-
 
         public JsonResult GetChapterList(string term)
         {
@@ -149,7 +132,7 @@ namespace splc.beholder.web.Controllers
             if (location != "") pred = pred.And(c => location.Length == 0 || c.AddressChapterRels.Any(m => m.Address.City.Contains(location)));
             if (stateid != null) pred = pred.And(c => (c.AddressChapterRels.Any(m => m.Address.StateId != null && stateid.Contains((int)m.Address.StateId))));
 
-            var list = _chapterRepo.GetChapters(currentUser, pred).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
+            var list = _chapterRepo.GetChapters(CurrentUser, pred).OrderByDescending(x => x.ActiveYear).ThenBy(m => m.ChapterName).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
@@ -162,7 +145,7 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var chapter = new Chapter
             {
                 ApprovalStatusId = _lookupRepo.GetApprovalStatuses().SingleOrDefault(p => p.Name.Equals("New")).Id,
@@ -178,7 +161,7 @@ namespace splc.beholder.web.Controllers
         [HttpPost]
         public ActionResult Create(Chapter chapter)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             if (ModelState.IsValid)
             {
 
@@ -191,7 +174,7 @@ namespace splc.beholder.web.Controllers
 
         public ViewResult DetailsLite(int id)
         {
-            var chapter = _chapterRepo.GetChapter(currentUser, id);
+            var chapter = _chapterRepo.GetChapter(CurrentUser, id);
             return chapter != null ? View(chapter) : View("Chapter404");
         }
 
@@ -212,7 +195,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.ContactId = -1;
             ViewBag.Controller = "Chapters";
 
-            var chapter = _chapterRepo.GetChapter(currentUser, id);
+            var chapter = _chapterRepo.GetChapter(CurrentUser, id);
             if (chapter != null)
             {
                 return View(chapter);
@@ -231,8 +214,8 @@ namespace splc.beholder.web.Controllers
         // GET: /Organizations/Edit/5
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
-            var chapter = _chapterRepo.GetChapter(currentUser, id);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
+            var chapter = _chapterRepo.GetChapter(CurrentUser, id);
             return chapter != null ? View(chapter) : View("Chapter404");
         }
 
@@ -252,14 +235,14 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult RemoveChapter(int id)
         {
-            var chapter = _chapterRepo.GetChapter(currentUser, id);
+            var chapter = _chapterRepo.GetChapter(CurrentUser, id);
             return View(chapter);
         }
 
         [HttpPost]
         public ActionResult RemoveChapter(int id, string removalreason)
         {
-            var chapter = _chapterRepo.GetChapter(currentUser, id);
+            var chapter = _chapterRepo.GetChapter(CurrentUser, id);
             chapter.RemovalReason = removalreason;
 
             chapter.RemovalStatusId = 1;

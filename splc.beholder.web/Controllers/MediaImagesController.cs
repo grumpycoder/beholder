@@ -1,15 +1,14 @@
+using Caseiro.Mvc.PagedList.Extensions;
+using splc.beholder.web.Utility;
+using splc.data.repository;
+using splc.domain.Models;
 using System;
 using System.Collections.Generic;
-using Caseiro.Mvc.PagedList;
-using Caseiro.Mvc.PagedList.Extensions;
-using System.Linq;
-using System.Web.Mvc;
-using splc.domain.Models;
-using splc.data.repository;
-using splc.beholder.web.Utility;
-using System.IO;
-using System.Web;
 using System.Data.Entity.Validation;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 
 namespace splc.beholder.web.Controllers
 {
@@ -41,7 +40,9 @@ namespace splc.beholder.web.Controllers
         public ViewResult Search(string searchTerm)
         {
             searchTerm = searchTerm.Trim();
-            IQueryable<MediaImage> list = _mediaImageRepo.GetMediaImages(currentUser, p => p.PhotographerArtist.Contains(searchTerm) || p.ImageTitle.Contains(searchTerm));
+            var pred = PredicateBuilder.True<MediaImage>().And(p => p.PhotographerArtist.Contains(searchTerm) || p.ImageTitle.Contains(searchTerm));
+
+            IQueryable<MediaImage> list = _mediaImageRepo.GetMediaImages(CurrentUser, pred);
 
             return View("Index", list);
         }
@@ -49,16 +50,10 @@ namespace splc.beholder.web.Controllers
         //
         // GET: /Organizations/
         //public ViewResult Index()
-        public ActionResult Index(int? activeyear, string imagetitle = "", string comment = "", string location = "", string artist = "", List<int> movementclassid = null, string movementclassid_string = "", List<int> stateid = null, string stateid_string = "", int? page = 1, int? pageSize = 15)
+        public ActionResult Index(string imagetitle = "", string comment = "", string location = "", string artist = "", List<int> movementclassid = null, string movementclassid_string = "", List<int> stateid = null, string stateid_string = "", int? page = 1, int? pageSize = 15)
         {
-            if (!String.IsNullOrWhiteSpace(movementclassid_string))
-            {
-                movementclassid = ((List<int>)movementclassid_string.Split(',').Select(int.Parse).ToList());
-            }
-            if (!String.IsNullOrWhiteSpace(stateid_string))
-            {
-                stateid = stateid_string.Split(',').Select(int.Parse).ToList();
-            }
+            if (!string.IsNullOrWhiteSpace(movementclassid_string)) { movementclassid = movementclassid_string.Split(',').Select(int.Parse).ToList(); }
+            if (!string.IsNullOrWhiteSpace(stateid_string)) { stateid = stateid_string.Split(',').Select(int.Parse).ToList(); }
 
             imagetitle = imagetitle.Trim();
             comment = comment.Trim();
@@ -68,61 +63,21 @@ namespace splc.beholder.web.Controllers
             Session["stateid"] = stateid;
             Session["movementclassid"] = movementclassid;
             Session["imagetitle"] = imagetitle;
-            Session["activeyear"] = activeyear;
             Session["comment"] = comment;
             Session["location"] = location;
             Session["artist"] = artist;
             Session["page"] = page;
             Session["pageSize"] = pageSize;
 
-            PagedList<MediaImage> list = null;
+            var pred = PredicateBuilder.True<MediaImage>();
+            if (movementclassid != null) pred = pred.And(p => movementclassid.Contains((int)p.MovementClassId));
+            if (!string.IsNullOrWhiteSpace(imagetitle)) pred = pred.And(p => p.ImageTitle.Contains(imagetitle));
+            if (!string.IsNullOrWhiteSpace(location)) pred = pred.And(p => p.City.Contains(location));
+            if (stateid != null) pred = pred.And(p => stateid.Contains((int)p.StateId));
+            if (!string.IsNullOrWhiteSpace(comment)) pred = pred.And(p => p.MediaImageComments.Any(c => c.Comment.Contains(comment)));
+            if (!string.IsNullOrWhiteSpace(artist)) pred = pred.And(p => p.PhotographerArtist.Contains(artist));
 
-            if (movementclassid == null)
-            {
-                if (stateid != null)
-                {
-                    list = _mediaImageRepo.GetMediaImages(currentUser, x =>
-                        x.ImageTitle.Contains(imagetitle)
-                        && (location.Length == 0 || x.City.Contains(location))
-                        && stateid.Contains((int)x.StateId)
-                        && (comment.Length == 0 || x.MediaImageComments.Any(m => m.Comment.Contains(comment)))
-                        && (artist.Length == 0 || x.PhotographerArtist.Contains(artist))
-                        ).OrderBy(m => m.ImageTitle).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-                else
-                {
-                    list = _mediaImageRepo.GetMediaImages(currentUser, x =>
-                       x.ImageTitle.Contains(imagetitle)
-                       && (location.Length == 0 || x.City.Contains(location))
-                       && (comment.Length == 0 || x.MediaImageComments.Any(m => m.Comment.Contains(comment)))
-                       && (artist.Length == 0 || x.PhotographerArtist.Contains(artist))
-                       ).OrderBy(m => m.ImageTitle).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-            }
-            else
-            {
-                if (stateid != null)
-                {
-                    list = _mediaImageRepo.GetMediaImages(currentUser, x =>
-                        x.ImageTitle.Contains(imagetitle)
-                        && (location.Length == 0 || x.City.Contains(location))
-                        && stateid.Contains((int)x.StateId)
-                        && (comment.Length == 0 || x.MediaImageComments.Any(m => m.Comment.Contains(comment)))
-                        && (artist.Length == 0 || x.PhotographerArtist.Contains(artist))
-                        && movementclassid.Contains((int)x.MovementClassId)
-                        ).OrderBy(m => m.ImageTitle).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-                else
-                {
-                    list = _mediaImageRepo.GetMediaImages(currentUser, x =>
-                        x.ImageTitle.Contains(imagetitle)
-                        && (location.Length == 0 || x.City.Contains(location))
-                        && (comment.Length == 0 || x.MediaImageComments.Any(m => m.Comment.Contains(comment)))
-                        && (artist.Length == 0 || x.PhotographerArtist.Contains(artist))
-                        && movementclassid.Contains((int)x.MovementClassId)
-                        ).OrderBy(m => m.ImageTitle).ToPagedList(page ?? 1, pageSize ?? 15);
-                }
-            }
+            var list = _mediaImageRepo.GetMediaImages(CurrentUser, pred).OrderByDescending(m => m.DateCreated).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
@@ -137,7 +92,7 @@ namespace splc.beholder.web.Controllers
         public JsonResult GetMediaImageList(string term)
         {
             term = term.Trim();
-            var list = _mediaImageRepo.GetMediaImages(currentUser, p => p.ImageTitle.Contains(term)).ToArray().Select(
+            var list = _mediaImageRepo.GetMediaImages(CurrentUser, p => p.ImageTitle.Contains(term)).ToArray().Select(
                 e => new
                 {
                     Id = e.Id,
@@ -163,10 +118,10 @@ namespace splc.beholder.web.Controllers
             ViewBag.SubscriptionId = -1;
             ViewBag.Controller = "MediaImages";
 
-            var image = _mediaImageRepo.GetMediaImage(currentUser, id);
+            var image = _mediaImageRepo.GetMediaImage(CurrentUser, id);
             if (image != null)
             {
-                return View(_mediaImageRepo.GetMediaImage(currentUser, id));
+                return View(_mediaImageRepo.GetMediaImage(CurrentUser, id));
             }
             return View("MediaImage404");
 
@@ -246,31 +201,9 @@ namespace splc.beholder.web.Controllers
             //}
         }
 
-        //private byte[] GetFile(string fileName)
-        //{
-        //    var stream = new FileStream(fileName, FileMode.Open);
-        //    byte[] tmp;
-
-        //    var buffer = new byte[16 * 1024];
-        //    using (var ms = new MemoryStream())
-        //    {
-        //        int read;
-        //        while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
-        //        {
-        //            ms.Write(buffer, 0, read);
-        //        }
-        //        stream.Close();
-        //        tmp = ImageHelper.Compress(ms.ToArray(), fileName);
-        //    }
-        //    return tmp;
-        //}
-
-
-        //
-        // GET: /MediaImages/Create
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var image = new Image();
             var mediaImage = new MediaImage
             {
@@ -325,21 +258,21 @@ namespace splc.beholder.web.Controllers
                 return RedirectToAction("Details", new { id = mediaimage.Id });
             }
             var img = new Image()
-                {
-                    ConfidentialityTypeId = _lookupRepo.GetConfidentialityTypes().SingleOrDefault(p => p.Name.Equals("Identity")).Id,
-                };
+            {
+                ConfidentialityTypeId = _lookupRepo.GetConfidentialityTypes().SingleOrDefault(p => p.Name.Equals("Identity")).Id,
+            };
             var entity = new MediaImage
-                {
-                    MediaTypeId = _lookupRepo.GetMediaTypes().SingleOrDefault(p => p.Name.Equals("Image")).Id,
-                    Image = img,
-                };
+            {
+                MediaTypeId = _lookupRepo.GetMediaTypes().SingleOrDefault(p => p.Name.Equals("Image")).Id,
+                Image = img,
+            };
             return View(entity);
         }
 
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
-            var mediaImage = _mediaImageRepo.GetMediaImage(currentUser, id);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
+            var mediaImage = _mediaImageRepo.GetMediaImage(CurrentUser, id);
             if (mediaImage != null)
             {
                 //allow add image on edit if not already there.
@@ -377,20 +310,20 @@ namespace splc.beholder.web.Controllers
                 _mediaImageRepo.Save();
                 return RedirectToAction("Details", new { id = mediaimage.Id });
             }
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             return View(mediaimage);
         }
 
         public ActionResult RemoveImage(int id)
         {
-            var img = _mediaImageRepo.GetMediaImage(currentUser, id);
+            var img = _mediaImageRepo.GetMediaImage(CurrentUser, id);
             return View(img);
         }
 
         [HttpPost]
         public ActionResult RemoveImage(int id, string removalreason)
         {
-            var img = _mediaImageRepo.GetMediaImage(currentUser, id);
+            var img = _mediaImageRepo.GetMediaImage(CurrentUser, id);
             img.RemovalReason = removalreason;
 
             img.RemovalStatusId = 1;
@@ -1062,7 +995,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.Controller = "MediaImages";
             //try
             //{
-            var mediaImages = _mediaImageRepo.GetMediaImageMediaImages(currentUser, mediaImageId);
+            var mediaImages = _mediaImageRepo.GetMediaImageMediaImages(CurrentUser, mediaImageId);
             //}
             //catch (Exception ex)
             //{

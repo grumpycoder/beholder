@@ -38,7 +38,7 @@ namespace splc.beholder.web.Controllers
         public ViewResult Search(string searchTerm)
         {
             searchTerm = searchTerm.Trim();
-            IQueryable<MediaAudioVideo> list = _mediaAudioVideoRepo.GetMediaAudioVideos(currentUser, p => p.SpeakerCommentator.Contains(searchTerm) || p.Title.Contains(searchTerm));
+            IQueryable<MediaAudioVideo> list = _mediaAudioVideoRepo.GetMediaAudioVideos(CurrentUser, p => p.SpeakerCommentator.Contains(searchTerm) || p.Title.Contains(searchTerm));
 
             return View("Index", list);
         }
@@ -75,7 +75,7 @@ namespace splc.beholder.web.Controllers
             if (daterecordfrom != null) pred = pred.And(p => daterecordfrom <= p.DateReceivedRecorded);
             if (daterecordto != null) pred = pred.And(p => daterecordto >= p.DateReceivedRecorded);
 
-            var list = _mediaAudioVideoRepo.GetMediaAudioVideos(currentUser, pred).OrderBy(m => m.Title).ToPagedList(page ?? 1, pageSize ?? 15);
+            var list = _mediaAudioVideoRepo.GetMediaAudioVideos(CurrentUser, pred).OrderBy(m => m.Title).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
@@ -90,7 +90,7 @@ namespace splc.beholder.web.Controllers
         public JsonResult GetMediaAudioVideoList(string term)
         {
             term = term.Trim();
-            var list = _mediaAudioVideoRepo.GetMediaAudioVideos(currentUser, p => p.Title.Contains(term)).ToArray().Select(
+            var list = _mediaAudioVideoRepo.GetMediaAudioVideos(CurrentUser, p => p.Title.Contains(term)).ToArray().Select(
                 e => new
                 {
                     Id = e.Id,
@@ -113,7 +113,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.MediaCorrespondenceId = -1;
             ViewBag.Controller = "MediaAudioVideos";
 
-            var mediaAudioVideo = _mediaAudioVideoRepo.GetMediaAudioVideo(currentUser, id);
+            var mediaAudioVideo = _mediaAudioVideoRepo.GetMediaAudioVideo(CurrentUser, id);
             if (mediaAudioVideo != null)
             {
                 return View(mediaAudioVideo);
@@ -124,7 +124,7 @@ namespace splc.beholder.web.Controllers
         // GET: /MediaAudioVideos/Create
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var mediaAudioVideo = new MediaAudioVideo();
             return View(mediaAudioVideo);
         }
@@ -164,11 +164,11 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
-            var mediaAudioVideo = _mediaAudioVideoRepo.GetMediaAudioVideo(currentUser, id);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
+            var mediaAudioVideo = _mediaAudioVideoRepo.GetMediaAudioVideo(CurrentUser, id);
             if (mediaAudioVideo != null)
             {
-                return View(_mediaAudioVideoRepo.GetMediaAudioVideo(currentUser, id));
+                return View(_mediaAudioVideoRepo.GetMediaAudioVideo(CurrentUser, id));
             }
             return View("MediaAudioVideo404");
         }
@@ -189,14 +189,14 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult RemoveAudioVideo(int id)
         {
-            var av = _mediaAudioVideoRepo.GetMediaAudioVideo(currentUser, id);
+            var av = _mediaAudioVideoRepo.GetMediaAudioVideo(CurrentUser, id);
             return View(av);
         }
 
         [HttpPost]
         public ActionResult RemoveAudioVideo(int id, string removalreason)
         {
-            var av = _mediaAudioVideoRepo.GetMediaAudioVideo(currentUser, id);
+            var av = _mediaAudioVideoRepo.GetMediaAudioVideo(CurrentUser, id);
             av.RemovalReason = removalreason;
 
             av.RemovalStatusId = 1;

@@ -1,14 +1,12 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using splc.domain.Models;
+﻿using splc.domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
 namespace splc.data.repository
 {
-
 
     public class LookupRepository : ILookupRepository
     {
@@ -69,9 +67,9 @@ namespace splc.data.repository
             return _ctx.HairPatterns.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
         }
 
-        public IQueryable<State> GetStates()
+        public virtual List<State> GetStates()
         {
-            return _ctx.States.OrderBy(x => x.StateCode);
+            return _ctx.States.OrderBy(x => x.StateCode).ToList();
         }
 
         public IQueryable<MaritialStatus> GetMaritialStatuses()
@@ -84,19 +82,19 @@ namespace splc.data.repository
             return _ctx.AddressTypes.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
         }
 
-        public IQueryable<ApprovalStatus> GetApprovalStatuses()
+        public virtual List<ApprovalStatus> GetApprovalStatuses()
         {
-            return _ctx.ApprovalStatus.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
+            return _ctx.ApprovalStatus.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name).ToList();
         }
 
-        public IQueryable<ActiveStatus> GetActiveStatuses()
+        public virtual List<ActiveStatus> GetActiveStatuses()
         {
-            return _ctx.ActiveStatus.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
+            return _ctx.ActiveStatus.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name).ToList();
         }
 
-        public IQueryable<MovementClass> GetMovementClasses()
+        public virtual List<MovementClass> GetMovementClasses()
         {
-            return _ctx.MovementClasses.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
+            return _ctx.MovementClasses.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name).ToList();
         }
 
         public IQueryable<ConfidentialityType> GetConfidentialityTypes(User user)
@@ -110,19 +108,19 @@ namespace splc.data.repository
         }
 
 
-        public IQueryable<RemovalStatus> GetRemovalStatus()
+        public virtual List<RemovalStatus> GetRemovalStatus()
         {
-            return _ctx.RemovalStatus.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
+            return _ctx.RemovalStatus.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name).ToList();
         }
 
-        public IQueryable<PrimaryStatus> GetPrimaryStatuses()
+        public virtual List<PrimaryStatus> GetPrimaryStatuses()
         {
-            return _ctx.PrimaryStatus.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
+            return _ctx.PrimaryStatus.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name).ToList();
         }
 
-        public IQueryable<RelationshipType> GetRelationshipTypes()
+        public virtual List<RelationshipType> GetRelationshipTypes()
         {
-            return _ctx.RelationshipTypes.Where(x => x.DateDeleted == null).OrderBy(x => x.ObjectFrom).ThenBy(x => x.ObjectTo).ThenBy(x => x.SortOrder ?? int.MaxValue);
+            return _ctx.RelationshipTypes.Where(x => x.DateDeleted == null).OrderBy(x => x.ObjectFrom).ThenBy(x => x.ObjectTo).ThenBy(x => x.SortOrder ?? int.MaxValue).ToList();
         }
 
         public IQueryable<OrganizationType> GetOrganizationTypes()
@@ -130,14 +128,14 @@ namespace splc.data.repository
             return _ctx.OrganizationTypes.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
         }
 
-        public IQueryable<ChapterType> GetChapterTypes()
+        public virtual List<ChapterType> GetChapterTypes()
         {
-            return _ctx.ChapterTypes.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
+            return _ctx.ChapterTypes.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name).ToList();
         }
 
-        public IQueryable<ContactInfoType> GetContactInfoTypes()
+        public virtual List<ContactInfoType> GetContactInfoTypes()
         {
-            return _ctx.ContactInfoTypes.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
+            return _ctx.ContactInfoTypes.Where(x => x.DateDeleted == null).OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name).ToList();
         }
 
         public IQueryable<WebIncidentType> GetWebIncidentTypes()
@@ -247,7 +245,170 @@ namespace splc.data.repository
         public IQueryable<ContactType> GetContactTypes()
         {
             return _ctx.ContactTypes.OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name);
+        }
     }
+
+    public class CachedLookupRepository : LookupRepository
+    {
+        private static readonly object CacheLockObject = new object();
+
+        public CachedLookupRepository(ACDBContext ctx) : base(ctx)
+        {
+        }
+
+        public override List<State> GetStates()
+        {
+            Debug.Print("CachedLookupRepository:GetStates");
+            var cacheKey = "States";
+            var result = HttpRuntime.Cache[cacheKey] as List<State>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<State>;
+                if (result != null) return result;
+                result = base.GetStates();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
+        public override List<ChapterType> GetChapterTypes()
+        {
+            Debug.Print("CachedLookupRepository:GetChapterTypes");
+            var cacheKey = "ChapterTypes";
+            var result = HttpRuntime.Cache[cacheKey] as List<ChapterType>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<ChapterType>;
+                if (result != null) return result;
+                result = base.GetChapterTypes();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
+        public override List<ApprovalStatus> GetApprovalStatuses()
+        {
+            Debug.Print("CachedLookupRepository:GetApprovalStatuses");
+            var cacheKey = "ApprovalStatus";
+            var result = HttpRuntime.Cache[cacheKey] as List<ApprovalStatus>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<ApprovalStatus>;
+                if (result != null) return result;
+                result = base.GetApprovalStatuses();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
+        public override List<ActiveStatus> GetActiveStatuses()
+        {
+            Debug.Print("CachedLookupRepository:GetActiveStatuses");
+            var cacheKey = "ActiveStatus";
+            var result = HttpRuntime.Cache[cacheKey] as List<ActiveStatus>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<ActiveStatus>;
+                if (result != null) return result;
+                result = base.GetActiveStatuses();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
+        public override List<MovementClass> GetMovementClasses()
+        {
+            Debug.Print("CachedLookupRepository:GetMovementClasses");
+            var cacheKey = "MovementClass";
+            var result = HttpRuntime.Cache[cacheKey] as List<MovementClass>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<MovementClass>;
+                if (result != null) return result;
+                result = base.GetMovementClasses();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
+        public override List<RemovalStatus> GetRemovalStatus()
+        {
+            Debug.Print("CachedLookupRepository:GetRemovalStatus");
+            var cacheKey = "RemovalStatus";
+            var result = HttpRuntime.Cache[cacheKey] as List<RemovalStatus>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<RemovalStatus>;
+                if (result != null) return result;
+                result = base.GetRemovalStatus();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
+        public override List<RelationshipType> GetRelationshipTypes()
+        {
+            Debug.Print("CachedLookupRepository:GetRelationshipTypes");
+            var cacheKey = "RelationshipType";
+            var result = HttpRuntime.Cache[cacheKey] as List<RelationshipType>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<RelationshipType>;
+                if (result != null) return result;
+                result = base.GetRelationshipTypes();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
+        public override List<ContactInfoType> GetContactInfoTypes()
+        {
+            Debug.Print("CachedLookupRepository:GetContactInfoTypes");
+            var cacheKey = "ContactInfoType";
+            var result = HttpRuntime.Cache[cacheKey] as List<ContactInfoType>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<ContactInfoType>;
+                if (result != null) return result;
+                result = base.GetContactInfoTypes();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
+        public override List<PrimaryStatus> GetPrimaryStatuses()
+        {
+            Debug.Print("CachedLookupRepository:GetPrimaryStatuses");
+            var cacheKey = "PrimaryStatus";
+            var result = HttpRuntime.Cache[cacheKey] as List<PrimaryStatus>;
+            if (result != null) return result;
+            lock (CacheLockObject)
+            {
+                result = HttpRuntime.Cache[cacheKey] as List<PrimaryStatus>;
+                if (result != null) return result;
+                result = base.GetPrimaryStatuses();
+                HttpRuntime.Cache.Insert(cacheKey, result, null,
+                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
+            }
+            return result;
+        }
+
     }
 
     public interface ILookupRepository
@@ -262,20 +423,20 @@ namespace splc.data.repository
         IQueryable<EyeColor> GetEyeColors();
         IQueryable<HairColor> GetHairColors();
         IQueryable<HairPattern> GetHairPatterns();
-        IQueryable<State> GetStates();
+        List<State> GetStates();
         IQueryable<MaritialStatus> GetMaritialStatuses();
         IQueryable<AddressType> GetAddressTypes();
-        IQueryable<ApprovalStatus> GetApprovalStatuses();
-        IQueryable<ActiveStatus> GetActiveStatuses();
-        IQueryable<MovementClass> GetMovementClasses();
+        List<ApprovalStatus> GetApprovalStatuses();
+        List<ActiveStatus> GetActiveStatuses();
+        List<MovementClass> GetMovementClasses();
         IQueryable<ConfidentialityType> GetConfidentialityTypes(User user);
         IQueryable<ConfidentialityType> GetConfidentialityTypes();
-        IQueryable<RemovalStatus> GetRemovalStatus();
-        IQueryable<PrimaryStatus> GetPrimaryStatuses();
-        IQueryable<RelationshipType> GetRelationshipTypes();
+        List<RemovalStatus> GetRemovalStatus();
+        List<PrimaryStatus> GetPrimaryStatuses();
+        List<RelationshipType> GetRelationshipTypes();
         IQueryable<OrganizationType> GetOrganizationTypes();
-        IQueryable<ChapterType> GetChapterTypes();
-        IQueryable<ContactInfoType> GetContactInfoTypes();
+        List<ChapterType> GetChapterTypes();
+        List<ContactInfoType> GetContactInfoTypes();
         IQueryable<WebIncidentType> GetWebIncidentTypes();
         IQueryable<EventDocumentationType> GetEventDocumentationTypes();
         IQueryable<VehicleMake> GetVehicleMakes();

@@ -66,7 +66,7 @@ namespace splc.beholder.web.Controllers
 
             if (string.IsNullOrWhiteSpace(term) || term == "-1")
             {
-                var list = _personRepo.Get(currentUser, null).Take(50).OrderBy(x => x.CommonPerson.LName).ThenBy(x => x.CommonPerson.FName)
+                var list = _personRepo.Get(CurrentUser, null).Take(50).OrderBy(x => x.CommonPerson.LName).ThenBy(x => x.CommonPerson.FName)
                                     .Select(x => new
                                     {
                                         x.Id,
@@ -94,7 +94,7 @@ namespace splc.beholder.web.Controllers
             if (term.IsInt())
             {
                 var id = Convert.ToInt32(term);
-                var list = _personRepo.Get(currentUser, p => p.Id == id)
+                var list = _personRepo.Get(CurrentUser, p => p.Id == id)
                                         .Select(x => new
                                         {
                                             x.Id,
@@ -121,7 +121,7 @@ namespace splc.beholder.web.Controllers
             else
             {
                 term = term.Trim();
-                var list = _personRepo.Get(currentUser, p => p.CommonPerson.LName.Contains(term) || p.CommonPerson.FName.Contains(term)).OrderBy(x => x.CommonPerson.LName).ThenBy(x => x.CommonPerson.FName)
+                var list = _personRepo.Get(CurrentUser, p => p.CommonPerson.LName.Contains(term) || p.CommonPerson.FName.Contains(term)).OrderBy(x => x.CommonPerson.LName).ThenBy(x => x.CommonPerson.FName)
                                         .Select(x => new
                                         {
                                             x.Id,
@@ -176,7 +176,7 @@ namespace splc.beholder.web.Controllers
         {
             //TODO: Why is there a need for 2 personrepo
             term = term.Trim();
-            var list = _beholderPersonRepo.Get(currentUser, p => p.CommonPerson.LName.Contains(term) || p.CommonPerson.FName.Contains(term)).ToArray().Select(
+            var list = _beholderPersonRepo.Get(CurrentUser, p => p.CommonPerson.LName.Contains(term) || p.CommonPerson.FName.Contains(term)).ToArray().Select(
                 e => new
                 {
                     e.Id,
@@ -221,7 +221,7 @@ namespace splc.beholder.web.Controllers
             if (!string.IsNullOrWhiteSpace(location)) pred = pred.And(p => p.CommonPerson.AddressPersonRels.Any(c => c.Address.City.Contains(location)));
             if (stateid != null) pred = pred.And(p => p.CommonPerson.AddressPersonRels.Any(c => stateid.Contains((int)c.Address.StateId)));
 
-            var list = _personRepo.Get(currentUser, pred).OrderBy(m => m.CommonPerson.LName)
+            var list = _personRepo.Get(CurrentUser, pred).OrderBy(m => m.CommonPerson.LName)
                 .ThenBy(n => n.CommonPerson.FName)
                 .ToPagedList(page ?? 1, pageSize ?? 15);
 
@@ -233,7 +233,7 @@ namespace splc.beholder.web.Controllers
         public ViewResult DetailsLite(int id)
         {
             //ViewBag.BeholderPersonId = id; 
-            var person = _personRepo.Get(id, currentUser);
+            var person = _personRepo.Get(id, CurrentUser);
 
             return person != null ? View(person) : View("Person404");
         }
@@ -242,7 +242,7 @@ namespace splc.beholder.web.Controllers
         // GET: /BeholderPersons/Details/5
         public ViewResult Details(int id)
         {
-            var person = _personRepo.Get(id, currentUser);
+            var person = _personRepo.Get(id, CurrentUser);
             if (person == null) return View("Person404");
 
             ViewBag.BeholderPersonId = id;
@@ -270,7 +270,7 @@ namespace splc.beholder.web.Controllers
             var bperson = new BeholderPerson();
             var cperson = new CommonPerson();
             bperson.CommonPerson = cperson;
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             return View(bperson);
         }
 
@@ -289,7 +289,7 @@ namespace splc.beholder.web.Controllers
                 }
                 return RedirectToAction("Details", new { id = beholderperson.Id });
             }
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             return View(beholderperson);
         }
 
@@ -297,8 +297,8 @@ namespace splc.beholder.web.Controllers
         // GET: /BeholderPersons/Edit/5
         public ActionResult Edit(int id)
         {
-            var person = _personRepo.Get(id, currentUser);
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            var person = _personRepo.Get(id, CurrentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             if (person != null)
             {
                 return View(person);
@@ -359,14 +359,14 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult RemovePerson(int id)
         {
-            var person = _personRepo.Get(id, currentUser);
+            var person = _personRepo.Get(id, CurrentUser);
             return View(person);
         }
 
         [HttpPost]
         public ActionResult RemovePerson(int id, string removalreason)
         {
-            var beholderperson = _personRepo.Get(id, currentUser);
+            var beholderperson = _personRepo.Get(id, CurrentUser);
             beholderperson.RemovalStatusId = 1;
             _personRepo.InsertOrUpdate(beholderperson);
             _personRepo.Save();
@@ -376,7 +376,7 @@ namespace splc.beholder.web.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var person = _personRepo.Get(id, currentUser);
+            var person = _personRepo.Get(id, CurrentUser);
             return View(person);
         }
 
@@ -1192,7 +1192,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.Controller = "Persons";
             try
             {
-                persons = _personRepo.Get(personId, currentUser);
+                persons = _personRepo.Get(personId, CurrentUser);
             }
             catch (Exception ex)
             {

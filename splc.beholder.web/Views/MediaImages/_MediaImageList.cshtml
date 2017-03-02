@@ -5,7 +5,6 @@
 
     var pageSize = Session["pageSize"] ?? Request["pageSize"];
     var imagetitle = Session["imagetitle"] ?? Request["imagetitle"];
-    var activeyear = Session["activeyear"] ?? Request["activeyear"];
     var location = Session["location"] ?? Request["location"];
     var comment = Session["comment"] ?? Request["comment"];
     var artist = Session["artist"] ?? Request["artist"];
@@ -28,7 +27,7 @@
     <h3>No Images found</h3>
 }
 <div class="row">
-    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, imagetitle, activeyear, location, comment, artist, movementclassid, stateid_string, movementclassid_string }))
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, imagetitle, location, comment, artist, movementclassid, stateid_string, movementclassid_string }))
 </div>
 
 <ul class="card-list">
@@ -68,5 +67,5 @@
 </ul>
 
 <div class="row">
-    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, imagetitle, activeyear, location, comment, artist, movementclassid, stateid_string, movementclassid_string }))
+    @Html.Pager(Model, page => Url.Action("Index", new { page, pageSize, imagetitle, location, comment, artist, movementclassid, stateid_string, movementclassid_string }))
 </div>

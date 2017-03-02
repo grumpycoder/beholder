@@ -6,7 +6,6 @@
     var page = Session["page"] ?? Request["page"];
     var pageSize = Session["pageSize"] ?? Request["pageSize"];
     var imagetitle = Session["imagetitle"] ?? Request["imagetitle"];
-    var activeyear = Session["activeyear"] ?? Request["activeyear"];
     var location = Session["location"] ?? Request["location"];
     var comment = Session["comment"] ?? Request["comment"];
     var artist = Session["artist"] ?? Request["artist"];
@@ -45,7 +44,6 @@
                                 
                                 <table class="table table-condensed table-responsive table-no-border">
                                     <tr>
-                                        <td><label for="activeyear" class="control-label">Active Year</label></td>
                                         <td><label for="location" class="control-label">City</label></td>
                                         <td><label for="location" class="control-label">State</label></td>
                                         <td><label for="artist" class="control-label">Artist</label></td>
@@ -53,7 +51,6 @@
                                         <td><label for="movementclassid" class="control-label">Movements</label></td>
                                     </tr>
                                     <tr>
-                                        <td><input type="text" id="activeyear" name="activeyear" placeholder="Active Year" class="form-control" value="@(activeyear)" /></td>
                                         <td><input type="text" id="location" name="location" placeholder="location" class="form-control" value="@(location)" /></td>
                                         <td>
                                             <select data-placeholder="Choose States..." name="stateid" id="stateid" multiple class="chosen-select form-control" style="width:350px;">

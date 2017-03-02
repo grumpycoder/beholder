@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using splc.data.repository;
 using splc.domain.Models;
-using splc.data;
+using System;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace splc.beholder.web.Controllers
 {
@@ -20,11 +17,11 @@ namespace splc.beholder.web.Controllers
         private readonly IPersonRepository _personRepo;
 
         public AliasesController(
-            IAliasRepository aliasRepository, 
-            IAliasChapterRelRepository aliaschapterrelRepository, 
-            IAliasPersonRelRepository aliaspersonrelRepository, 
-            IAliasOrganizationRelRepository aliasOrganizationRelRepository, 
-            ILookupRepository lookupRepo, 
+            IAliasRepository aliasRepository,
+            IAliasChapterRelRepository aliaschapterrelRepository,
+            IAliasPersonRelRepository aliaspersonrelRepository,
+            IAliasOrganizationRelRepository aliasOrganizationRelRepository,
+            ILookupRepository lookupRepo,
             IPersonRepository personRepo)
         {
             _lookupRepo = lookupRepo;
@@ -127,8 +124,8 @@ namespace splc.beholder.web.Controllers
         // GET: /AliasPersonRels/Create
         public ActionResult CreatePersonAlias(int personId)
         {
-//            var person = _personRepo.Get(personId, currentUser);
-//            ViewBag.CommonPersonId = personId;
+            //            var person = _personRepo.Get(personId, currentUser);
+            //            ViewBag.CommonPersonId = personId;
 
             var alias = new AliasPersonRel
             {
@@ -155,7 +152,7 @@ namespace splc.beholder.web.Controllers
                     _aliaspersonrelRepository.InsertOrUpdate(aliaspersonrel);
                     _aliaspersonrelRepository.Save();
                     //TODO:  Make sure this is the right PersonId to return
-//                    return RedirectToAction("Details", "Persons", new { id = aliaspersonrel.PersonId });
+                    //                    return RedirectToAction("Details", "Persons", new { id = aliaspersonrel.PersonId });
                 }
             }
             catch (Exception ex)
@@ -193,7 +190,7 @@ namespace splc.beholder.web.Controllers
                 _aliaspersonrelRepository.InsertOrUpdate(aliaspersonrel);
                 _aliaspersonrelRepository.Save();
                 //TODO:  Make sure this is the right PersonId to return
-//                return RedirectToAction("Details", "Persons", new { id = aliaspersonrel.PersonId });
+                //                return RedirectToAction("Details", "Persons", new { id = aliaspersonrel.PersonId });
             }
             return View(aliaspersonrel);
         }
@@ -203,9 +200,9 @@ namespace splc.beholder.web.Controllers
         {
             var aliases = _aliaspersonrelRepository.GetAliases(p => p.CommonPerson.Id.Equals(id)).ToArray();
             //TODO: Unable to get beholderperson from commonperson id passed in to set viewbag variable needed in partial view. 
-            var beholderPerson = _personRepo.Get(currentUser, x => x.CommonPersonId == id);
+            var beholderPerson = _personRepo.Get(CurrentUser, x => x.CommonPersonId == id);
 
-            ViewBag.BeholderPersonId = beholderPerson.First().Id; 
+            ViewBag.BeholderPersonId = beholderPerson.First().Id;
             ViewBag.CommonPersonId = id;
 
             if (Request.IsAjaxRequest())

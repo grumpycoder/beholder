@@ -23,12 +23,12 @@ namespace splc.beholder.web.Controllers
         // GET: /Admin/
         public ActionResult Index()
         {
-                return View();
+            return View();
         }
 
         public ActionResult Lookup()
         {
-                return View();
+            return View();
         }
 
         public ActionResult ActiveStatus()
@@ -1942,7 +1942,7 @@ namespace splc.beholder.web.Controllers
         {
             if (ModelState.IsValid)
             {
-                state.CreatedUserId = currentUser.Id;
+                state.CreatedUserId = CurrentUser.Id;
                 _ctx.States.Add(state);
                 _ctx.SaveChanges();
             }
@@ -2292,7 +2292,7 @@ namespace splc.beholder.web.Controllers
             if (ModelState.IsValid)
             {
                 //TODO: Fix this!!
-                vehicleModel.CreatedUserId = currentUser.Id;
+                vehicleModel.CreatedUserId = CurrentUser.Id;
                 _ctx.Entry(vehicleModel).State = EntityState.Modified;
                 _ctx.SaveChanges();
                 return RedirectToAction("Index");

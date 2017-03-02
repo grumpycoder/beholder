@@ -1,68 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-using Microsoft.AspNet.Identity;
-using splc.data;
+﻿using splc.data;
 using splc.data.repository;
 using splc.domain.Models;
+using System.Diagnostics;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace splc.beholder.web.Controllers
 {
 
     public class BaseController : Controller
     {
-        //protected IUserRepository userRepo;
-        protected IUserRepository userRepo;
-        protected User currentUser;
+        protected IUserRepository UserRepo;
+        protected User CurrentUser;
 
-        public BaseController()
-        {
-
-        }
+        public BaseController() { }
 
         public BaseController(IUserRepository userRepository)
         {
-            userRepo = userRepository;
+            UserRepo = userRepository;
         }
 
         protected override void Initialize(RequestContext requestContext)
         {
             base.Initialize(requestContext);
-            userRepo = new UserRepository(new ACDBContext());
-            if (User.Identity.Name != "")
+            UserRepo = new UserRepository(new ACDBContext());
+            if (User.Identity.Name == "") return;
+
+            if (HttpContext.Session != null && HttpContext.Session["UserId"] == null)
             {
-                //if (HttpContext.Session != null && HttpContext.Session["UserId"] == null)
-                //{
+                var user = UserRepo.Find(User.Identity.Name);
 
-                //userRepo = new UserRepository(new ACDBContext());
+                CurrentUser = user;
 
-                //var user = userRepo.Find(User.Identity.Name);
-                //currentUser = user;
-
-
-                if (HttpContext.Session != null && HttpContext.Session["UserId"] == null)
-                {
-                    //userRepo = new UserRepository(new ACDBContext());
-                    var user = userRepo.Find(User.Identity.Name);
-
-                    currentUser = user;
-
-                    HttpContext.Session["UserId"] = user.Id;
-                    HttpContext.Session["User"] = user;
-                    var u = (User)HttpContext.Session["User"];
-                    Debug.WriteLine(u.UserName);
-                }
-                else
-                {
-                    currentUser = (User)HttpContext.Session["User"];
-                }
-
+                HttpContext.Session["UserId"] = user.Id;
+                HttpContext.Session["User"] = user;
+                var u = (User)HttpContext.Session["User"];
+                Debug.WriteLine(u.UserName);
             }
-
+            else
+            {
+                CurrentUser = (User)HttpContext.Session["User"];
+            }
         }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -72,8 +51,6 @@ namespace splc.beholder.web.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-
-                //var user = userRepo.Find(User.Identity.Name);
                 var user = (User)HttpContext.Session["User"];
                 if (user == null && s != "HomeController")
                 {
@@ -85,7 +62,7 @@ namespace splc.beholder.web.Controllers
                 }
                 if (user != null && (s == "AdminController" || s == "SecurityController"))
                 {
-                    var g = currentUser.GroupUsers.Where(x => x.Group.Name == "Admin");
+                    var g = CurrentUser.GroupUsers.Where(x => x.Group.Name == "Admin");
                     var b = g.Any(groupUser => groupUser.DateDeleted == null);
 
                     if (!b)
@@ -99,7 +76,7 @@ namespace splc.beholder.web.Controllers
                 }
                 if (user != null && s == "ApprovalController")
                 {
-                    var g = currentUser.GroupUsers.Where(x => x.Group.Name == "Approver");
+                    var g = CurrentUser.GroupUsers.Where(x => x.Group.Name == "Approver");
                     var b = g.Any(groupUser => groupUser.DateDeleted == null);
 
                     if (!b)
@@ -114,7 +91,7 @@ namespace splc.beholder.web.Controllers
 
                 if (user != null && s == "ResearchController")
                 {
-                    var g = currentUser.GroupUsers.Where(x => x.Group.Name == "Researchers");
+                    var g = CurrentUser.GroupUsers.Where(x => x.Group.Name == "Researchers");
                     var b = g.Any(groupUser => groupUser.DateDeleted == null);
 
                     if (!b)
