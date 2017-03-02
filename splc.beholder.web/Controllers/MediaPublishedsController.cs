@@ -1,20 +1,19 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Xml;
-using Caseiro.Mvc.PagedList;
 using Caseiro.Mvc.PagedList.Extensions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
-using splc.data;
-using splc.domain.Models;
-using splc.data.repository;
-using System.IO;
-using System.Web;
-using System.Data.Entity.Validation;
-using splc.data.Utility;
-using System.Text;
 using splc.beholder.web.Models;
+using splc.beholder.web.Utility;
+using splc.data;
+using splc.data.repository;
+using splc.data.Utility;
+using splc.domain.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Validation;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Web;
+using System.Web.Mvc;
 
 namespace splc.beholder.web.Controllers
 {
@@ -52,7 +51,6 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult GetContextList(int MediaPublishedId)
         {
-            //            var list = db.MediaPublishedContexts.Where(x => x.MediaPublishedId == MediaPublishedId).ToList();
             var list = db.MediaPublishedContexts.Where(x => x.MediaPublishedId == MediaPublishedId).Select(s =>
             new PublishedContextViewModel()
             {
@@ -65,7 +63,6 @@ namespace splc.beholder.web.Controllers
 
         [HttpPost]
         public JsonResult SaveTextAsContent(int mediapublishedid, string filename, string content)
-        //public ActionResult SaveTextAsContent(FormCollection form)
         {
             var context = new MediaPublishedContext()
             {
@@ -91,43 +88,39 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult SaveAttachments(IEnumerable<HttpPostedFileBase> attachments, int mediaPublishedId)
         {
-
-            if (attachments != null)
+            if (attachments == null) return Content("");
+            foreach (var file in attachments)
             {
-                foreach (var file in attachments)
+                try
                 {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var physicalPath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
+
+                    file.SaveAs(physicalPath);
+
+                    var mimetypeid = _lookupRepo.GetMimeTypes().SingleOrDefault(p => p.Name.Equals(file.ContentType.ToLower())).Id;
+                    var context = new MediaPublishedContext()
+                    {
+                        MediaPublishedId = mediaPublishedId,
+                        FileName = fileName,
+                        ContextText = GetFile(physicalPath),
+                        DocumentExtension = Path.GetExtension(physicalPath),
+                        MimeTypeId = mimetypeid
+                    };
                     try
                     {
-                        var fileName = Path.GetFileName(file.FileName);
-                        var physicalPath = Path.Combine(Server.MapPath("~/App_Data"), fileName);
-
-                        file.SaveAs(physicalPath);
-
-                        var mimetypeid = _lookupRepo.GetMimeTypes().SingleOrDefault(p => p.Name.Equals(file.ContentType.ToLower())).Id;
-                        var context = new MediaPublishedContext()
-                        {
-                            MediaPublishedId = mediaPublishedId,
-                            FileName = fileName,
-                            ContextText = GetFile(physicalPath),
-                            DocumentExtension = Path.GetExtension(physicalPath),
-                            MimeTypeId = mimetypeid
-                        };
-                        try
-                        {
-                            db.MediaPublishedContexts.Add(context);
-                            db.SaveChanges();
-                            System.IO.File.Delete(physicalPath);
-                        }
-                        catch (ValidationException e)
-                        {
-                            return Content(string.Format(@"File contains invalid characters \/:*?""<>|"));
-                        }
+                        db.MediaPublishedContexts.Add(context);
+                        db.SaveChanges();
+                        System.IO.File.Delete(physicalPath);
                     }
-                    catch (Exception e)
+                    catch (ValidationException e)
                     {
-                        return Content(e.Message);
+                        return Content(string.Format(@"File contains invalid characters \/:*?""<>|"));
                     }
-
+                }
+                catch (Exception e)
+                {
+                    return Content(e.Message);
                 }
 
             }
@@ -147,19 +140,19 @@ namespace splc.beholder.web.Controllers
         public ViewResult Search(string searchTerm)
         {
             searchTerm = searchTerm.Trim();
-            IQueryable<MediaPublished> list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, p => p.Name.Contains(searchTerm) || p.Author.Contains(searchTerm));
+            var list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, p => p.Name.Contains(searchTerm) || p.Author.Contains(searchTerm));
 
             return View("Index", list);
         }
 
         public ActionResult Index(string publishedname = "", string location = "", DateTime? datefrom = null, DateTime? dateto = null, List<int> publishedtypeid = null, string publishedtypeid_string = "", List<int> stateid = null, string stateid_string = "", string docsearch = "", int? page = 1, int? pageSize = 15)
         {
-            if (!String.IsNullOrWhiteSpace(publishedtypeid_string))
+            if (!string.IsNullOrWhiteSpace(publishedtypeid_string))
             {
-                publishedtypeid = ((List<int>)publishedtypeid_string.Split(',').Select(int.Parse).ToList());
+                publishedtypeid = publishedtypeid_string.Split(',').Select(int.Parse).ToList();
             }
 
-            if (!String.IsNullOrWhiteSpace(stateid_string))
+            if (!string.IsNullOrWhiteSpace(stateid_string))
             {
                 stateid = stateid_string.Split(',').Select(int.Parse).ToList();
             }
@@ -180,123 +173,22 @@ namespace splc.beholder.web.Controllers
             //TODO:  need to handle multiple search expressions.
             //this is to prepare the search term for full text index search.  s variable is used for full text index search.
             string s = null;
-            if (!String.IsNullOrEmpty(docsearch))
+            if (!string.IsNullOrEmpty(docsearch))
             {
-                s = String.Format("\"{0}\"", FtsInterceptor.Fts(docsearch.Replace("\"", "")));
+                s = string.Format("\"{0}\"", FtsInterceptor.Fts(docsearch.Replace("\"", "")));
             }
-            //TODO: REFACTOR!!!!
-            PagedList<MediaPublished> list = null;
-            if (s == null)
-            {
-                if (publishedtypeid != null)
-                {
-                    if (stateid != null)
-                    {
-                        list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, x =>
-                            (publishedname.Length == 0 || x.Name.Contains(publishedname))
-                            && (x.DatePublished ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DatePublished ?? DateTime.MinValue))
-                            && (x.DatePublished ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DatePublished ?? DateTime.MinValue))
-                            && (location.Length == 0 || x.City.Contains(location))
-                            && stateid.Contains((int)x.StateId)
-                            && (publishedtypeid.Contains((int)x.PublishedTypeId))
-                            //&& x.MediaPublishedContext_Index.ContextText.Contains(s)
-                            ).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
-                    }
-                    else
-                    {
-                        list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, x =>
-                            (publishedname.Length == 0 || x.Name.Contains(publishedname))
-                            && (x.DatePublished ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DatePublished ?? DateTime.MinValue))
-                            && (x.DatePublished ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DatePublished ?? DateTime.MinValue))
-                            && (location.Length == 0 || x.City.Contains(location))
-                            && (publishedtypeid.Contains((int)x.PublishedTypeId))
-                            //&& x.MediaPublishedContext_Index.ContextText.Contains(s)
-                            ).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
-                    }
-                }
-                else
-                {
-                    if (stateid != null)
-                    {
-                        list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, x =>
-                            (publishedname.Length == 0 || x.Name.Contains(publishedname))
-                            && (x.DatePublished ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DatePublished ?? DateTime.MinValue))
-                            && (x.DatePublished ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DatePublished ?? DateTime.MinValue))
-                            && (location.Length == 0 || x.City.Contains(location))
-                            && stateid.Contains((int)x.StateId)
-                            //&& x.MediaPublishedContext_Index.ContextText.Contains(s)
-                            ).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
-                    }
-                    else
-                    {
-                        list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, x =>
-                            (publishedname.Length == 0 || x.Name.Contains(publishedname))
-                            && (x.DatePublished ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DatePublished ?? DateTime.MinValue))
-                            && (x.DatePublished ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DatePublished ?? DateTime.MinValue))
-                            && (location.Length == 0 || x.City.Contains(location))
-                            //&& x.MediaPublishedContext_Index.ContextText.Contains(s)
-                            ).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
-                    }
-                }
-            }
-            else
-            {
-                if (publishedtypeid != null)
-                {
-                    if (stateid != null)
-                    {
-                        list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, x =>
-                            (publishedname.Length == 0 || x.Name.Contains(publishedname))
-                            && (x.DatePublished ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DatePublished ?? DateTime.MinValue))
-                            && (x.DatePublished ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DatePublished ?? DateTime.MinValue))
-                            && (location.Length == 0 || x.City.Contains(location))
-                            && stateid.Contains((int)x.StateId)
-                            && (publishedtypeid.Contains((int)x.PublishedTypeId))
-                            && (x.MediaPublishedContext_Indexes.Any(m => m.ContextText.Contains(s)))
-                            //&& x.MediaPublishedContext_Index.ContextText.Contains(s)
-                            ).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
-                    }
-                    else
-                    {
-                        list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, x =>
-                            (publishedname.Length == 0 || x.Name.Contains(publishedname))
-                            && (x.DatePublished ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DatePublished ?? DateTime.MinValue))
-                            && (x.DatePublished ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DatePublished ?? DateTime.MinValue))
-                            && (location.Length == 0 || x.City.Contains(location))
-                            && (publishedtypeid.Contains((int)x.PublishedTypeId))
-                            && (x.MediaPublishedContext_Indexes.Any(m => m.ContextText.Contains(s)))
-                            //&& x.MediaPublishedContext_Index.ContextText.Contains(s)
-                            ).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
-                    }
-                }
-                else
-                {
-                    if (stateid != null)
-                    {
-                        list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, x =>
-                            (publishedname.Length == 0 || x.Name.Contains(publishedname))
-                            && (x.DatePublished ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DatePublished ?? DateTime.MinValue))
-                            && (x.DatePublished ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DatePublished ?? DateTime.MinValue))
-                            && (location.Length == 0 || x.City.Contains(location))
-                            && stateid.Contains((int)x.StateId)
-                            && (x.MediaPublishedContext_Indexes.Any(m => m.ContextText.Contains(s)))
-                            //&& x.MediaPublishedContext_Index.ContextText.Contains(s)
-                            ).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
-                    }
-                    else
-                    {
-                        // DocSearch Only
-                        list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, x =>
-                            (publishedname.Length == 0 || x.Name.Contains(publishedname))
-                            && (x.DatePublished ?? DateTime.MinValue) >= (datefrom.HasValue ? datefrom : (x.DatePublished ?? DateTime.MinValue))
-                            && (x.DatePublished ?? DateTime.MinValue) <= (dateto.HasValue ? dateto : (x.DatePublished ?? DateTime.MinValue))
-                            && (location.Length == 0 || x.City.Contains(location))
-                            && (x.MediaPublishedContext_Indexes.Any(m => m.ContextText.Contains(s)))
-                            //&& x.MediaPublishedContext_Index.ContextText.Contains(s)
-                            ).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
-                    }
-                }
-            }
+            var pred = PredicateBuilder.True<MediaPublished>();
+            if (!string.IsNullOrWhiteSpace(publishedname)) pred = pred.And(p => p.Name.Contains(publishedname));
+            if (!string.IsNullOrWhiteSpace(location)) pred = pred.And(p => p.City.Contains(location));
+            if (publishedtypeid != null) pred = pred.And(p => publishedtypeid.Contains((int)p.PublishedTypeId));
+            if (stateid != null) pred = pred.And(p => stateid.Contains((int)p.StateId));
+
+
+            if (datefrom != null) pred = pred.And(p => datefrom <= p.DatePublished);
+            if (dateto != null) pred = pred.And(p => dateto >= p.DatePublished);
+            if (!string.IsNullOrWhiteSpace(s)) pred = pred.And(p => p.MediaPublishedContext_Indexes.Any(m => m.ContextText.Contains(s)));
+
+            var list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, pred).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
 
             //slj had to move filter of deleted records here because having the filter build here for the full context search and in the repository for the date deleted filter was messing up the full context search and causing an error.
             if (Request.IsAjaxRequest())
