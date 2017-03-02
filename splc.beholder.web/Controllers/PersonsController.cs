@@ -1,4 +1,3 @@
-using Caseiro.Mvc.PagedList;
 using Caseiro.Mvc.PagedList.Extensions;
 using splc.beholder.web.Utility;
 using splc.data.repository;
@@ -214,8 +213,6 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page;
             Session["pageSize"] = pageSize;
 
-            PagedList<BeholderPerson> list = null;
-
             var pred = PredicateBuilder.True<BeholderPerson>();
             if (movementclassid != null) pred = pred.And(p => movementclassid.Contains((int)p.MovementClassId));
             if (!string.IsNullOrWhiteSpace(fname)) pred = pred.And(p => p.CommonPerson.FName.Contains(fname));
@@ -224,9 +221,9 @@ namespace splc.beholder.web.Controllers
             if (!string.IsNullOrWhiteSpace(location)) pred = pred.And(p => p.CommonPerson.AddressPersonRels.Any(c => c.Address.City.Contains(location)));
             if (stateid != null) pred = pred.And(p => p.CommonPerson.AddressPersonRels.Any(c => stateid.Contains((int)c.Address.StateId)));
 
-            list = _personRepo.Get(currentUser, pred).OrderBy(m => m.CommonPerson.LName)
-                         .ThenBy(n => n.CommonPerson.FName)
-                         .ToPagedList(page ?? 1, pageSize ?? 15);
+            var list = _personRepo.Get(currentUser, pred).OrderBy(m => m.CommonPerson.LName)
+                .ThenBy(n => n.CommonPerson.FName)
+                .ToPagedList(page ?? 1, pageSize ?? 15);
 
             return View("Index", list);
         }

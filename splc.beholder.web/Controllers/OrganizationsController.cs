@@ -64,7 +64,7 @@ namespace splc.beholder.web.Controllers
         //public ViewResult Index()
         public ActionResult Index(int? activeyear, int? activestatusid, List<int> movementclassid = null, string movementclassid_string = "", string organizationname = "", int? page = 1, int? pageSize = 15)
         {
-            if (!String.IsNullOrWhiteSpace(movementclassid_string))
+            if (!string.IsNullOrWhiteSpace(movementclassid_string))
             {
                 movementclassid = ((List<int>)movementclassid_string.Split(',').Select(int.Parse).ToList());
             }
