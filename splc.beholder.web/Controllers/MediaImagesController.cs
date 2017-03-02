@@ -50,7 +50,7 @@ namespace splc.beholder.web.Controllers
         //
         // GET: /Organizations/
         //public ViewResult Index()
-        public ActionResult Index(int? activeyear, string imagetitle = "", string comment = "", string location = "", string artist = "", List<int> movementclassid = null, string movementclassid_string = "", List<int> stateid = null, string stateid_string = "", int? page = 1, int? pageSize = 15)
+        public ActionResult Index(string imagetitle = "", string comment = "", string location = "", string artist = "", List<int> movementclassid = null, string movementclassid_string = "", List<int> stateid = null, string stateid_string = "", int? page = 1, int? pageSize = 15)
         {
             if (!string.IsNullOrWhiteSpace(movementclassid_string)) { movementclassid = movementclassid_string.Split(',').Select(int.Parse).ToList(); }
             if (!string.IsNullOrWhiteSpace(stateid_string)) { stateid = stateid_string.Split(',').Select(int.Parse).ToList(); }
@@ -63,7 +63,6 @@ namespace splc.beholder.web.Controllers
             Session["stateid"] = stateid;
             Session["movementclassid"] = movementclassid;
             Session["imagetitle"] = imagetitle;
-            Session["activeyear"] = activeyear;
             Session["comment"] = comment;
             Session["location"] = location;
             Session["artist"] = artist;
