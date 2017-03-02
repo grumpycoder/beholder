@@ -1,10 +1,11 @@
+using Caseiro.Mvc.PagedList.Extensions;
+using splc.beholder.web.Utility;
+using splc.data.repository;
+using splc.domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using Caseiro.Mvc.PagedList.Extensions;
-using splc.data.repository;
-using splc.domain.Models;
 
 namespace splc.beholder.web.Controllers
 {
@@ -33,13 +34,16 @@ namespace splc.beholder.web.Controllers
         public JsonResult GetVehicleList(string term)
         {
             term = term.Trim();
-            var list = _vehicleRepo.GetVehicles(v => v.VIN.Contains(term) || v.VehicleMake.Name.Contains(term) || v.VehicleModel.Name.Contains(term)).ToArray().Select(
-                                                                                                                              e => new
-                                                                                                                              {
-                                                                                                                                  Id = e.Id,
-                                                                                                                                  //label = string.Format("{0}|{1}|{2}", e.VIN, e.VehicleMake == null ? "[Make]" : e.VehicleMake.Name, e.VehicleModel == null ? "[Model]" : e.VehicleModel.Name)
-                                                                                                                                  label = e.ToString()
-                                                                                                                              });
+            var pred = PredicateBuilder.True<Vehicle>();
+            if (!string.IsNullOrWhiteSpace(term))
+            {
+                pred = pred.And(
+                        x =>
+                            x.VIN.Contains(term) || x.VehicleMake.Name.Contains(term) ||
+                            x.VehicleModel.Name.Contains(term));
+            }
+
+            var list = _vehicleRepo.GetVehicles(pred).ToArray().Select(e => new { e.Id, label = e.ToString() });
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
@@ -52,15 +56,18 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page ?? 1;
             Session["searchTerm"] = searchTerm;
 
-            var list = searchTerm == null
-                ? _vehicleRepo.GetVehicles()
-                    .OrderBy(m => m.VehicleMake.Name)
-                    .ThenBy(m => m.VehicleModel.Name)
-                    .ToPagedList(page ?? 1, pageSize ?? 15)
-                : _vehicleRepo.GetVehicles(x => x.VIN.Contains(searchTerm) || x.VehicleMake.Name.Contains(searchTerm) || x.VehicleModel.Name.Contains(searchTerm))
-                    .OrderBy(m => m.VehicleMake.Name)
-                    .ThenBy(m => m.VehicleModel.Name)
-                    .ToPagedList(page ?? 1, pageSize ?? 15);
+            var pred = PredicateBuilder.True<Vehicle>();
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                pred = pred.And(
+                        x =>
+                            x.VIN.Contains(searchTerm) || x.VehicleMake.Name.Contains(searchTerm) ||
+                            x.VehicleModel.Name.Contains(searchTerm));
+            }
+            var list = _vehicleRepo.GetVehicles(pred)
+                               .OrderBy(m => m.VehicleMake.Name)
+                               .ThenBy(m => m.VehicleModel.Name)
+                               .ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
