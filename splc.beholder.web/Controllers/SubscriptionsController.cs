@@ -132,14 +132,15 @@ namespace splc.beholder.web.Controllers
         {
             ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes().OrderBy(x => x.SortOrder);
             var subscription = new Subscription
-                {
-                    ActiveStatusId = Queryable.SingleOrDefault(_lookupRepo.GetActiveStatuses(), p => p.Name.Equals("Active")).Id,
-                    //SubscriptionRate = DateTime.Now,
-                    CreatedUserId = 1,
-                    DateCreated = DateTime.Now,
-                    ModifiedUserId = 1,
-                    DateModified = DateTime.Now,
-                };
+            {
+                //ActiveStatusId = Queryable.SingleOrDefault(_lookupRepo.GetActiveStatuses(), p => p.Name.Equals("Active")).Id,
+                ActiveStatusId = _lookupRepo.GetActiveStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id,
+                //SubscriptionRate = DateTime.Now,
+                CreatedUserId = 1,
+                DateCreated = DateTime.Now,
+                ModifiedUserId = 1,
+                DateModified = DateTime.Now,
+            };
             return View(subscription);
 
         }
@@ -261,7 +262,8 @@ namespace splc.beholder.web.Controllers
         // GET: /Vehicles/CreatePersonVehicle
         public ActionResult CreateSubscriptionVehicle(int vehicleId, int subscriptionId)
         {
-            var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            //var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            var approvalStatusId = _lookupRepo.GetApprovalStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id;
             var subscriptionVehicleRel = new SubscriptionVehicleRel()
             {
                 VehicleId = vehicleId,
@@ -398,14 +400,15 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult CreateSubscriptionSubscription(int subscriptionId)
         {
-            var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            //var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            var approvalStatusId = _lookupRepo.GetApprovalStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id;
             var subscriptionSubscriptionRel = new SubscriptionSubscriptionRel
-                {
-                    SubscriptionId = subscriptionId,
-                    ApprovalStatusId = approvalStatusId,
-                    DateStart = DateTime.Now,
-                    Subscription2 = new Subscription { CreatedUserId = 1 },
-                };
+            {
+                SubscriptionId = subscriptionId,
+                ApprovalStatusId = approvalStatusId,
+                DateStart = DateTime.Now,
+                Subscription2 = new Subscription { CreatedUserId = 1 },
+            };
 
             ViewBag.PossibleRelationshipTypes = _lookupRepo.GetRelationshipTypes().Where(x => x.ObjectFrom.Equals("Subscription") && x.ObjectTo.Equals("Subscription")).OrderBy(x => x.SortOrder);
             ViewBag.SubscriptionId = subscriptionId;

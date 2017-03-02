@@ -58,7 +58,8 @@ namespace splc.beholder.web.App_Start
         {
             kernel.Bind<ACDBContext>().To<ACDBContext>().InRequestScope();
             kernel.Bind<IUserRepository>().To<UserRepository>().InRequestScope();
-            kernel.Bind<ILookupRepository>().To<LookupRepository>().InRequestScope();
+            //kernel.Bind<ILookupRepository>().To<LookupRepository>().InRequestScope();
+            kernel.Bind<ILookupRepository>().To<CachedLookupRepository>().InRequestScope();
             kernel.Bind<IPersonRepository>().To<PersonRepository>().InRequestScope();
             kernel.Bind<IBeholderPersonRepository>().To<BeholderPersonRepository>().InRequestScope();
 

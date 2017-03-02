@@ -347,7 +347,8 @@ namespace splc.beholder.web.Controllers
         // GET: Organizations/CreateOrganizationPerson
         public ActionResult CreateOrganizationPerson(int organizationId, int personId)
         {
-            var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            //var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            var approvalStatusId = _lookupRepo.GetApprovalStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id;
             var organizationPersonRel = new OrganizationPersonRel()
             {
                 PersonId = personId,
@@ -447,7 +448,8 @@ namespace splc.beholder.web.Controllers
         public ActionResult CreateOrganizationEvent(int organizationId, int eventId)
         {
             //TODO: Refactor code smell?
-            var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            //var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            var approvalStatusId = _lookupRepo.GetApprovalStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id;
             var organizationEventRel = new OrganizationEventRel()
             {
                 EventId = eventId,
@@ -743,7 +745,8 @@ namespace splc.beholder.web.Controllers
         // GET: /Vehicles/CreatePersonVehicle
         public ActionResult CreateOrganizationVehicle(int vehicleId, int organizationId)
         {
-            var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            //var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            var approvalStatusId = _lookupRepo.GetApprovalStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id;
             var organizationVehicleRel = new OrganizationVehicleRel()
             {
                 VehicleId = vehicleId,
@@ -890,7 +893,8 @@ namespace splc.beholder.web.Controllers
         public ActionResult CreateOrganizationOrganization(int organizationId)
         {
             var org = _organizationRepo.GetOrganization(organizationId);
-            var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            //var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            var approvalStatusId = _lookupRepo.GetApprovalStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id;
             var organizationOrganizationRel = new OrganizationOrganizationRel
             {
                 OrganizationId = organizationId,
@@ -1581,7 +1585,8 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult CreateOrganizationSubscription(int organizationId, int subscriptionId)
         {
-            var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            //var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            var approvalStatusId = _lookupRepo.GetApprovalStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id;
             var organizationSubscriptionRel = new OrganizationSubscriptionRel()
             {
                 SubscriptionId = subscriptionId,

@@ -48,14 +48,6 @@
 
                 <a href="@Url.Action("Details", "Chapters", new { id = item.Id })">
 
-                    @if (item.ChapterMediaImageRels.Count > 0)
-                    {
-                        <img src="@Url.Action("ShowPrimaryImage", "Chapters", new { Id = item.Id })" alt="org image" class="thumbnail-img" height="175" width="250" />
-                    }
-                    else
-                    {
-                        <img src="~/Content/images/image_unavailable.jpg" alt="" class="thumbnail-img" height="175" width="250" />
-                    }
 
                     <h4 class="title-elliipsis" title="@string.Format("{0}", item.ChapterName)">@string.Format("{0}", item.ChapterName)</h4>
                     <table class="table">

@@ -1951,6 +1951,7 @@
     <Folder Include="Content\upload\" />
     <Folder Include="Filters\" />
     <Folder Include="UploadFiles\" />
+    <Folder Include="ViewModels\" />
     <Folder Include="Views\Validation\" />
   </ItemGroup>
   <ItemGroup>

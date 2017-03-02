@@ -993,7 +993,9 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult CreateMediaPublishedMediaImage(int mediaPublishedId, int mediaImageId)
         {
-            var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            //var approvalStatusId = Queryable.SingleOrDefault(_lookupRepo.GetApprovalStatuses(), p => p.Name.Equals("New")).Id;
+            var approvalStatusId = _lookupRepo.GetApprovalStatuses().FirstOrDefault(e => e.Name.Equals("New")).Id;
+
             var mediaPublishedMediaImageRel = new MediaPublishedMediaImageRel()
             {
                 MediaImageId = mediaImageId,
