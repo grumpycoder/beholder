@@ -59,7 +59,7 @@ namespace splc.beholder.web.Controllers
             }
             if (string.IsNullOrWhiteSpace(term) || term == "-1")
             {
-                var list = _contactRepo.Get(currentUser, null).Take(50).OrderBy(x => x.CommonPerson.LName).ThenBy(x => x.CommonPerson.FName)
+                var list = _contactRepo.Get(CurrentUser, null).Take(50).OrderBy(x => x.CommonPerson.LName).ThenBy(x => x.CommonPerson.FName)
                                     .Select(x => new
                                     {
                                         x.Id,
@@ -85,7 +85,7 @@ namespace splc.beholder.web.Controllers
             if (term.IsInt())
             {
                 var id = Convert.ToInt32(term);
-                var list = _contactRepo.Get(currentUser, p => p.Id == id)
+                var list = _contactRepo.Get(CurrentUser, p => p.Id == id)
                                         .Select(x => new
                                         {
                                             x.Id,
@@ -110,7 +110,7 @@ namespace splc.beholder.web.Controllers
             else
             {
                 term = term.Trim();
-                var list = _contactRepo.Get(currentUser, p => p.CommonPerson.LName.Contains(term) || p.CommonPerson.FName.Contains(term)).OrderBy(x => x.CommonPerson.LName).ThenBy(x => x.CommonPerson.FName)
+                var list = _contactRepo.Get(CurrentUser, p => p.CommonPerson.LName.Contains(term) || p.CommonPerson.FName.Contains(term)).OrderBy(x => x.CommonPerson.LName).ThenBy(x => x.CommonPerson.FName)
                                         .Select(x => new
                                         {
                                             x.Id,
@@ -139,7 +139,7 @@ namespace splc.beholder.web.Controllers
         public JsonResult GetContactList(string term)
         {
             //var _contactRepo = new ContactRepository();
-            var list = _contactRepo.GetContacts(currentUser, p => p.CommonPerson.LName.Contains(term.Trim()) || p.CommonPerson.FName.Contains(term.Trim())).ToArray().Select(
+            var list = _contactRepo.GetContacts(CurrentUser, p => p.CommonPerson.LName.Contains(term.Trim()) || p.CommonPerson.FName.Contains(term.Trim())).ToArray().Select(
                 e => new
                 {
                     e.Id,
@@ -173,7 +173,7 @@ namespace splc.beholder.web.Controllers
             if (!string.IsNullOrWhiteSpace(lname)) pred = pred.And(p => p.CommonPerson.LName.Contains(lname));
             if (!string.IsNullOrWhiteSpace(location)) pred = pred.And(p => p.AddressContactRels.Any(c => c.Address.City.Contains(location)));
 
-            var list = _contactRepo.GetContacts(currentUser, pred).OrderBy(m => m.CommonPerson.LName).ToPagedList(page ?? 1, pageSize ?? 15);
+            var list = _contactRepo.GetContacts(CurrentUser, pred).OrderBy(m => m.CommonPerson.LName).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
@@ -185,7 +185,7 @@ namespace splc.beholder.web.Controllers
 
         public ViewResult Details(int id)
         {
-            var contact = _contactRepo.Find(currentUser, id);
+            var contact = _contactRepo.Find(CurrentUser, id);
             ViewBag.BeholderPersonId = -1;
             ViewBag.PersonId = -1;
             ViewBag.ContactId = id;
@@ -197,12 +197,12 @@ namespace splc.beholder.web.Controllers
             ViewBag.MediaWebsiteEGroupId = -1;
             ViewBag.MediaPublishedId = -1;
             ViewBag.Controller = "Contacts";
-            return View(_contactRepo.Find(currentUser, id));
+            return View(_contactRepo.Find(CurrentUser, id));
         }
 
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var contact = new Contact();
             var cperson = new CommonPerson();
             contact.CommonPerson = cperson;
@@ -223,8 +223,8 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
-            var contact = _contactRepo.Find(currentUser, id);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
+            var contact = _contactRepo.Find(CurrentUser, id);
             return View(contact);
         }
 
@@ -232,7 +232,7 @@ namespace splc.beholder.web.Controllers
         public ActionResult Edit(Contact contact)
         //public ActionResult Edit([Bind(Include = "Id,FName,MName,LName,CommonPersonId")] Contact contact)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             if (ModelState.IsValid)
             {
                 _contactRepo.InsertOrUpdate(contact);
@@ -244,14 +244,14 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult RemoveContact(int id)
         {
-            var contact = _contactRepo.Find(currentUser, id);
+            var contact = _contactRepo.Find(CurrentUser, id);
             return View(contact);
         }
 
         [HttpPost]
         public ActionResult RemoveContact(int id, string removalreason)
         {
-            var contact = _contactRepo.Find(currentUser, id);
+            var contact = _contactRepo.Find(CurrentUser, id);
             contact.RemovalReason = removalreason;
 
             contact.RemovalStatusId = 1;

@@ -42,7 +42,7 @@ namespace splc.beholder.web.Controllers
             searchTerm = searchTerm.Trim();
             var pred = PredicateBuilder.True<MediaImage>().And(p => p.PhotographerArtist.Contains(searchTerm) || p.ImageTitle.Contains(searchTerm));
 
-            IQueryable<MediaImage> list = _mediaImageRepo.GetMediaImages(currentUser, pred);
+            IQueryable<MediaImage> list = _mediaImageRepo.GetMediaImages(CurrentUser, pred);
 
             return View("Index", list);
         }
@@ -77,7 +77,7 @@ namespace splc.beholder.web.Controllers
             if (!string.IsNullOrWhiteSpace(comment)) pred = pred.And(p => p.MediaImageComments.Any(c => c.Comment.Contains(comment)));
             if (!string.IsNullOrWhiteSpace(artist)) pred = pred.And(p => p.PhotographerArtist.Contains(artist));
 
-            var list = _mediaImageRepo.GetMediaImages(currentUser, pred).OrderByDescending(m => m.DateCreated).ToPagedList(page ?? 1, pageSize ?? 15);
+            var list = _mediaImageRepo.GetMediaImages(CurrentUser, pred).OrderByDescending(m => m.DateCreated).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
@@ -92,7 +92,7 @@ namespace splc.beholder.web.Controllers
         public JsonResult GetMediaImageList(string term)
         {
             term = term.Trim();
-            var list = _mediaImageRepo.GetMediaImages(currentUser, p => p.ImageTitle.Contains(term)).ToArray().Select(
+            var list = _mediaImageRepo.GetMediaImages(CurrentUser, p => p.ImageTitle.Contains(term)).ToArray().Select(
                 e => new
                 {
                     Id = e.Id,
@@ -118,10 +118,10 @@ namespace splc.beholder.web.Controllers
             ViewBag.SubscriptionId = -1;
             ViewBag.Controller = "MediaImages";
 
-            var image = _mediaImageRepo.GetMediaImage(currentUser, id);
+            var image = _mediaImageRepo.GetMediaImage(CurrentUser, id);
             if (image != null)
             {
-                return View(_mediaImageRepo.GetMediaImage(currentUser, id));
+                return View(_mediaImageRepo.GetMediaImage(CurrentUser, id));
             }
             return View("MediaImage404");
 
@@ -203,7 +203,7 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var image = new Image();
             var mediaImage = new MediaImage
             {
@@ -271,8 +271,8 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
-            var mediaImage = _mediaImageRepo.GetMediaImage(currentUser, id);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
+            var mediaImage = _mediaImageRepo.GetMediaImage(CurrentUser, id);
             if (mediaImage != null)
             {
                 //allow add image on edit if not already there.
@@ -310,20 +310,20 @@ namespace splc.beholder.web.Controllers
                 _mediaImageRepo.Save();
                 return RedirectToAction("Details", new { id = mediaimage.Id });
             }
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             return View(mediaimage);
         }
 
         public ActionResult RemoveImage(int id)
         {
-            var img = _mediaImageRepo.GetMediaImage(currentUser, id);
+            var img = _mediaImageRepo.GetMediaImage(CurrentUser, id);
             return View(img);
         }
 
         [HttpPost]
         public ActionResult RemoveImage(int id, string removalreason)
         {
-            var img = _mediaImageRepo.GetMediaImage(currentUser, id);
+            var img = _mediaImageRepo.GetMediaImage(CurrentUser, id);
             img.RemovalReason = removalreason;
 
             img.RemovalStatusId = 1;
@@ -995,7 +995,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.Controller = "MediaImages";
             //try
             //{
-            var mediaImages = _mediaImageRepo.GetMediaImageMediaImages(currentUser, mediaImageId);
+            var mediaImages = _mediaImageRepo.GetMediaImageMediaImages(CurrentUser, mediaImageId);
             //}
             //catch (Exception ex)
             //{

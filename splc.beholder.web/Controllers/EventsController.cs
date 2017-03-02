@@ -1,5 +1,4 @@
-﻿using Caseiro.Mvc.PagedList;
-using Caseiro.Mvc.PagedList.Extensions;
+﻿using Caseiro.Mvc.PagedList.Extensions;
 using splc.beholder.web.Utility;
 using splc.data;
 using splc.data.repository;
@@ -42,7 +41,7 @@ namespace splc.beholder.web.Controllers
 
         public JsonResult GetEventList(string term)
         {
-            var list = _eventRepo.GetEvents(currentUser, x => x.EventName.Contains(term)).ToArray().Select(e => new
+            var list = _eventRepo.GetEvents(CurrentUser, x => x.EventName.Contains(term)).ToArray().Select(e => new
             {
                 Id = e.Id,
                 label = e.EventName
@@ -81,7 +80,7 @@ namespace splc.beholder.web.Controllers
             if (datefrom != null) pred = pred.And(p => datefrom <= p.EventDate);
 
 
-            var list = _eventRepo.GetEvents(currentUser, pred)
+            var list = _eventRepo.GetEvents(CurrentUser, pred)
                 .OrderBy(m => m.EventDate).ToPagedList(page ?? 1, pageSize ?? 15);
 
             return View("Index", list);
@@ -89,7 +88,7 @@ namespace splc.beholder.web.Controllers
 
         public ViewResult Search(string searchTerm)
         {
-            var list = _eventRepo.GetEvents(currentUser, e => e.EventName.Contains(searchTerm));
+            var list = _eventRepo.GetEvents(CurrentUser, e => e.EventName.Contains(searchTerm));
             return View("Index", list);
         }
 
@@ -109,7 +108,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.VehicleId = -1;
             ViewBag.SubscriptionId = -1;
             ViewBag.Controller = "Events";
-            var e = _eventRepo.GetEvent(currentUser, id);
+            var e = _eventRepo.GetEvent(CurrentUser, id);
             if (e != null)
             {
                 return View(e);
@@ -121,7 +120,7 @@ namespace splc.beholder.web.Controllers
         // GET: /Event/Create
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             //var approvalStatus = _lookupRepo.GetApprovalStatuses().SingleOrDefault(p => p.Name.Equals("New"));
             var entity = new Event
             {
@@ -159,9 +158,9 @@ namespace splc.beholder.web.Controllers
         // GET: /Event/Edit/5
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
 
-            var e = _eventRepo.GetEvent(currentUser, id);
+            var e = _eventRepo.GetEvent(CurrentUser, id);
 
             //var selectList = listOfCategories.Select(x =>new SelectListItem{Text = x.Name, Value = x.Id.ToString(), Selected = x.Id.Equals(blogToEdit.Category.Id)}).ToList();
             var listOfCategories = _lookupRepo.GetEventTypes();
@@ -209,14 +208,14 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult RemoveEvent(int id)
         {
-            var evt = _eventRepo.GetEvent(currentUser, id);
+            var evt = _eventRepo.GetEvent(CurrentUser, id);
             return View(evt);
         }
 
         [HttpPost]
         public ActionResult RemoveEvent(int id, string removalreason)
         {
-            var evt = _eventRepo.GetEvent(currentUser, id);
+            var evt = _eventRepo.GetEvent(CurrentUser, id);
             evt.RemovalReason = removalreason;
 
             evt.RemovalStatusId = 1;

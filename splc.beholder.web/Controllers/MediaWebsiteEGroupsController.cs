@@ -143,7 +143,7 @@ namespace splc.beholder.web.Controllers
             if (string.IsNullOrWhiteSpace(term) || term == "-1")
             {
 
-                var list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser).OrderBy(x => x.Name).Take(50).Select(c => new
+                var list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(CurrentUser).OrderBy(x => x.Name).Take(50).Select(c => new
                 {
                     c.Name,
                     c.Id,
@@ -168,7 +168,7 @@ namespace splc.beholder.web.Controllers
             {
                 var id = Convert.ToInt32(term);
 
-                var list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, x => x.Id == id).Select(c => new
+                var list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(CurrentUser, x => x.Id == id).Select(c => new
                 {
                     c.Name,
                     c.Id,
@@ -190,7 +190,7 @@ namespace splc.beholder.web.Controllers
                 return Json(items, JsonRequestBehavior.AllowGet);
             }
 
-            var list2 = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, x => x.Name.Contains(term)).OrderBy(x => x.Name).Select(c => new
+            var list2 = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(CurrentUser, x => x.Name.Contains(term)).OrderBy(x => x.Name).Select(c => new
             {
                 c.Name,
                 c.Id,
@@ -267,7 +267,7 @@ namespace splc.beholder.web.Controllers
             if (!string.IsNullOrWhiteSpace(comment)) pred = pred.And(p => p.MediaWebsiteEGroupComments.Any(c => c.Comment.Contains(comment)));
             if (!string.IsNullOrWhiteSpace(s)) pred = pred.And(p => p.MediaWebsiteEGroupContext_Indexes.Any(m => m.ContextText.Contains(s)));
 
-            var list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(currentUser, pred).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
+            var list = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroups(CurrentUser, pred).OrderBy(m => m.Name).ToPagedList(page ?? 1, pageSize ?? 15);
 
             //slj had to move filter of deleted records here because having the filter build here for the full context search and in the repository for the date deleted filter was messing up the full context search and causing an error.
 
@@ -304,7 +304,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.SubscriptionId = -1;
             ViewBag.MediaWebsiteEGroupId = id;
             ViewBag.Controller = "MediaWebsiteEGroups";
-            var websiteEGroup = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroup(currentUser, id);
+            var websiteEGroup = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroup(CurrentUser, id);
 
             if (websiteEGroup != null)
             {
@@ -391,7 +391,7 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var mediaTypeId = _lookupRepo.GetMediaTypes().SingleOrDefault(p => p.Name.Equals("Website/eGroup")).Id;
             var context = new MediaWebsiteEGroupContext();
 
@@ -510,7 +510,7 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var mediaWebsiteEGroup = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroup(id);
 
             if (mediaWebsiteEGroup != null)
@@ -550,20 +550,20 @@ namespace splc.beholder.web.Controllers
 
                 return RedirectToAction("Details", new { id = mediawebsiteegroup.Id });
             }
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             return View(mediawebsiteegroup);
         }
 
         public ActionResult RemoveWebsiteEgroup(int id)
         {
-            var website = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroup(currentUser, id);
+            var website = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroup(CurrentUser, id);
             return View(website);
         }
 
         [HttpPost, ValidateInput(false)]
         public ActionResult RemoveWebsiteEgroup(int id, string removalreason)
         {
-            var website = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroup(currentUser, id);
+            var website = _mediaWebsiteEGroupRepo.GetMediaWebsiteEGroup(CurrentUser, id);
             website.RemovalReason = removalreason;
 
             website.RemovalStatusId = 1;

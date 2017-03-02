@@ -1,20 +1,20 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using Caseiro.Mvc.PagedList;
 using Caseiro.Mvc.PagedList.Extensions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Mvc;
+using splc.beholder.web.Models;
 using splc.beholder.web.Utility;
 using splc.data;
-using splc.domain.Models;
 using splc.data.repository;
-using System.IO;
-using System.Web;
-using System.Data.Entity.Validation;
 using splc.data.Utility;
+using splc.domain.Models;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Validation;
+using System.IO;
+using System.Linq;
 using System.Text;
-using splc.beholder.web.Models;
+using System.Web;
+using System.Web.Mvc;
 
 namespace splc.beholder.web.Controllers
 {
@@ -162,7 +162,7 @@ namespace splc.beholder.web.Controllers
         public ViewResult Search(string searchTerm)
         {
             searchTerm = searchTerm.Trim();
-            IQueryable<MediaCorrespondence> list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser, p => p.FromName.Contains(searchTerm) || p.CorrespondenceName.Contains(searchTerm));
+            IQueryable<MediaCorrespondence> list = _mediaCorrespondenceRepo.GetMediaCorrespondences(CurrentUser, p => p.FromName.Contains(searchTerm) || p.CorrespondenceName.Contains(searchTerm));
 
             return View("Index", list);
         }
@@ -208,7 +208,7 @@ namespace splc.beholder.web.Controllers
             {
                 if (correspondencetypeid == null)
                 {
-                    list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser,
+                    list = _mediaCorrespondenceRepo.GetMediaCorrespondences(CurrentUser,
                         x => (fromname.Length == 0 || x.FromName.Contains(fromname))
                              && (x.CreatedUserId == (userid ?? x.CreatedUserId))
                              && (correspondencename.Length == 0 || x.CorrespondenceName.Contains(correspondencename))
@@ -219,7 +219,7 @@ namespace splc.beholder.web.Controllers
                 }
                 else
                 {
-                    list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser,
+                    list = _mediaCorrespondenceRepo.GetMediaCorrespondences(CurrentUser,
                         x => (fromname.Length == 0 || x.FromName.Contains(fromname))
                              && (x.CreatedUserId == (userid ?? x.CreatedUserId))
                              && (correspondencename.Length == 0 || x.CorrespondenceName.Contains(correspondencename))
@@ -234,7 +234,7 @@ namespace splc.beholder.web.Controllers
             {
                 if (correspondencetypeid == null)
                 {
-                    list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser,
+                    list = _mediaCorrespondenceRepo.GetMediaCorrespondences(CurrentUser,
                         x => (fromname.Length == 0 || x.FromName.Contains(fromname))
                              && (x.CreatedUserId == (userid ?? x.CreatedUserId))
                              && (correspondencename.Length == 0 || x.CorrespondenceName.Contains(correspondencename))
@@ -247,7 +247,7 @@ namespace splc.beholder.web.Controllers
                 }
                 else
                 {
-                    list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser,
+                    list = _mediaCorrespondenceRepo.GetMediaCorrespondences(CurrentUser,
                         x => (fromname.Length == 0 || x.FromName.Contains(fromname))
                              && (x.CreatedUserId == (userid ?? x.CreatedUserId))
                              && (correspondencename.Length == 0 || x.CorrespondenceName.Contains(correspondencename))
@@ -274,7 +274,7 @@ namespace splc.beholder.web.Controllers
         public JsonResult GetMediaCorrespondenceList(string term)
         {
             term = term.Trim();
-            var list = _mediaCorrespondenceRepo.GetMediaCorrespondences(currentUser, p => p.CorrespondenceName.Contains(term)).ToArray().Select(
+            var list = _mediaCorrespondenceRepo.GetMediaCorrespondences(CurrentUser, p => p.CorrespondenceName.Contains(term)).ToArray().Select(
                 e => new
                 {
                     Id = e.Id,
@@ -302,7 +302,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.MediaCorrespondenceId = id;
             ViewBag.Controller = "MediaCorrespondences";
 
-            var correspondence = _mediaCorrespondenceRepo.GetMediaCorrespondence(currentUser, id);
+            var correspondence = _mediaCorrespondenceRepo.GetMediaCorrespondence(CurrentUser, id);
             if (correspondence != null)
             {
                 return View(correspondence);
@@ -390,7 +390,7 @@ namespace splc.beholder.web.Controllers
         // GET: /MediaCorrespondences/Create
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var image = new MediaCorrespondenceContext { };
             var mediaCorrespondence = new MediaCorrespondence
             {
@@ -503,8 +503,8 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
-            var correspondence = _mediaCorrespondenceRepo.GetMediaCorrespondence(currentUser, id);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
+            var correspondence = _mediaCorrespondenceRepo.GetMediaCorrespondence(CurrentUser, id);
 
             if (correspondence != null)
             {
@@ -551,21 +551,21 @@ namespace splc.beholder.web.Controllers
 
                 return RedirectToAction("Details", new { id = mediacorrespondence.Id });
             }
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             return View(mediacorrespondence);
 
         }
 
         public ActionResult RemoveCorrespondence(int id)
         {
-            var c = _mediaCorrespondenceRepo.GetMediaCorrespondence(currentUser, id);
+            var c = _mediaCorrespondenceRepo.GetMediaCorrespondence(CurrentUser, id);
             return View(c);
         }
 
         [HttpPost]
         public ActionResult RemoveCorrespondence(int id, string removalreason)
         {
-            var c = _mediaCorrespondenceRepo.GetMediaCorrespondence(currentUser, id);
+            var c = _mediaCorrespondenceRepo.GetMediaCorrespondence(CurrentUser, id);
             c.RemovalReason = removalreason;
 
             c.RemovalStatusId = 1;
@@ -761,7 +761,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.Controller = "MediaCorrespondences";
             try
             {
-                mediaCorrespondences = _mediaCorrespondenceRepo.GetMediaCorrespondence(currentUser, mediaCorrespondenceId);
+                mediaCorrespondences = _mediaCorrespondenceRepo.GetMediaCorrespondence(CurrentUser, mediaCorrespondenceId);
                 //                subscriptions = _eventRepository.Get(p => p.Id.Equals(eventId));
             }
             catch (Exception ex)

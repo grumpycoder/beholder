@@ -140,7 +140,7 @@ namespace splc.beholder.web.Controllers
         public ViewResult Search(string searchTerm)
         {
             searchTerm = searchTerm.Trim();
-            var list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, p => p.Name.Contains(searchTerm) || p.Author.Contains(searchTerm));
+            var list = _mediaPublishedRepo.GetMediaPublisheds(CurrentUser, p => p.Name.Contains(searchTerm) || p.Author.Contains(searchTerm));
 
             return View("Index", list);
         }
@@ -188,7 +188,7 @@ namespace splc.beholder.web.Controllers
             if (dateto != null) pred = pred.And(p => dateto >= p.DatePublished);
             if (!string.IsNullOrWhiteSpace(s)) pred = pred.And(p => p.MediaPublishedContext_Indexes.Any(m => m.ContextText.Contains(s)));
 
-            var list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, pred).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
+            var list = _mediaPublishedRepo.GetMediaPublisheds(CurrentUser, pred).OrderByDescending(m => m.DatePublished).ToPagedList(page ?? 1, pageSize ?? 15);
 
             //slj had to move filter of deleted records here because having the filter build here for the full context search and in the repository for the date deleted filter was messing up the full context search and causing an error.
             if (Request.IsAjaxRequest())
@@ -203,7 +203,7 @@ namespace splc.beholder.web.Controllers
         public JsonResult GetMediaPublishedList(string term)
         {
             term = term.Trim();
-            var list = _mediaPublishedRepo.GetMediaPublisheds(currentUser, p => p.Name.Contains(term)).ToArray().Select(
+            var list = _mediaPublishedRepo.GetMediaPublisheds(CurrentUser, p => p.Name.Contains(term)).ToArray().Select(
                 e => new
                 {
                     Id = e.Id,
@@ -232,7 +232,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.MediaPublishedId = id;
             ViewBag.Controller = "MediaPublisheds";
 
-            var published = _mediaPublishedRepo.GetMediaPublished(currentUser, id);
+            var published = _mediaPublishedRepo.GetMediaPublished(CurrentUser, id);
             if (published != null)
             {
                 return View(published);
@@ -320,7 +320,7 @@ namespace splc.beholder.web.Controllers
         // GET: /MediaPublisheds/Create
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             //var entity = new MediaPublishedContext { };
             var mediaPublished = new MediaPublished
             {
@@ -413,15 +413,15 @@ namespace splc.beholder.web.Controllers
                 return RedirectToAction("Details", new { id = mediapublished.Id });
             }
 
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             return View(mediapublished);
 
         }
 
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
-            var published = _mediaPublishedRepo.GetMediaPublished(currentUser, id);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
+            var published = _mediaPublishedRepo.GetMediaPublished(CurrentUser, id);
 
             if (published != null)
             {
@@ -463,20 +463,20 @@ namespace splc.beholder.web.Controllers
 
                 return RedirectToAction("Details", new { id = mediapublished.Id });
             }
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             return View(mediapublished);
         }
 
         public ActionResult RemovePublished(int id)
         {
-            var published = _mediaPublishedRepo.GetMediaPublished(currentUser, id);
+            var published = _mediaPublishedRepo.GetMediaPublished(CurrentUser, id);
             return View(published);
         }
 
         [HttpPost]
         public ActionResult RemovePublished(int id, string removalreason)
         {
-            var published = _mediaPublishedRepo.GetMediaPublished(currentUser, id);
+            var published = _mediaPublishedRepo.GetMediaPublished(CurrentUser, id);
             published.RemovalReason = removalreason;
 
             published.RemovalStatusId = 1;

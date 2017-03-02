@@ -52,8 +52,8 @@ namespace splc.beholder.web.Controllers
         {
             searchTerm = searchTerm.Trim();
             var list = approvalStatus == null ?
-                                  _organizationRepo.GetOrganizations(currentUser, p => p.OrganizationName.Contains(searchTerm)) :
-                                  _organizationRepo.GetOrganizations(currentUser, p => p.OrganizationName.Contains(searchTerm) && p.ApprovalStatusId.Equals(approvalStatus));
+                                  _organizationRepo.GetOrganizations(CurrentUser, p => p.OrganizationName.Contains(searchTerm)) :
+                                  _organizationRepo.GetOrganizations(CurrentUser, p => p.OrganizationName.Contains(searchTerm) && p.ApprovalStatusId.Equals(approvalStatus));
 
             return View("Index", list as IPagination<Organization>);
         }
@@ -82,7 +82,7 @@ namespace splc.beholder.web.Controllers
             if (activeyear != null) pred = pred.And(p => p.ActiveYear == activeyear);
             if (activestatusid != null) pred = pred.And(p => p.ActiveStatusId == activestatusid);
 
-            var list = _organizationRepo.GetOrganizations(currentUser, pred)
+            var list = _organizationRepo.GetOrganizations(CurrentUser, pred)
                 .OrderBy(m => m.OrganizationName).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
@@ -118,7 +118,7 @@ namespace splc.beholder.web.Controllers
 
         public ViewResult DetailsLite(int id)
         {
-            var organization = _organizationRepo.GetOrganization(currentUser, id);
+            var organization = _organizationRepo.GetOrganization(CurrentUser, id);
             return organization != null ? View(organization) : View("Organization404");
         }
         //
@@ -140,18 +140,18 @@ namespace splc.beholder.web.Controllers
             ViewBag.VehicleId = -1;
             ViewBag.Controller = "Organizations";
 
-            var organization = _organizationRepo.GetOrganization(currentUser, id);
+            var organization = _organizationRepo.GetOrganization(CurrentUser, id);
 
             if (organization != null)
             {
-                return View(_organizationRepo.GetOrganization(currentUser, id));
+                return View(_organizationRepo.GetOrganization(CurrentUser, id));
             }
             return View("Organization404");
         }
 
         public ActionResult Create()
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
             var organization = new Organization
             {
                 //OrganizationTypeId = Queryable.SingleOrDefault(_lookupRepo.GetOrganizationTypes(), p => p.Name.Equals("Physical")).Id,
@@ -182,8 +182,8 @@ namespace splc.beholder.web.Controllers
         // GET: /Organizations/Edit/5
         public ActionResult Edit(int id)
         {
-            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(currentUser);
-            var organization = _organizationRepo.GetOrganization(currentUser, id);
+            ViewBag.PossibleConfidentialityTypes = _lookupRepo.GetConfidentialityTypes(CurrentUser);
+            var organization = _organizationRepo.GetOrganization(CurrentUser, id);
             if (organization != null)
             {
                 return View(organization);
@@ -207,14 +207,14 @@ namespace splc.beholder.web.Controllers
 
         public ActionResult RemoveOrganization(int id)
         {
-            var org = _organizationRepo.GetOrganization(currentUser, id);
+            var org = _organizationRepo.GetOrganization(CurrentUser, id);
             return View(org);
         }
 
         [HttpPost]
         public ActionResult RemoveOrganization(int id, string removalreason)
         {
-            var organization = _organizationRepo.GetOrganization(currentUser, id);
+            var organization = _organizationRepo.GetOrganization(CurrentUser, id);
             organization.RemovalReason = removalreason;
 
             organization.RemovalStatusId = 1;
@@ -229,7 +229,7 @@ namespace splc.beholder.web.Controllers
         // GET: /Organizations/Delete/5
         public ActionResult Delete(int id)
         {
-            return View(_organizationRepo.GetOrganization(currentUser, id));
+            return View(_organizationRepo.GetOrganization(CurrentUser, id));
         }
 
         //
@@ -869,7 +869,7 @@ namespace splc.beholder.web.Controllers
             ViewBag.OrganizationId = organizationId;
             ViewBag.Organization2Id = organizationId;
             ViewBag.Controller = "Organization";
-            Organization organization = _organizationRepo.GetOrganization(currentUser, organizationId);
+            Organization organization = _organizationRepo.GetOrganization(CurrentUser, organizationId);
             //}
             //else
             //{

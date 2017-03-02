@@ -1,14 +1,10 @@
-﻿using System.Data.SqlClient;
-using splc.beholder.web.Models;
+﻿using splc.beholder.web.Models;
 using splc.data;
 using splc.data.repository;
 using System;
-using System.Collections.Generic;
-using MvcContrib.Pagination;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using splc.domain.Models;
 
 namespace splc.beholder.web.Controllers
 {
@@ -79,7 +75,7 @@ namespace splc.beholder.web.Controllers
                 {
                     try
                     {
-                        context.Database.ExecuteSqlCommand("Beholder.p_ApprovalReset @activeYear, @userId", new SqlParameter("ActiveYear", year), new SqlParameter("userId", currentUser.Id));
+                        context.Database.ExecuteSqlCommand("Beholder.p_ApprovalReset @activeYear, @userId", new SqlParameter("ActiveYear", year), new SqlParameter("userId", CurrentUser.Id));
                         context.SaveChanges();
                         dbContextTrans.Commit();
                     }
