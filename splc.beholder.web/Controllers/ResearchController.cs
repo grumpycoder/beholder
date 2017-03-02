@@ -1,14 +1,16 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Caseiro.Mvc.PagedList.Extensions;
+﻿using Caseiro.Mvc.PagedList.Extensions;
+using splc.beholder.web.Utility;
 using splc.data;
+using splc.domain.Models;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace splc.beholder.web.Controllers
 {
     [Authorize]
     public class ResearchController : BaseController
     {
-        private readonly ACDBContext context; 
+        private readonly ACDBContext context;
 
         public ResearchController(ACDBContext Context)
         {
@@ -21,9 +23,12 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page ?? 1;
             Session["searchTerm"] = searchTerm;
 
-            var customers = searchTerm == null ? 
-                context.Customers.OrderBy(c => c.Lastname).ToPagedList(page ?? 1, pageSize ?? 25) :
-                context.Customers.Where(c => c.Lastname.Contains(searchTerm) || c.Firstname.Contains(searchTerm)).OrderBy(c => c.Lastname).ToPagedList(page ?? 1, pageSize ?? 25);
+            var pred = PredicateBuilder.True<Customer>();
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                pred = pred.And(c => c.Lastname.Contains(searchTerm) || c.Firstname.Contains(searchTerm));
+            }
+            var customers = context.Customers.Where(pred).OrderBy(c => c.Lastname).ToPagedList(page ?? 1, pageSize ?? 25);
 
             if (Request.IsAjaxRequest())
             {
