@@ -1,13 +1,12 @@
-using System;
-using Caseiro.Mvc.PagedList;
 using Caseiro.Mvc.PagedList.Extensions;
+using splc.beholder.web.Utility;
+using splc.data.repository;
+using splc.domain.Models;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web.Mvc;
-using splc.domain.Models;
-using splc.data.repository;
-using splc.beholder.web.Utility;
-using System.Data.Entity.Validation;
 
 namespace splc.beholder.web.Controllers
 {
@@ -50,9 +49,9 @@ namespace splc.beholder.web.Controllers
         public ActionResult Index(string audiovideotitle = "", DateTime? daterecordfrom = null, DateTime? daterecordto = null, DateTime? dateairfrom = null, DateTime? dateairto = null, string comment = "", List<int> movementclassid = null, string movementclassid_string = "", int? page = 1, int? pageSize = 15)
         {
 
-            if (!String.IsNullOrWhiteSpace(movementclassid_string))
+            if (!string.IsNullOrWhiteSpace(movementclassid_string))
             {
-                movementclassid = ((List<int>)movementclassid_string.Split(',').Select(int.Parse).ToList());
+                movementclassid = movementclassid_string.Split(',').Select(int.Parse).ToList();
             }
             audiovideotitle = audiovideotitle.Trim();
 
@@ -65,33 +64,18 @@ namespace splc.beholder.web.Controllers
             Session["page"] = page;
             Session["pageSize"] = pageSize;
 
-            PagedList<MediaAudioVideo> list = null;
+            var pred = PredicateBuilder.True<MediaAudioVideo>();
+            if (movementclassid != null) pred = pred.And(p => movementclassid.Contains((int)p.MovementClassId));
+            if (!string.IsNullOrWhiteSpace(audiovideotitle)) pred = pred.And(p => p.Title.Contains(audiovideotitle));
+            if (!string.IsNullOrWhiteSpace(comment)) pred = pred.And(p => p.MediaAudioVideoComments.Any(c => c.Comment.Contains(comment)));
 
-            if (movementclassid == null)
-            {
-                list = _mediaAudioVideoRepo.GetMediaAudioVideos(currentUser, x =>
-                    x.Title.Contains(audiovideotitle)
-                    && (comment.Length == 0 || x.MediaAudioVideoComments.Any(m => m.Comment.Contains(comment)))
-                    && x.DateAired >= (dateairfrom.HasValue ? dateairfrom : x.DateAired)
-                    && x.DateAired <= (dateairto.HasValue ? dateairto : x.DateAired)
-                    && (x.DateReceivedRecorded >= (daterecordfrom.HasValue ? daterecordfrom : x.DateReceivedRecorded)
-                    && x.DateReceivedRecorded <= (daterecordto.HasValue ? daterecordto : x.DateReceivedRecorded))
-                    )
-                    .OrderBy(m => m.Title).ToPagedList(page ?? 1, pageSize ?? 15);
-            }
-            else
-            {
-                list = _mediaAudioVideoRepo.GetMediaAudioVideos(currentUser, x =>
-                    x.Title.Contains(audiovideotitle)
-                    && (comment.Length == 0 || x.MediaAudioVideoComments.Any(m => m.Comment.Contains(comment)))
-                    && x.DateAired >= (dateairfrom.HasValue ? dateairfrom : x.DateAired)
-                    && x.DateAired <= (dateairto.HasValue ? dateairto : x.DateAired)
-                    && x.DateReceivedRecorded >= (daterecordfrom.HasValue ? daterecordfrom : x.DateReceivedRecorded)
-                    && x.DateReceivedRecorded <= (daterecordto.HasValue ? daterecordto : x.DateReceivedRecorded)
-                    && movementclassid.Contains((int)x.MovementClassId)
-                    )
-                    .OrderBy(m => m.Title).ToPagedList(page ?? 1, pageSize ?? 15);
-            }
+            if (dateairto != null) pred = pred.And(p => dateairto <= p.DateAired);
+            if (dateairfrom != null) pred = pred.And(p => dateairfrom >= p.DateAired);
+
+            if (daterecordfrom != null) pred = pred.And(p => daterecordfrom <= p.DateReceivedRecorded);
+            if (daterecordto != null) pred = pred.And(p => daterecordto >= p.DateReceivedRecorded);
+
+            var list = _mediaAudioVideoRepo.GetMediaAudioVideos(currentUser, pred).OrderBy(m => m.Title).ToPagedList(page ?? 1, pageSize ?? 15);
 
             if (Request.IsAjaxRequest())
             {
