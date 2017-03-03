@@ -1,12 +1,12 @@
 ﻿using Microsoft.Ajax.Utilities;
 using splc.beholder.web.Models;
+using splc.beholder.web.Utility;
 using splc.data;
 using splc.data.repository;
 using splc.domain.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using splc.beholder.web.Utility;
 
 namespace splc.beholder.web.Controllers
 {
@@ -81,26 +81,34 @@ namespace splc.beholder.web.Controllers
 
             Session["searchTerm"] = searchterm;
             string firstName, lastName;
-            
+
             var names = new string[] { };
 
             if (searchterm.Contains(",")) names = searchterm.Split(',');
             if (!searchterm.Contains(",")) names = searchterm.Split(' ');
 
+            var personPred = PredicateBuilder.True<BeholderPerson>();
             if (searchterm.Contains(","))
             {
                 lastName = names[0].Trim();
                 firstName = names[1].Trim();
+                personPred = personPred.And(e => e.CommonPerson.FName.Contains(firstName) && e.CommonPerson.LName.Contains(lastName));
             }
             else
             {
-                firstName = names[0].Trim();
-                lastName = names[1].Trim();
+                if (names.Length > 1)
+                {
+                    firstName = names[0].Trim();
+                    lastName = names[1].Trim();
+                    personPred = personPred.And(e => e.CommonPerson.FName.Contains(firstName) && e.CommonPerson.LName.Contains(lastName));
+                }
+                else
+                {
+                    firstName = names[0].Trim();
+                    lastName = names[0].Trim();
+                    personPred = personPred.And(e => e.CommonPerson.FName.Contains(firstName) || e.CommonPerson.LName.Contains(lastName));
+                }
             }
-
-            var personPred =
-                PredicateBuilder.True<BeholderPerson>()
-                    .And(e => e.CommonPerson.FName == firstName && e.CommonPerson.LName == lastName); 
 
             var persons = _context.BeholderPersons.Where(personPred).OrderBy(e => e.CommonPerson.LName).ToList();
 
