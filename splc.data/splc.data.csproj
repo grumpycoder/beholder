@@ -107,6 +107,7 @@
     <Compile Include="repository\BeholderPersonRepository.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="repository\CachedLookupRepository.cs" />
     <Compile Include="repository\ContactInfoPersonRelRepository.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -114,6 +115,7 @@
     <Compile Include="repository\AddressSubscriptionRelRepository.cs" />
     <Compile Include="repository\AddressEventRelRepository.cs" />
     <Compile Include="repository\AddressContactRelRepository.cs" />
+    <Compile Include="repository\ILookupRepository.cs" />
     <Compile Include="repository\MediaPublishedRepository .cs" />
     <Compile Include="repository\LookupRepository.cs">
       <SubType>Code</SubType>
@@ -172,4 +174,3 @@
   </Target>
   -->
 </Project>
-

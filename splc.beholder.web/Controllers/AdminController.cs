@@ -4,6 +4,7 @@ using splc.domain.Models;
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace splc.beholder.web.Controllers
@@ -20,7 +21,6 @@ namespace splc.beholder.web.Controllers
             _lookupRepo = lookupRepo;
         }
 
-        // GET: /Admin/
         public ActionResult Index()
         {
             return View();
@@ -41,52 +41,41 @@ namespace splc.beholder.web.Controllers
             return View("ActiveStatus", list);
         }
 
-        // GET: /Admin/CreateActiveStatus
         public ActionResult CreateActiveStatus()
         {
             var list = _lookupRepo.GetActiveStatuses();
             var sortOrder = list.Max(x => x.SortOrder);
 
-            var activeStatus = new ActiveStatus
-            {
-                SortOrder = sortOrder + 1
-            };
+            var activeStatus = new ActiveStatus { SortOrder = sortOrder + 1 };
+
             return PartialView("_CreateOrEditActiveStatus", activeStatus);
         }
 
-        // POST: /Admin/CreateActiveStatus
         [HttpPost]
         public ActionResult CreateActiveStatus(ActiveStatus activestatus)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.ActiveStatus.Add(activestatus);
-                _ctx.SaveChanges();
-                //return RedirectToAction("ActiveStatusList");
-            }
-
+            if (!ModelState.IsValid) return null;
+            _ctx.ActiveStatus.Add(activestatus);
+            _ctx.SaveChanges();
+            HttpRuntime.Cache.Remove("ActiveStatus");
+            _lookupRepo.GetActiveStatuses(); //Refresh cache
             return null;
         }
 
-        // GET: /Admin/EditActiveStatus/5
         public ActionResult EditActiveStatus(int id)
         {
             var activeStatus = _lookupRepo.GetActiveStatuses().Single(x => x.Id == id);
             return PartialView("_CreateOrEditActiveStatus", activeStatus);
         }
 
-        // POST: /Admin/EditActiveStatus/5
         [HttpPost]
         public ActionResult EditActiveStatus(ActiveStatus activestatus)
         {
-
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(activestatus).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(activestatus);
+            if (!ModelState.IsValid) return View(activestatus);
+            _ctx.Entry(activestatus).State = EntityState.Modified;
+            _ctx.SaveChanges();
+            _lookupRepo.GetActiveStatuses(); //Refresh cache
+            return RedirectToAction("Index");
         }
 
         // GET: /Admin/DeleteActiveStatus/5
@@ -1425,8 +1414,9 @@ namespace splc.beholder.web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _ctx.Prefixes.Add(prefix);
-                _ctx.SaveChanges();
+                //_ctx.Prefixes.Add(prefix);
+                //_ctx.SaveChanges();
+                _lookupRepo.SavePrefixes(prefix);
             }
             return null;
         }

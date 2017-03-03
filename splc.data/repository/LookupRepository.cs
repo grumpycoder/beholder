@@ -1,9 +1,7 @@
 ﻿using splc.domain.Models;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Web;
 
 namespace splc.data.repository
 {
@@ -241,830 +239,271 @@ namespace splc.data.repository
         {
             return _ctx.ContactTypes.OrderBy(x => x.SortOrder ?? int.MaxValue).ThenBy(x => x.Name).ToList();
         }
-    }
 
-    public class CachedLookupRepository : LookupRepository
-    {
-        private static readonly object CacheLockObject = new object();
-
-        public CachedLookupRepository(ACDBContext ctx) : base(ctx)
+        public virtual int SaveEventType(EventType model)
         {
+            _ctx.EventTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<State> GetStates()
+        public virtual int SaveAudioVideoTypes(AudioVideoType model)
         {
-            Debug.Print("CachedLookupRepository:GetStates");
-            var cacheKey = "States";
-            var result = HttpRuntime.Cache[cacheKey] as List<State>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<State>;
-                if (result != null) return result;
-                result = base.GetStates();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.AudioVideoTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<ChapterType> GetChapterTypes()
+        public virtual int SavePrefixes(Prefix model)
         {
-            Debug.Print("CachedLookupRepository:GetChapterTypes");
-            var cacheKey = "ChapterTypes";
-            var result = HttpRuntime.Cache[cacheKey] as List<ChapterType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ChapterType>;
-                if (result != null) return result;
-                result = base.GetChapterTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.Prefixes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<ApprovalStatus> GetApprovalStatuses()
+        public virtual int SaveSuffixes(Suffix model)
         {
-            Debug.Print("CachedLookupRepository:GetApprovalStatuses");
-            var cacheKey = "ApprovalStatus";
-            var result = HttpRuntime.Cache[cacheKey] as List<ApprovalStatus>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ApprovalStatus>;
-                if (result != null) return result;
-                result = base.GetApprovalStatuses();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.Suffixes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<ActiveStatus> GetActiveStatuses()
+        public virtual int SaveGenders(Gender model)
         {
-            Debug.Print("CachedLookupRepository:GetActiveStatuses");
-            var cacheKey = "ActiveStatus";
-            var result = HttpRuntime.Cache[cacheKey] as List<ActiveStatus>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ActiveStatus>;
-                if (result != null) return result;
-                result = base.GetActiveStatuses();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.Genders.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<MovementClass> GetMovementClasses()
+        public virtual int SaveRaces(Race model)
         {
-            Debug.Print("CachedLookupRepository:GetMovementClasses");
-            var cacheKey = "MovementClass";
-            var result = HttpRuntime.Cache[cacheKey] as List<MovementClass>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<MovementClass>;
-                if (result != null) return result;
-                result = base.GetMovementClasses();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.Races.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<RemovalStatus> GetRemovalStatus()
+        public virtual int SaveLicenseTypes(LicenseType model)
         {
-            Debug.Print("CachedLookupRepository:GetRemovalStatus");
-            var cacheKey = "RemovalStatus";
-            var result = HttpRuntime.Cache[cacheKey] as List<RemovalStatus>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<RemovalStatus>;
-                if (result != null) return result;
-                result = base.GetRemovalStatus();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.LicenseTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<RelationshipType> GetRelationshipTypes()
+        public virtual int SaveEyeColors(EyeColor model)
         {
-            Debug.Print("CachedLookupRepository:GetRelationshipTypes");
-            var cacheKey = "RelationshipType";
-            var result = HttpRuntime.Cache[cacheKey] as List<RelationshipType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<RelationshipType>;
-                if (result != null) return result;
-                result = base.GetRelationshipTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.EyeColors.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<ContactInfoType> GetContactInfoTypes()
+        public virtual int SaveHairColors(HairColor model)
         {
-            Debug.Print("CachedLookupRepository:GetContactInfoTypes");
-            var cacheKey = "ContactInfoType";
-            var result = HttpRuntime.Cache[cacheKey] as List<ContactInfoType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ContactInfoType>;
-                if (result != null) return result;
-                result = base.GetContactInfoTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.HairColors.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<PrimaryStatus> GetPrimaryStatuses()
+        public virtual int SaveHairPatterns(HairPattern model)
         {
-            Debug.Print("CachedLookupRepository:GetPrimaryStatuses");
-            var cacheKey = "PrimaryStatus";
-            var result = HttpRuntime.Cache[cacheKey] as List<PrimaryStatus>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<PrimaryStatus>;
-                if (result != null) return result;
-                result = base.GetPrimaryStatuses();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.HairPatterns.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<EventType> GetEventTypes()
+        public virtual int SaveStates(State model)
         {
-            Debug.Print("CachedLookupRepository:GetEventTypes");
-            var cacheKey = "EventType";
-            var result = HttpRuntime.Cache[cacheKey] as List<EventType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<EventType>;
-                if (result != null) return result;
-                result = base.GetEventTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.States.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<AudioVideoType> GetAudioVideoTypes()
+        public virtual int SaveMaritialStatuses(MaritialStatus model)
         {
-            Debug.Print("CachedLookupRepository:GetAudioVideoTypes");
-            var cacheKey = "AudioVideoType";
-            var result = HttpRuntime.Cache[cacheKey] as List<AudioVideoType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<AudioVideoType>;
-                if (result != null) return result;
-                result = base.GetAudioVideoTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.MaritialStatus.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<Prefix> GetPrefixes()
+        public virtual int SaveAddressTypes(AddressType model)
         {
-            Debug.Print("CachedLookupRepository:GetPrefixes");
-            var cacheKey = "Prefix";
-            var result = HttpRuntime.Cache[cacheKey] as List<Prefix>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<Prefix>;
-                if (result != null) return result;
-                result = base.GetPrefixes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.AddressTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<Suffix> GetSuffixes()
+        public virtual int SaveApprovalStatuses(ApprovalStatus model)
         {
-            Debug.Print("CachedLookupRepository:GetSuffixes");
-            var cacheKey = "Suffix";
-            var result = HttpRuntime.Cache[cacheKey] as List<Suffix>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<Suffix>;
-                if (result != null) return result;
-                result = base.GetSuffixes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.ApprovalStatus.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<Gender> GetGenders()
+        public virtual int SaveActiveStatuses(ActiveStatus model)
         {
-            Debug.Print("CachedLookupRepository:GetGenders");
-            var cacheKey = "Gender";
-            var result = HttpRuntime.Cache[cacheKey] as List<Gender>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<Gender>;
-                if (result != null) return result;
-                result = base.GetGenders();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.ActiveStatus.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<Race> GetRaces()
+        public virtual int SaveMovementClasses(MovementClass model)
         {
-            Debug.Print("CachedLookupRepository:GetRaces");
-            var cacheKey = "Race";
-            var result = HttpRuntime.Cache[cacheKey] as List<Race>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<Race>;
-                if (result != null) return result;
-                result = base.GetRaces();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.MovementClasses.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<LicenseType> GetLicenseTypes()
+        public virtual int SaveConfidentialityTypes(ConfidentialityType model)
         {
-            Debug.Print("CachedLookupRepository:GetLicenseTypes");
-            var cacheKey = "LicenseType";
-            var result = HttpRuntime.Cache[cacheKey] as List<LicenseType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<LicenseType>;
-                if (result != null) return result;
-                result = base.GetLicenseTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.ConfidentialityTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<EyeColor> GetEyeColors()
+        public virtual int SaveRemovalStatus(RemovalStatus model)
         {
-            Debug.Print("CachedLookupRepository:GetEyeColors");
-            var cacheKey = "EyeColor";
-            var result = HttpRuntime.Cache[cacheKey] as List<EyeColor>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<EyeColor>;
-                if (result != null) return result;
-                result = base.GetEyeColors();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.RemovalStatus.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<HairColor> GetHairColors()
+        public virtual int SavePrimaryStatuses(PrimaryStatus model)
         {
-            Debug.Print("CachedLookupRepository:GetHairColors");
-            var cacheKey = "HairColor";
-            var result = HttpRuntime.Cache[cacheKey] as List<HairColor>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<HairColor>;
-                if (result != null) return result;
-                result = base.GetHairColors();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.PrimaryStatus.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<HairPattern> GetHairPatterns()
+        public virtual int SaveRelationshipTypes(RelationshipType model)
         {
-            Debug.Print("CachedLookupRepository:GetHairPatterns");
-            var cacheKey = "HairPattern";
-            var result = HttpRuntime.Cache[cacheKey] as List<HairPattern>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<HairPattern>;
-                if (result != null) return result;
-                result = base.GetHairPatterns();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.RelationshipTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<MaritialStatus> GetMaritialStatuses()
+        public virtual int SaveOrganizationTypes(OrganizationType model)
         {
-            Debug.Print("CachedLookupRepository:GetMaritialStatuses");
-            var cacheKey = "MaritialStatus";
-            var result = HttpRuntime.Cache[cacheKey] as List<MaritialStatus>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<MaritialStatus>;
-                if (result != null) return result;
-                result = base.GetMaritialStatuses();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.OrganizationTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<AddressType> GetAddressTypes()
+        public virtual int SaveChapterTypes(ChapterType model)
         {
-            Debug.Print("CachedLookupRepository:GetAddressTypes");
-            var cacheKey = "AddressType";
-            var result = HttpRuntime.Cache[cacheKey] as List<AddressType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<AddressType>;
-                if (result != null) return result;
-                result = base.GetAddressTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.ChapterTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<ConfidentialityType> GetConfidentialityTypes(User user)
+        public virtual int SaveContactInfoTypes(ContactInfoType model)
         {
-            Debug.Print("CachedLookupRepository:GetConfidentialityTypes");
-            var cacheKey = "ConfidentialityType";
-            var result = HttpRuntime.Cache[cacheKey] as List<ConfidentialityType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ConfidentialityType>;
-                if (result != null) return result;
-                result = base.GetConfidentialityTypes(user);
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.ContactInfoTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<ConfidentialityType> GetConfidentialityTypes()
+        public virtual int SaveWebIncidentTypes(WebIncidentType model)
         {
-            Debug.Print("CachedLookupRepository:GetConfidentialityTypes");
-            var cacheKey = "ConfidentialityType";
-            var result = HttpRuntime.Cache[cacheKey] as List<ConfidentialityType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ConfidentialityType>;
-                if (result != null) return result;
-                result = base.GetConfidentialityTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.WebIncidentTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<OrganizationType> GetOrganizationTypes()
+        public virtual int SaveEventDocumentationTypes(EventDocumentationType model)
         {
-            Debug.Print("CachedLookupRepository:GetOrganizationTypes");
-            var cacheKey = "OrganizationType";
-            var result = HttpRuntime.Cache[cacheKey] as List<OrganizationType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<OrganizationType>;
-                if (result != null) return result;
-                result = base.GetOrganizationTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.EventDocumentationTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<WebIncidentType> GetWebIncidentTypes()
+        public virtual int SaveVehicleMakes(VehicleMake model)
         {
-            Debug.Print("CachedLookupRepository:GetWebIncidentTypes");
-            var cacheKey = "WebIncidentType";
-            var result = HttpRuntime.Cache[cacheKey] as List<WebIncidentType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<WebIncidentType>;
-                if (result != null) return result;
-                result = base.GetWebIncidentTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.VehicleMakes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<EventDocumentationType> GetEventDocumentationTypes()
+        public virtual int SaveVehicleModels(VehicleModel model)
         {
-            Debug.Print("CachedLookupRepository:GetEventDocumentationTypes");
-            var cacheKey = "EventDocumentationType";
-            var result = HttpRuntime.Cache[cacheKey] as List<EventDocumentationType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<EventDocumentationType>;
-                if (result != null) return result;
-                result = base.GetEventDocumentationTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.VehicleModels.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<VehicleMake> GetVehicleMakes()
+        public virtual int SaveVehicleTypes(VehicleType model)
         {
-            Debug.Print("CachedLookupRepository:GetVehicleMakes");
-            var cacheKey = "VehicleMake";
-            var result = HttpRuntime.Cache[cacheKey] as List<VehicleMake>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<VehicleMake>;
-                if (result != null) return result;
-                result = base.GetVehicleMakes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.VehicleTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<VehicleModel> GetVehicleModels()
+        public virtual int SaveVehicleColors(VehicleColor model)
         {
-            Debug.Print("CachedLookupRepository:GetVehicleModels");
-            var cacheKey = "VehicleModel";
-            var result = HttpRuntime.Cache[cacheKey] as List<VehicleModel>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<VehicleModel>;
-                if (result != null) return result;
-                result = base.GetVehicleModels();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.VehicleColors.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<VehicleType> GetVehicleTypes()
+        public virtual int SaveNewSourceType(NewsSourceType model)
         {
-            Debug.Print("CachedLookupRepository:GetVehicleTypes");
-            var cacheKey = "VehicleType";
-            var result = HttpRuntime.Cache[cacheKey] as List<VehicleType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<VehicleType>;
-                if (result != null) return result;
-                result = base.GetVehicleTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.NewsSourceTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<VehicleColor> GetVehicleColors()
+        public virtual int SaveMediaTypes(MediaType model)
         {
-            Debug.Print("CachedLookupRepository:GetVehicleColors");
-            var cacheKey = "VehicleColor";
-            var result = HttpRuntime.Cache[cacheKey] as List<VehicleColor>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<VehicleColor>;
-                if (result != null) return result;
-                result = base.GetVehicleColors();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.MediaTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<NewsSourceType> GetNewSourceType()
+        public virtual int SaveImageTypes(ImageType model)
         {
-            Debug.Print("CachedLookupRepository:GetNewSourceType");
-            var cacheKey = "NewsSourceType";
-            var result = HttpRuntime.Cache[cacheKey] as List<NewsSourceType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<NewsSourceType>;
-                if (result != null) return result;
-                result = base.GetNewSourceType();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.ImageTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<MediaType> GetMediaTypes()
+        public virtual int SaveMimeTypes(MimeType model)
         {
-            Debug.Print("CachedLookupRepository:GetMediaTypes");
-            var cacheKey = "MediaType";
-            var result = HttpRuntime.Cache[cacheKey] as List<MediaType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<MediaType>;
-                if (result != null) return result;
-                result = base.GetMediaTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.MimeTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<ImageType> GetImageTypes()
+        public virtual int SaveRenewalPermissionTypes(RenewalPermmisionType model)
         {
-            Debug.Print("CachedLookupRepository:GetImageTypes");
-            var cacheKey = "ImageType";
-            var result = HttpRuntime.Cache[cacheKey] as List<ImageType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ImageType>;
-                if (result != null) return result;
-                result = base.GetImageTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.RenewalPermmisionTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<MimeType> GetMimeTypes()
+        public virtual int SaveNewsSources(NewsSource model)
         {
-            Debug.Print("CachedLookupRepository:GetMimeTypes");
-            var cacheKey = "MimeType";
-            var result = HttpRuntime.Cache[cacheKey] as List<MimeType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<MimeType>;
-                if (result != null) return result;
-                result = base.GetMimeTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.NewsSources.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<RenewalPermmisionType> RenewalPermissionTypes()
+        public virtual int SaveContactTopics(ContactTopic model)
         {
-            Debug.Print("CachedLookupRepository:RenewalPermissionTypes");
-            var cacheKey = "RenewalPermmisionType";
-            var result = HttpRuntime.Cache[cacheKey] as List<RenewalPermmisionType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<RenewalPermmisionType>;
-                if (result != null) return result;
-                result = base.RenewalPermissionTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.ContactTopics.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<NewsSource> GetNewsSources()
+        public virtual int SaveContactTypes(ContactType model)
         {
-            Debug.Print("CachedLookupRepository:GetNewsSources");
-            var cacheKey = "NewsSource";
-            var result = HttpRuntime.Cache[cacheKey] as List<NewsSource>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<NewsSource>;
-                if (result != null) return result;
-                result = base.GetNewsSources();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.ContactTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<CorrespondenceType> GetCorrespondenceTypes()
+        public virtual int SaveCorrespondenceTypes(CorrespondenceType model)
         {
-            Debug.Print("CachedLookupRepository:GetCorrespondenceTypes");
-            var cacheKey = "CorrespondenceType";
-            var result = HttpRuntime.Cache[cacheKey] as List<CorrespondenceType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<CorrespondenceType>;
-                if (result != null) return result;
-                result = base.GetCorrespondenceTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.CorrespondenceTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<LibraryCategoryType> GetLibraryCategoryTypes()
+        public virtual int SaveLibraryCategoryTypes(LibraryCategoryType model)
         {
-            Debug.Print("CachedLookupRepository:GetLibraryCategoryTypes");
-            var cacheKey = "LibraryCategoryType";
-            var result = HttpRuntime.Cache[cacheKey] as List<LibraryCategoryType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<LibraryCategoryType>;
-                if (result != null) return result;
-                result = base.GetLibraryCategoryTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.LibraryCategoryTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<PublishedType> GetPublishedTypes()
+        public virtual int SavePublishedTypes(PublishedType model)
         {
-            Debug.Print("CachedLookupRepository:GetPublishedTypes");
-            var cacheKey = "TagType";
-            var result = HttpRuntime.Cache[cacheKey] as List<PublishedType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<PublishedType>;
-                if (result != null) return result;
-                result = base.GetPublishedTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.PublishedTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<TagType> GetTagTypes()
+        public virtual int SaveTagTypes(TagType model)
         {
-            Debug.Print("CachedLookupRepository:GetTagTypes");
-            var cacheKey = "TagType";
-            var result = HttpRuntime.Cache[cacheKey] as List<TagType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<TagType>;
-                if (result != null) return result;
-                result = base.GetTagTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.TagTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<UserType> GetUserTypes()
+        public virtual int SaveUserTypes(UserType model)
         {
-            Debug.Print("CachedLookupRepository:GetUserTypes");
-            var cacheKey = "UserType";
-            var result = HttpRuntime.Cache[cacheKey] as List<UserType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<UserType>;
-                if (result != null) return result;
-                result = base.GetUserTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.UserTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<WebsiteGroupType> GetWebsiteGroupTypes()
+        public virtual int SaveWebsiteGroupTypes(WebsiteGroupType model)
         {
-            Debug.Print("CachedLookupRepository:GetWebsiteGroupTypes");
-            var cacheKey = "WebsiteGroupType";
-            var result = HttpRuntime.Cache[cacheKey] as List<WebsiteGroupType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<WebsiteGroupType>;
-                if (result != null) return result;
-                result = base.GetWebsiteGroupTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.WebsiteGroupTypes.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<Religion> GetReligions()
+        public virtual int SaveReligions(Religion model)
         {
-            Debug.Print("CachedLookupRepository:GetReligions");
-            var cacheKey = "Religion";
-            var result = HttpRuntime.Cache[cacheKey] as List<Religion>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<Religion>;
-                if (result != null) return result;
-                result = base.GetReligions();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
+            _ctx.Religions.AddOrUpdate(model);
+            return _ctx.SaveChanges();
         }
 
-        public override List<ContactTopic> GetContactTopics()
-        {
-            Debug.Print("CachedLookupRepository:GetContactTopics");
-            var cacheKey = "ContactTopic";
-            var result = HttpRuntime.Cache[cacheKey] as List<ContactTopic>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ContactTopic>;
-                if (result != null) return result;
-                result = base.GetContactTopics();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
-        }
-
-        public override List<ContactType> GetContactTypes()
-        {
-            Debug.Print("CachedLookupRepository:GetContactTypes");
-            var cacheKey = "ContactType";
-            var result = HttpRuntime.Cache[cacheKey] as List<ContactType>;
-            if (result != null) return result;
-            lock (CacheLockObject)
-            {
-                result = HttpRuntime.Cache[cacheKey] as List<ContactType>;
-                if (result != null) return result;
-                result = base.GetContactTypes();
-                HttpRuntime.Cache.Insert(cacheKey, result, null,
-                    DateTime.Now.AddSeconds(1440), TimeSpan.Zero);
-            }
-            return result;
-        }
-
-    }
-
-    public interface ILookupRepository
-    {
-        List<EventType> GetEventTypes();
-        List<AudioVideoType> GetAudioVideoTypes();
-        List<Prefix> GetPrefixes();
-        List<Suffix> GetSuffixes();
-        List<Gender> GetGenders();
-        List<Race> GetRaces();
-        List<LicenseType> GetLicenseTypes();
-        List<EyeColor> GetEyeColors();
-        List<HairColor> GetHairColors();
-        List<HairPattern> GetHairPatterns();
-        List<State> GetStates();
-        List<MaritialStatus> GetMaritialStatuses();
-        List<AddressType> GetAddressTypes();
-        List<ApprovalStatus> GetApprovalStatuses();
-        List<ActiveStatus> GetActiveStatuses();
-        List<MovementClass> GetMovementClasses();
-        List<ConfidentialityType> GetConfidentialityTypes(User user);
-        List<ConfidentialityType> GetConfidentialityTypes();
-        List<RemovalStatus> GetRemovalStatus();
-        List<PrimaryStatus> GetPrimaryStatuses();
-        List<RelationshipType> GetRelationshipTypes();
-        List<OrganizationType> GetOrganizationTypes();
-        List<ChapterType> GetChapterTypes();
-        List<ContactInfoType> GetContactInfoTypes();
-        List<WebIncidentType> GetWebIncidentTypes();
-        List<EventDocumentationType> GetEventDocumentationTypes();
-        List<VehicleMake> GetVehicleMakes();
-        List<VehicleModel> GetVehicleModels();
-        List<VehicleType> GetVehicleTypes();
-        List<VehicleColor> GetVehicleColors();
-        List<NewsSourceType> GetNewSourceType();
-        List<MediaType> GetMediaTypes();
-        List<ImageType> GetImageTypes();
-        List<MimeType> GetMimeTypes();
-        List<RenewalPermmisionType> RenewalPermissionTypes();
-        List<NewsSource> GetNewsSources();
-        List<ContactTopic> GetContactTopics();
-        List<ContactType> GetContactTypes();
-        List<CorrespondenceType> GetCorrespondenceTypes();
-        List<LibraryCategoryType> GetLibraryCategoryTypes();
-        List<PublishedType> GetPublishedTypes();
-        List<TagType> GetTagTypes();
-        List<UserType> GetUserTypes();
-        List<WebsiteGroupType> GetWebsiteGroupTypes();
-        List<Religion> GetReligions();
 
     }
 }
