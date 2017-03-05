@@ -4,7 +4,6 @@ using splc.domain.Models;
 using System;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace splc.beholder.web.Controllers
@@ -52,13 +51,10 @@ namespace splc.beholder.web.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateActiveStatus(ActiveStatus activestatus)
+        public ActionResult CreateActiveStatus(ActiveStatus model)
         {
             if (!ModelState.IsValid) return null;
-            _ctx.ActiveStatus.Add(activestatus);
-            _ctx.SaveChanges();
-            HttpRuntime.Cache.Remove("ActiveStatus");
-            _lookupRepo.GetActiveStatuses(); //Refresh cache
+            _lookupRepo.SaveActiveStatuses(model);
             return null;
         }
 
@@ -69,16 +65,13 @@ namespace splc.beholder.web.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditActiveStatus(ActiveStatus activestatus)
+        public ActionResult EditActiveStatus(ActiveStatus model)
         {
-            if (!ModelState.IsValid) return View(activestatus);
-            _ctx.Entry(activestatus).State = EntityState.Modified;
-            _ctx.SaveChanges();
-            _lookupRepo.GetActiveStatuses(); //Refresh cache
-            return RedirectToAction("Index");
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveActiveStatuses(model);
+            return null;
         }
 
-        // GET: /Admin/DeleteActiveStatus/5
         public void DeleteActiveStatus(int id)
         {
             ActiveStatus activestatus = _ctx.ActiveStatus.Single(x => x.Id == id);
@@ -98,7 +91,6 @@ namespace splc.beholder.web.Controllers
             return View("AddressType", list);
         }
 
-        // GET: /Admin/CreateAddressType
         public ActionResult CreateAddressType()
         {
             var list = _lookupRepo.GetAddressTypes();
@@ -111,39 +103,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditAddressType", addressType);
         }
 
-        // POST: /Admin/CreateAddressType
         [HttpPost]
-        public ActionResult CreateAddressType(AddressType addressType)
+        public ActionResult CreateAddressType(AddressType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.AddressTypes.Add(addressType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveAddressTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditAddressType/5
         public ActionResult EditAddressType(int id)
         {
             var addressType = _lookupRepo.GetAddressTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditAddressType", addressType);
         }
 
-        // POST: /Admin/EditAddressType
         [HttpPost]
-        public ActionResult EditAddressType(AddressType addressType)
+        public ActionResult EditAddressType(AddressType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(addressType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(addressType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveAddressTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteAddressType/5
         public void DeleteAddressType(int id)
         {
             AddressType addressType = _ctx.AddressTypes.Single(x => x.Id == id);
@@ -151,8 +132,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(addressType).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
-
 
         public ActionResult ApprovalStatus()
         {
@@ -164,7 +143,6 @@ namespace splc.beholder.web.Controllers
             return View("ApprovalStatus", list);
         }
 
-        // GET: /Admin/CreateActiveStatus
         public ActionResult CreateApprovalStatus()
         {
             var list = _lookupRepo.GetApprovalStatuses();
@@ -178,39 +156,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditApprovalStatus", approvalStatus);
         }
 
-        // POST: /Admin/CreateApprovalStatus
         [HttpPost]
-        public ActionResult CreateApprovalStatus(ApprovalStatus approvalStatus)
+        public ActionResult CreateApprovalStatus(ApprovalStatus model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.ApprovalStatus.Add(approvalStatus);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveApprovalStatuses(model);
             return null;
         }
 
-        // GET: /Admin/EditApprovalStatus/5
         public ActionResult EditApprovalStatus(int id)
         {
             var approvalStatus = _lookupRepo.GetApprovalStatuses().Single(x => x.Id == id);
             return PartialView("_CreateOrEditApprovalStatus", approvalStatus);
         }
 
-        // POST: /Admin/EditApprovalStatus
         [HttpPost]
-        public ActionResult EditApprovalStatus(ApprovalStatus approvalStatus)
+        public ActionResult EditApprovalStatus(ApprovalStatus model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(approvalStatus).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(approvalStatus);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveApprovalStatuses(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteApprovalStatus/5
         public void DeleteApprovalStatus(int id)
         {
             ApprovalStatus approvalStatus = _ctx.ApprovalStatus.Single(x => x.Id == id);
@@ -218,7 +185,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(approvalStatus).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
 
         public ActionResult AudioVideoType()
         {
@@ -230,7 +196,6 @@ namespace splc.beholder.web.Controllers
             return View("AudioVideoType", list);
         }
 
-        // GET: /Admin/CreateAudioVideoType
         public ActionResult CreateAudioVideoType()
         {
             var list = _lookupRepo.GetAudioVideoTypes();
@@ -243,39 +208,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditAudioVideoType", audioVideoType);
         }
 
-        // POST: /Admin/CreateAudioVideoType
         [HttpPost]
-        public ActionResult CreateAudioVideoType(AudioVideoType audioVideoType)
+        public ActionResult CreateAudioVideoType(AudioVideoType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.AudioVideoTypes.Add(audioVideoType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveAudioVideoTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditAudioVideoType/5
         public ActionResult EditAudioVideoType(int id)
         {
             var audioVideoType = _lookupRepo.GetAudioVideoTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditAudioVideoType", audioVideoType);
         }
 
-        // POST: /Admin/EditAudioVideoType
         [HttpPost]
-        public ActionResult EditAudioVideoType(AudioVideoType audioVideoType)
+        public ActionResult EditAudioVideoType(AudioVideoType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(audioVideoType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(audioVideoType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveAudioVideoTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteAudioVideoType/5
         public void DeleteAudioVideoType(int id)
         {
             AudioVideoType audioVideoType = _ctx.AudioVideoTypes.Single(x => x.Id == id);
@@ -283,7 +237,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(audioVideoType).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
 
         public ActionResult ChapterType()
         {
@@ -295,7 +248,6 @@ namespace splc.beholder.web.Controllers
             return View("ChapterType", list);
         }
 
-        // GET: /Admin/CreateChapterType
         public ActionResult CreateChapterType()
         {
             var list = _lookupRepo.GetChapterTypes();
@@ -308,39 +260,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditChapterType", chapterType);
         }
 
-        // POST: /Admin/CreateChapterType
         [HttpPost]
-        public ActionResult CreateChapterType(ChapterType chapterType)
+        public ActionResult CreateChapterType(ChapterType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.ChapterTypes.Add(chapterType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveChapterTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditChapterType/5
         public ActionResult EditChapterType(int id)
         {
             var chapterType = _lookupRepo.GetChapterTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditChapterType", chapterType);
         }
 
-        // POST: /Admin/EditChapterType
         [HttpPost]
-        public ActionResult EditChapterType(ChapterType chapterType)
+        public ActionResult EditChapterType(ChapterType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(chapterType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(chapterType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveChapterTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteChapterType/5
         public void DeleteChapterType(int id)
         {
             ChapterType chapterType = _ctx.ChapterTypes.Single(x => x.Id == id);
@@ -359,7 +300,6 @@ namespace splc.beholder.web.Controllers
             return View("ConfidentialityType", list);
         }
 
-        // GET: /Admin/CreateConfidentialityType
         public ActionResult CreateConfidentialityType()
         {
             var list = _lookupRepo.GetConfidentialityTypes();
@@ -372,39 +312,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditConfidentialityType", confidentialityType);
         }
 
-        // POST: /Admin/CreateConfidentialityType
         [HttpPost]
-        public ActionResult CreateConfidentialityType(ConfidentialityType confidentialityType)
+        public ActionResult CreateConfidentialityType(ConfidentialityType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.ConfidentialityTypes.Add(confidentialityType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveConfidentialityTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditConfidentialityType/5
         public ActionResult EditConfidentialityType(int id)
         {
             var confidentialityType = _lookupRepo.GetConfidentialityTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditConfidentialityType", confidentialityType);
         }
 
-        // POST: /Admin/EditConfidentialityType
         [HttpPost]
-        public ActionResult EditConfidentialityType(ConfidentialityType confidentialityType)
+        public ActionResult EditConfidentialityType(ConfidentialityType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(confidentialityType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(confidentialityType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveConfidentialityTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteConfidentialityType/5
         public void DeleteConfidentialityType(int id)
         {
             ConfidentialityType confidentialityType = _ctx.ConfidentialityTypes.Single(x => x.Id == id);
@@ -424,7 +353,6 @@ namespace splc.beholder.web.Controllers
             return View("ContactInfoType", list);
         }
 
-        // GET: /Admin/CreateContactInfoType
         public ActionResult CreateContactInfoType()
         {
             var list = _lookupRepo.GetContactInfoTypes();
@@ -437,39 +365,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditContactInfoType", contactInfoType);
         }
 
-        // POST: /Admin/CreateContactInfoType
         [HttpPost]
-        public ActionResult CreateContactInfoType(ContactInfoType contactInfoType)
+        public ActionResult CreateContactInfoType(ContactInfoType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.ContactInfoTypes.Add(contactInfoType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveContactInfoTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditContactInfoType/5
         public ActionResult EditContactInfoType(int id)
         {
             var contactInfoType = _lookupRepo.GetContactInfoTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditContactInfoType", contactInfoType);
         }
 
-        // POST: /Admin/EditContactInfoType
         [HttpPost]
-        public ActionResult EditContactInfoType(ContactInfoType contactInfoType)
+        public ActionResult EditContactInfoType(ContactInfoType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(contactInfoType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(contactInfoType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveContactInfoTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteContactInfoType/5
         public void DeleteContactInfoType(int id)
         {
             ContactInfoType contactInfoType = _ctx.ContactInfoTypes.Single(x => x.Id == id);
@@ -477,7 +394,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(contactInfoType).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
 
         public ActionResult CorrespondenceType()
         {
@@ -489,7 +405,6 @@ namespace splc.beholder.web.Controllers
             return View("CorrespondenceType", list);
         }
 
-        // GET: /Admin/CreateCorrespondenceType
         public ActionResult CreateCorrespondenceType()
         {
             var list = _lookupRepo.GetCorrespondenceTypes();
@@ -502,39 +417,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditCorrespondenceType", correspondenceType);
         }
 
-        // POST: /Admin/CreateCorrespondenceType
         [HttpPost]
-        public ActionResult CreateCorrespondenceType(CorrespondenceType correspondenceType)
+        public ActionResult CreateCorrespondenceType(CorrespondenceType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.CorrespondenceTypes.Add(correspondenceType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveCorrespondenceTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditCorrespondenceType/5
         public ActionResult EditCorrespondenceType(int id)
         {
             var correspondenceType = _lookupRepo.GetCorrespondenceTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditCorrespondenceType", correspondenceType);
         }
 
-        // POST: /Admin/EditCorrespondenceType
         [HttpPost]
-        public ActionResult EditCorrespondenceType(CorrespondenceType correspondenceType)
+        public ActionResult EditCorrespondenceType(CorrespondenceType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(correspondenceType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(correspondenceType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveCorrespondenceTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteCorrespondenceType/5
         public void DeleteCorrespondenceType(int id)
         {
             CorrespondenceType correspondenceType = _ctx.CorrespondenceTypes.Single(x => x.Id == id);
@@ -554,7 +458,6 @@ namespace splc.beholder.web.Controllers
             return View("EventDocumentationType", list);
         }
 
-        // GET: /Admin/CreateEventDocumentationType
         public ActionResult CreateEventDocumentationType()
         {
             var list = _lookupRepo.GetEventDocumentationTypes();
@@ -567,39 +470,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditEventDocumentationType", eventDocumentationType);
         }
 
-        // POST: /Admin/CreateEventDocumentationType
         [HttpPost]
-        public ActionResult CreateEventDocumentationType(EventDocumentationType eventDocumentationType)
+        public ActionResult CreateEventDocumentationType(EventDocumentationType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.EventDocumentationTypes.Add(eventDocumentationType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveEventDocumentationTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditEventDocumentationType/5
         public ActionResult EditEventDocumentationType(int id)
         {
             var eventDocumentationType = _lookupRepo.GetEventDocumentationTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditEventDocumentationType", eventDocumentationType);
         }
 
-        // POST: /Admin/EditEventDocumentationType
         [HttpPost]
-        public ActionResult EditEventDocumentationType(EventDocumentationType eventDocumentationType)
+        public ActionResult EditEventDocumentationType(EventDocumentationType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(eventDocumentationType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(eventDocumentationType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveEventDocumentationTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteEventDocumentationType/5
         public void DeleteEventDocumentationType(int id)
         {
             EventDocumentationType eventDocumentationType = _ctx.EventDocumentationTypes.Single(x => x.Id == id);
@@ -619,7 +511,6 @@ namespace splc.beholder.web.Controllers
             return View("EyeColor", list);
         }
 
-        // GET: /Admin/CreateEyeColor
         public ActionResult CreateEyeColor()
         {
             var list = _lookupRepo.GetEyeColors();
@@ -632,39 +523,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditEyeColor", eyeColor);
         }
 
-        // POST: /Admin/CreateEyeColor
         [HttpPost]
-        public ActionResult CreateEyeColor(EyeColor eyeColor)
+        public ActionResult CreateEyeColor(EyeColor model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.EyeColors.Add(eyeColor);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveEyeColors(model);
             return null;
         }
 
-        // GET: /Admin/EditEyeColor/5
         public ActionResult EditEyeColor(int id)
         {
             var eyeColor = _lookupRepo.GetEyeColors().Single(x => x.Id == id);
             return PartialView("_CreateOrEditEyeColor", eyeColor);
         }
 
-        // POST: /Admin/EditEyeColor
         [HttpPost]
-        public ActionResult EditEyeColor(EyeColor eyeColor)
+        public ActionResult EditEyeColor(EyeColor model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(eyeColor).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(eyeColor);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveEyeColors(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteEyeColor/5
         public void DeleteEyeColor(int id)
         {
             EyeColor eyeColor = _ctx.EyeColors.Single(x => x.Id == id);
@@ -683,7 +563,6 @@ namespace splc.beholder.web.Controllers
             return View("HairColor", list);
         }
 
-        // GET: /Admin/CreateHairColor
         public ActionResult CreateHairColor()
         {
             var list = _lookupRepo.GetHairColors();
@@ -696,39 +575,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditHairColor", hairColor);
         }
 
-        // POST: /Admin/CreateHairColor
         [HttpPost]
-        public ActionResult CreateHairColor(HairColor hairColor)
+        public ActionResult CreateHairColor(HairColor model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.HairColors.Add(hairColor);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveHairColors(model);
             return null;
         }
 
-        // GET: /Admin/EditHairColor/5
         public ActionResult EditHairColor(int id)
         {
             var hairColor = _lookupRepo.GetHairColors().Single(x => x.Id == id);
             return PartialView("_CreateOrEditHairColor", hairColor);
         }
 
-        // POST: /Admin/EditHairColor
         [HttpPost]
-        public ActionResult EditHairColor(HairColor hairColor)
+        public ActionResult EditHairColor(HairColor model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(hairColor).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(hairColor);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveHairColors(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteHairColor/5
         public void DeleteHairColor(int id)
         {
             HairColor hairColor = _ctx.HairColors.Single(x => x.Id == id);
@@ -748,7 +616,6 @@ namespace splc.beholder.web.Controllers
             return View("HairPattern", list);
         }
 
-        // GET: /Admin/CreateHairPattern
         public ActionResult CreateHairPattern()
         {
             var list = _lookupRepo.GetHairPatterns();
@@ -761,39 +628,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditHairPattern", hairPattern);
         }
 
-        // POST: /Admin/CreateHairPattern
         [HttpPost]
-        public ActionResult CreateHairPattern(HairPattern hairPattern)
+        public ActionResult CreateHairPattern(HairPattern model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.HairPatterns.Add(hairPattern);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveHairPatterns(model);
             return null;
         }
 
-        // GET: /Admin/EditHairPattern/5
         public ActionResult EditHairPattern(int id)
         {
             var hairPattern = _lookupRepo.GetHairPatterns().Single(x => x.Id == id);
             return PartialView("_CreateOrEditHairPattern", hairPattern);
         }
 
-        // POST: /Admin/EditHairPattern
         [HttpPost]
-        public ActionResult EditHairPattern(HairPattern hairPattern)
+        public ActionResult EditHairPattern(HairPattern model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(hairPattern).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(hairPattern);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveHairPatterns(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteHairPattern/5
         public void DeleteHairPattern(int id)
         {
             HairPattern hairPattern = _ctx.HairPatterns.Single(x => x.Id == id);
@@ -813,7 +669,6 @@ namespace splc.beholder.web.Controllers
             return View("ImageType", list);
         }
 
-        // GET: /Admin/CreateImageType
         public ActionResult CreateImageType()
         {
             var list = _lookupRepo.GetImageTypes();
@@ -827,39 +682,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditImageType", imageType);
         }
 
-        // POST: /Admin/CreateImageType
         [HttpPost]
-        public ActionResult CreateImageType(ImageType imageType)
+        public ActionResult CreateImageType(ImageType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.ImageTypes.Add(imageType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveImageTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditImageType/5
         public ActionResult EditImageType(int id)
         {
             var imageType = _lookupRepo.GetImageTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditImageType", imageType);
         }
 
-        // POST: /Admin/EditImageType
         [HttpPost]
-        public ActionResult EditImageType(ImageType imageType)
+        public ActionResult EditImageType(ImageType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(imageType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(imageType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveImageTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteImageType/5
         public void DeleteImageType(int id)
         {
             ImageType imageType = _ctx.ImageTypes.Single(x => x.Id == id);
@@ -878,7 +722,6 @@ namespace splc.beholder.web.Controllers
             return View("LibraryCategoryType", list);
         }
 
-        // GET: /Admin/CreateLibraryCategoryType
         public ActionResult CreateLibraryCategoryType()
         {
             var list = _lookupRepo.GetLibraryCategoryTypes();
@@ -891,39 +734,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditLibraryCategoryType", libraryCategoryType);
         }
 
-        // POST: /Admin/CreateLibraryCategoryType
         [HttpPost]
-        public ActionResult CreateLibraryCategoryType(LibraryCategoryType libraryCategoryType)
+        public ActionResult CreateLibraryCategoryType(LibraryCategoryType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.LibraryCategoryTypes.Add(libraryCategoryType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveLibraryCategoryTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditLibraryCategoryType/5
         public ActionResult EditLibraryCategoryType(int id)
         {
             var libraryCategoryType = _lookupRepo.GetLibraryCategoryTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditLibraryCategoryType", libraryCategoryType);
         }
 
-        // POST: /Admin/EditLibraryCategoryType
         [HttpPost]
-        public ActionResult EditLibraryCategoryType(LibraryCategoryType libraryCategoryType)
+        public ActionResult EditLibraryCategoryType(LibraryCategoryType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(libraryCategoryType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(libraryCategoryType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveLibraryCategoryTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteLibraryCategoryType/5
         public void DeleteLibraryCategoryType(int id)
         {
             LibraryCategoryType libraryCategoryType = _ctx.LibraryCategoryTypes.Single(x => x.Id == id);
@@ -943,7 +775,6 @@ namespace splc.beholder.web.Controllers
             return View("LicenseType", list);
         }
 
-        // GET: /Admin/CreateLicenseType
         public ActionResult CreateLicenseType()
         {
             var list = _lookupRepo.GetLicenseTypes();
@@ -956,39 +787,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditLicenseType", licenseType);
         }
 
-        // POST: /Admin/CreateLicenseType
         [HttpPost]
-        public ActionResult CreateLicenseType(LicenseType licenseType)
+        public ActionResult CreateLicenseType(LicenseType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.LicenseTypes.Add(licenseType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveLicenseTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditLicenseType/5
         public ActionResult EditLicenseType(int id)
         {
             var licenseType = _lookupRepo.GetLicenseTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditLicenseType", licenseType);
         }
 
-        // POST: /Admin/EditLicenseType
         [HttpPost]
-        public ActionResult EditLicenseType(LicenseType licenseType)
+        public ActionResult EditLicenseType(LicenseType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(licenseType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(licenseType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveLicenseTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteLicenseType/5
         public void DeleteLicenseType(int id)
         {
             LicenseType licenseType = _ctx.LicenseTypes.Single(x => x.Id == id);
@@ -1008,7 +828,6 @@ namespace splc.beholder.web.Controllers
             return View("MaritialStatus", list);
         }
 
-        // GET: /Admin/CreateMaritialStatus
         public ActionResult CreateMaritialStatus()
         {
             var list = _lookupRepo.GetMaritialStatuses();
@@ -1021,39 +840,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditMaritialStatus", maritialStatus);
         }
 
-        // POST: /Admin/CreateMaritialStatus
         [HttpPost]
-        public ActionResult CreateMaritialStatus(MaritialStatus maritialStatus)
+        public ActionResult CreateMaritialStatus(MaritialStatus model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.MaritialStatus.Add(maritialStatus);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveMaritialStatuses(model);
             return null;
         }
 
-        // GET: /Admin/EditMaritialStatus/5
         public ActionResult EditMaritialStatus(int id)
         {
             var maritialStatus = _lookupRepo.GetMaritialStatuses().Single(x => x.Id == id);
             return PartialView("_CreateOrEditMaritialStatus", maritialStatus);
         }
 
-        // POST: /Admin/EditMaritialStatus
         [HttpPost]
-        public ActionResult EditMaritialStatus(MaritialStatus maritialStatus)
+        public ActionResult EditMaritialStatus(MaritialStatus model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(maritialStatus).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(maritialStatus);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveMaritialStatuses(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteMaritialStatus/5
         public void DeleteMaritialStatus(int id)
         {
             MaritialStatus maritialStatus = _ctx.MaritialStatus.Single(x => x.Id == id);
@@ -1072,7 +880,6 @@ namespace splc.beholder.web.Controllers
             return View("MediaType", list);
         }
 
-        // GET: /Admin/CreateMediaType
         public ActionResult CreateMediaType()
         {
             var list = _lookupRepo.GetMediaTypes();
@@ -1085,39 +892,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditMediaType", mediaType);
         }
 
-        // POST: /Admin/CreateMediaType
         [HttpPost]
-        public ActionResult CreateMediaType(MediaType mediaType)
+        public ActionResult CreateMediaType(MediaType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.MediaTypes.Add(mediaType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveMediaTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditMediaType/5
         public ActionResult EditMediaType(int id)
         {
             var mediaType = _lookupRepo.GetMediaTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditMediaType", mediaType);
         }
 
-        // POST: /Admin/EditMediaType
         [HttpPost]
-        public ActionResult EditMediaType(MediaType mediaType)
+        public ActionResult EditMediaType(MediaType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(mediaType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(mediaType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveMediaTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteMediaType/5
         public void DeleteMediaType(int id)
         {
             MediaType mediaType = _ctx.MediaTypes.Single(x => x.Id == id);
@@ -1125,7 +921,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(mediaType).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
 
         public ActionResult MimeType()
         {
@@ -1137,7 +932,6 @@ namespace splc.beholder.web.Controllers
             return View("MimeType", list);
         }
 
-        // GET: /Admin/CreateMimeType
         public ActionResult CreateMimeType()
         {
             var list = _lookupRepo.GetMimeTypes();
@@ -1150,39 +944,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditMimeType", mimeType);
         }
 
-        // POST: /Admin/CreateMimeType
         [HttpPost]
-        public ActionResult CreateMimeType(MimeType mimeType)
+        public ActionResult CreateMimeType(MimeType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.MimeTypes.Add(mimeType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveMimeTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditMimeType/5
         public ActionResult EditMimeType(int id)
         {
             var mimeType = _lookupRepo.GetMimeTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditMimeType", mimeType);
         }
 
-        // POST: /Admin/EditMimeType
         [HttpPost]
-        public ActionResult EditMimeType(MimeType mimeType)
+        public ActionResult EditMimeType(MimeType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(mimeType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(mimeType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveMimeTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteMimeType/5
         public void DeleteMimeType(int id)
         {
             MimeType mimeType = _ctx.MimeTypes.Single(x => x.Id == id);
@@ -1202,7 +985,6 @@ namespace splc.beholder.web.Controllers
             return View("MovementClass", list);
         }
 
-        // GET: /Admin/CreateMovementClass
         public ActionResult CreateMovementClass()
         {
             var list = _lookupRepo.GetMovementClasses();
@@ -1215,39 +997,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditMovementClass", movementClass);
         }
 
-        // POST: /Admin/CreateMovementClass
         [HttpPost]
-        public ActionResult CreateMovementClass(MovementClass movementClass)
+        public ActionResult CreateMovementClass(MovementClass model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.MovementClasses.Add(movementClass);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveMovementClasses(model);
             return null;
         }
 
-        // GET: /Admin/EditMovementClass/5
         public ActionResult EditMovementClass(int id)
         {
             var movementClass = _lookupRepo.GetMovementClasses().Single(x => x.Id == id);
             return PartialView("_CreateOrEditMovementClass", movementClass);
         }
 
-        // POST: /Admin/EditMovementClass
         [HttpPost]
-        public ActionResult EditMovementClass(MovementClass movementClass)
+        public ActionResult EditMovementClass(MovementClass model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(movementClass).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(movementClass);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveMovementClasses(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteMovementClass/5
         public void DeleteMovementClass(int id)
         {
             MovementClass movementClass = _ctx.MovementClasses.Single(x => x.Id == id);
@@ -1255,7 +1026,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(movementClass).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
 
         public ActionResult NewsSourceType()
         {
@@ -1267,7 +1037,6 @@ namespace splc.beholder.web.Controllers
             return View("NewsSourceType", list);
         }
 
-        // GET: /Admin/CreateNewsSourceType
         public ActionResult CreateNewsSourceType()
         {
             var list = _lookupRepo.GetNewSourceType();
@@ -1280,39 +1049,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditNewsSourceType", newsSourceType);
         }
 
-        // POST: /Admin/CreateNewsSourceType
         [HttpPost]
-        public ActionResult CreateNewsSourceType(NewsSourceType newsSourceType)
+        public ActionResult CreateNewsSourceType(NewsSourceType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.NewsSourceTypes.Add(newsSourceType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveNewSourceType(model);
             return null;
         }
 
-        // GET: /Admin/EditNewsSourceType/5
         public ActionResult EditNewsSourceType(int id)
         {
             var newsSourceType = _lookupRepo.GetNewSourceType().Single(x => x.Id == id);
             return PartialView("_CreateOrEditNewsSourceType", newsSourceType);
         }
 
-        // POST: /Admin/EditNewsSourceType
         [HttpPost]
-        public ActionResult EditNewsSourceType(NewsSourceType newsSourceType)
+        public ActionResult EditNewsSourceType(NewsSourceType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(newsSourceType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(newsSourceType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveNewSourceType(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteNewsSourceType/5
         public void DeleteNewsSourceType(int id)
         {
             NewsSourceType newsSourceType = _ctx.NewsSourceTypes.Single(x => x.Id == id);
@@ -1331,7 +1089,6 @@ namespace splc.beholder.web.Controllers
             return View("OrganizationType", list);
         }
 
-        // GET: /Admin/CreateOrganizationType
         public ActionResult CreateOrganizationType()
         {
             var list = _lookupRepo.GetOrganizationTypes();
@@ -1344,39 +1101,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditOrganizationType", organizationType);
         }
 
-        // POST: /Admin/CreateOrganizationType
         [HttpPost]
-        public ActionResult CreateOrganizationType(OrganizationType organizationType)
+        public ActionResult CreateOrganizationType(OrganizationType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.OrganizationTypes.Add(organizationType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveOrganizationTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditOrganizationType/5
         public ActionResult EditOrganizationType(int id)
         {
             var organizationType = _lookupRepo.GetOrganizationTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditOrganizationType", organizationType);
         }
 
-        // POST: /Admin/EditOrganizationType
         [HttpPost]
-        public ActionResult EditOrganizationType(OrganizationType organizationType)
+        public ActionResult EditOrganizationType(OrganizationType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(organizationType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(organizationType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveOrganizationTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteOrganizationType/5
         public void DeleteOrganizationType(int id)
         {
             OrganizationType organizationType = _ctx.OrganizationTypes.Single(x => x.Id == id);
@@ -1395,7 +1141,6 @@ namespace splc.beholder.web.Controllers
             return View("Prefix", list);
         }
 
-        // GET: /Admin/CreatePrefix
         public ActionResult CreatePrefix()
         {
             var list = _lookupRepo.GetPrefixes();
@@ -1408,40 +1153,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditPrefix", prefix);
         }
 
-        // POST: /Admin/CreatePrefix
         [HttpPost]
-        public ActionResult CreatePrefix(Prefix prefix)
+        public ActionResult CreatePrefix(Prefix model)
         {
-            if (ModelState.IsValid)
-            {
-                //_ctx.Prefixes.Add(prefix);
-                //_ctx.SaveChanges();
-                _lookupRepo.SavePrefixes(prefix);
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SavePrefixes(model);
             return null;
         }
 
-        // GET: /Admin/EditPrefix/5
         public ActionResult EditPrefix(int id)
         {
             var prefix = _lookupRepo.GetPrefixes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditPrefix", prefix);
         }
 
-        // POST: /Admin/EditPrefix
         [HttpPost]
-        public ActionResult EditPrefix(Prefix prefix)
+        public ActionResult EditPrefix(Prefix model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(prefix).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(prefix);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SavePrefixes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeletePrefix/5
         public void DeletePrefix(int id)
         {
             Prefix prefix = _ctx.Prefixes.Single(x => x.Id == id);
@@ -1460,7 +1193,6 @@ namespace splc.beholder.web.Controllers
             return View("PrimaryStatus", list);
         }
 
-        // GET: /Admin/CreatePrimaryStatus
         public ActionResult CreatePrimaryStatus()
         {
             var list = _lookupRepo.GetPrimaryStatuses();
@@ -1473,39 +1205,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditPrimaryStatus", primaryStatus);
         }
 
-        // POST: /Admin/CreatePrimaryStatus
         [HttpPost]
-        public ActionResult CreatePrimaryStatus(PrimaryStatus primaryStatus)
+        public ActionResult CreatePrimaryStatus(PrimaryStatus model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.PrimaryStatus.Add(primaryStatus);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SavePrimaryStatuses(model);
             return null;
         }
 
-        // GET: /Admin/EditPrimaryStatus/5
         public ActionResult EditPrimaryStatus(int id)
         {
             var primaryStatus = _lookupRepo.GetPrimaryStatuses().Single(x => x.Id == id);
             return PartialView("_CreateOrEditPrimaryStatus", primaryStatus);
         }
 
-        // POST: /Admin/EditPrimaryStatus
         [HttpPost]
-        public ActionResult EditPrimaryStatus(PrimaryStatus primaryStatus)
+        public ActionResult EditPrimaryStatus(PrimaryStatus model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(primaryStatus).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(primaryStatus);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SavePrimaryStatuses(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeletePrimaryStatus/5
         public void DeletePrimaryStatus(int id)
         {
             PrimaryStatus primaryStatus = _ctx.PrimaryStatus.Single(x => x.Id == id);
@@ -1525,7 +1246,6 @@ namespace splc.beholder.web.Controllers
             return View("PublishedType", list);
         }
 
-        // GET: /Admin/CreatePublishedType
         public ActionResult CreatePublishedType()
         {
             var list = _lookupRepo.GetPublishedTypes();
@@ -1538,39 +1258,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditPublishedType", publishedType);
         }
 
-        // POST: /Admin/CreatePublishedType
         [HttpPost]
-        public ActionResult CreatePublishedType(PublishedType publishedType)
+        public ActionResult CreatePublishedType(PublishedType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.PublishedTypes.Add(publishedType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SavePublishedTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditPublishedType/5
         public ActionResult EditPublishedType(int id)
         {
             var publishedType = _lookupRepo.GetPublishedTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditPublishedType", publishedType);
         }
 
-        // POST: /Admin/EditPublishedType
         [HttpPost]
-        public ActionResult EditPublishedType(PublishedType publishedType)
+        public ActionResult EditPublishedType(PublishedType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(publishedType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(publishedType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SavePublishedTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeletePublishedType/5
         public void DeletePublishedType(int id)
         {
             PublishedType publishedType = _ctx.PublishedTypes.Single(x => x.Id == id);
@@ -1590,7 +1299,6 @@ namespace splc.beholder.web.Controllers
             return View("Race", list);
         }
 
-        // GET: /Admin/CreateRace
         public ActionResult CreateRace()
         {
             var list = _lookupRepo.GetRaces();
@@ -1603,39 +1311,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditRace", race);
         }
 
-        // POST: /Admin/CreateRace
         [HttpPost]
-        public ActionResult CreateRace(Race race)
+        public ActionResult CreateRace(Race model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Races.Add(race);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveRaces(model);
             return null;
         }
 
-        // GET: /Admin/EditRace/5
         public ActionResult EditRace(int id)
         {
             var race = _lookupRepo.GetRaces().Single(x => x.Id == id);
             return PartialView("_CreateOrEditRace", race);
         }
 
-        // POST: /Admin/EditRace
         [HttpPost]
-        public ActionResult EditRace(Race race)
+        public ActionResult EditRace(Race model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(race).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(race);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveRaces(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteRace/5
         public void DeleteRace(int id)
         {
             Race race = _ctx.Races.Single(x => x.Id == id);
@@ -1656,7 +1353,6 @@ namespace splc.beholder.web.Controllers
             return View("RelationshipType", list);
         }
 
-        // GET: /Admin/CreateRelationshipType
         public ActionResult CreateRelationshipType()
         {
             var list = _lookupRepo.GetRelationshipTypes();
@@ -1669,39 +1365,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditRelationshipType", relationshipType);
         }
 
-        // POST: /Admin/CreateRelationshipType
         [HttpPost]
-        public ActionResult CreateRelationshipType(RelationshipType relationshipType)
+        public ActionResult CreateRelationshipType(RelationshipType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.RelationshipTypes.Add(relationshipType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveRelationshipTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditRelationshipType/5
         public ActionResult EditRelationshipType(int id)
         {
             var relationshipType = _lookupRepo.GetRelationshipTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditRelationshipType", relationshipType);
         }
 
-        // POST: /Admin/EditRelationshipType
         [HttpPost]
-        public ActionResult EditRelationshipType(RelationshipType relationshipType)
+        public ActionResult EditRelationshipType(RelationshipType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(relationshipType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(relationshipType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveRelationshipTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteRelationshipType/5
         public void DeleteRelationshipType(int id)
         {
             RelationshipType relationshipType = _ctx.RelationshipTypes.Single(x => x.Id == id);
@@ -1709,7 +1394,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(relationshipType).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
 
         public ActionResult RemovalStatus()
         {
@@ -1721,7 +1405,6 @@ namespace splc.beholder.web.Controllers
             return View("RemovalStatus", list);
         }
 
-        // GET: /Admin/CreateRemovalStatus
         public ActionResult CreateRemovalStatus()
         {
             var list = _lookupRepo.GetRemovalStatus();
@@ -1734,39 +1417,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditRemovalStatus", removalStatus);
         }
 
-        // POST: /Admin/CreateRemovalStatus
         [HttpPost]
-        public ActionResult CreateRemovalStatus(RemovalStatus removalStatus)
+        public ActionResult CreateRemovalStatus(RemovalStatus model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.RemovalStatus.Add(removalStatus);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveRemovalStatus(model);
             return null;
         }
 
-        // GET: /Admin/EditRemovalStatus/5
         public ActionResult EditRemovalStatus(int id)
         {
             var removalStatus = _lookupRepo.GetRemovalStatus().Single(x => x.Id == id);
             return PartialView("_CreateOrEditRemovalStatus", removalStatus);
         }
 
-        // POST: /Admin/EditRemovalStatus
         [HttpPost]
-        public ActionResult EditRemovalStatus(RemovalStatus removalStatus)
+        public ActionResult EditRemovalStatus(RemovalStatus model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(removalStatus).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(removalStatus);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveRemovalStatus(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteRemovalStatus/5
         public void DeleteRemovalStatus(int id)
         {
             RemovalStatus removalStatus = _ctx.RemovalStatus.Single(x => x.Id == id);
@@ -1786,7 +1458,6 @@ namespace splc.beholder.web.Controllers
             return View("RenewalPermissionType", list);
         }
 
-        // GET: /Admin/CreateRenewalPermissionType
         public ActionResult CreateRenewalPermissionType()
         {
             var list = _lookupRepo.RenewalPermissionTypes();
@@ -1799,39 +1470,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditRenewalPermissionType", renewalPermissionType);
         }
 
-        // POST: /Admin/CreateRenewalPermissionType
         [HttpPost]
-        public ActionResult CreateRenewalPermissionType(RenewalPermmisionType renewalPermissionType)
+        public ActionResult CreateRenewalPermissionType(RenewalPermmisionType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.RenewalPermmisionTypes.Add(renewalPermissionType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveRenewalPermissionTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditRenewalPermissionType/5
         public ActionResult EditRenewalPermissionType(int id)
         {
             var renewalPermissionType = _lookupRepo.RenewalPermissionTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditRenewalPermissionType", renewalPermissionType);
         }
 
-        // POST: /Admin/EditRenewalPermissionType
         [HttpPost]
-        public ActionResult EditRenewalPermissionType(RenewalPermmisionType renewalPermissionType)
+        public ActionResult EditRenewalPermissionType(RenewalPermmisionType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(renewalPermissionType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(renewalPermissionType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveRenewalPermissionTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteRenewalPermissionType/5
         public void DeleteRenewalPermissionType(int id)
         {
             RenewalPermmisionType renewalPermissionType = _ctx.RenewalPermmisionTypes.Single(x => x.Id == id);
@@ -1852,7 +1512,6 @@ namespace splc.beholder.web.Controllers
         }
 
 
-        // GET: /Admin/CreateSuffix
         public ActionResult CreateSuffix()
         {
             var list = _lookupRepo.GetSuffixes();
@@ -1865,39 +1524,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditSuffix", suffix);
         }
 
-        // POST: /Admin/CreateSuffix
         [HttpPost]
-        public ActionResult CreateSuffix(Suffix suffix)
+        public ActionResult CreateSuffix(Suffix model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Suffixes.Add(suffix);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveSuffixes(model);
             return null;
         }
 
-        // GET: /Admin/EditSuffix/5
         public ActionResult EditSuffix(int id)
         {
             var suffix = _lookupRepo.GetSuffixes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditSuffix", suffix);
         }
 
-        // POST: /Admin/EditSuffix
         [HttpPost]
-        public ActionResult EditSuffix(Suffix suffix)
+        public ActionResult EditSuffix(Suffix model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(suffix).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(suffix);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveSuffixes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteSuffix/5
         public void DeleteSuffix(int id)
         {
             Suffix suffix = _ctx.Suffixes.Single(x => x.Id == id);
@@ -1917,49 +1565,41 @@ namespace splc.beholder.web.Controllers
             return View("States", list);
         }
 
-        // GET: /Admin/CreateState
         public ActionResult CreateState()
         {
-            var list = _lookupRepo.GetStates();
-
+            _lookupRepo.GetStates();
             var state = new State();
             return PartialView("_CreateOrEditState", state);
         }
 
-        // POST: /Admin/CreateState
         [HttpPost]
-        public ActionResult CreateState(State state)
+        public ActionResult CreateState(State model)
         {
             if (ModelState.IsValid)
             {
-                state.CreatedUserId = CurrentUser.Id;
-                _ctx.States.Add(state);
-                _ctx.SaveChanges();
+                model.CreatedUserId = CurrentUser.Id;
+                _lookupRepo.SaveStates(model);
             }
             return null;
         }
 
-        // GET: /Admin/EditState/5
         public ActionResult EditState(int id)
         {
             var suffix = _lookupRepo.GetStates().Single(x => x.Id == id);
             return PartialView("_CreateOrEditState", suffix);
         }
 
-        // POST: /Admin/EditState
         [HttpPost]
-        public ActionResult EditState(State state)
+        public ActionResult EditState(State model)
         {
             if (ModelState.IsValid)
             {
-                _ctx.Entry(state).State = EntityState.Modified;
-                _ctx.SaveChanges();
+                _lookupRepo.SaveStates(model);
                 return RedirectToAction("Index");
             }
-            return View(state);
+            return View(model);
         }
 
-        // GET: /Admin/DeleteState/5
         public void DeleteState(int id)
         {
             State state = _ctx.States.Single(x => x.Id == id);
@@ -1977,7 +1617,6 @@ namespace splc.beholder.web.Controllers
             return View("TagType", list);
         }
 
-        // GET: /Admin/CreateTagType
         public ActionResult CreateTagType()
         {
             var list = _lookupRepo.GetTagTypes();
@@ -1990,39 +1629,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditTagType", tagType);
         }
 
-        // POST: /Admin/CreateTagType
         [HttpPost]
-        public ActionResult CreateTagType(TagType tagType)
+        public ActionResult CreateTagType(TagType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.TagTypes.Add(tagType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveTagTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditTagType/5
         public ActionResult EditTagType(int id)
         {
             var tagType = _lookupRepo.GetTagTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditTagType", tagType);
         }
 
-        // POST: /Admin/EditTagType
         [HttpPost]
-        public ActionResult EditTagType(TagType tagType)
+        public ActionResult EditTagType(TagType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(tagType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(tagType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveTagTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteTagType/5
         public void DeleteTagType(int id)
         {
             TagType tagType = _ctx.TagTypes.Single(x => x.Id == id);
@@ -2030,8 +1658,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(tagType).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
-
 
         public ActionResult UserType()
         {
@@ -2043,7 +1669,6 @@ namespace splc.beholder.web.Controllers
             return View("UserType", list);
         }
 
-        // GET: /Admin/CreateUserType
         public ActionResult CreateUserType()
         {
             var list = _lookupRepo.GetUserTypes();
@@ -2056,39 +1681,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditUserType", userType);
         }
 
-        // POST: /Admin/CreateUserType
         [HttpPost]
-        public ActionResult CreateUserType(UserType userType)
+        public ActionResult CreateUserType(UserType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.UserTypes.Add(userType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveUserTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditUserType/5
         public ActionResult EditUserType(int id)
         {
             var userType = _lookupRepo.GetUserTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditUserType", userType);
         }
 
-        // POST: /Admin/EditUserType
         [HttpPost]
-        public ActionResult EditUserType(UserType userType)
+        public ActionResult EditUserType(UserType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(userType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(userType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveUserTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteUserType/5
         public void DeleteUserType(int id)
         {
             UserType userType = _ctx.UserTypes.Single(x => x.Id == id);
@@ -2096,7 +1710,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(userType).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
 
         public ActionResult VehicleColor()
         {
@@ -2108,7 +1721,6 @@ namespace splc.beholder.web.Controllers
             return View("VehicleColor", list);
         }
 
-        // GET: /Admin/CreateVehicleColor
         public ActionResult CreateVehicleColor()
         {
             var list = _lookupRepo.GetVehicleColors();
@@ -2121,39 +1733,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditVehicleColor", vehicleColor);
         }
 
-        // POST: /Admin/CreateVehicleColor
         [HttpPost]
-        public ActionResult CreateVehicleColor(VehicleColor vehicleColor)
+        public ActionResult CreateVehicleColor(VehicleColor model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.VehicleColors.Add(vehicleColor);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveVehicleColors(model);
             return null;
         }
 
-        // GET: /Admin/EditVehicleColor/5
         public ActionResult EditVehicleColor(int id)
         {
             var vehicleColor = _lookupRepo.GetVehicleColors().Single(x => x.Id == id);
             return PartialView("_CreateOrEditVehicleColor", vehicleColor);
         }
 
-        // POST: /Admin/EditVehicleColor
         [HttpPost]
-        public ActionResult EditVehicleColor(VehicleColor vehicleColor)
+        public ActionResult EditVehicleColor(VehicleColor model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(vehicleColor).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(vehicleColor);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveVehicleColors(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteVehicleColor/5
         public void DeleteVehicleColor(int id)
         {
             VehicleColor vehicleColor = _ctx.VehicleColors.Single(x => x.Id == id);
@@ -2161,7 +1762,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(vehicleColor).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
-
 
         public ActionResult VehicleMake()
         {
@@ -2173,7 +1773,6 @@ namespace splc.beholder.web.Controllers
             return View("VehicleMake", list);
         }
 
-        // GET: /Admin/CreateVehicleMake
         public ActionResult CreateVehicleMake()
         {
             var list = _lookupRepo.GetVehicleMakes();
@@ -2186,39 +1785,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditVehicleMake", vehicleMake);
         }
 
-        // POST: /Admin/CreateVehicleMake
         [HttpPost]
-        public ActionResult CreateVehicleMake(VehicleMake vehicleMake)
+        public ActionResult CreateVehicleMake(VehicleMake model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.VehicleMakes.Add(vehicleMake);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveVehicleMakes(model);
             return null;
         }
 
-        // GET: /Admin/EditVehicleMake/5
         public ActionResult EditVehicleMake(int id)
         {
             var vehicleMake = _lookupRepo.GetVehicleMakes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditVehicleMake", vehicleMake);
         }
 
-        // POST: /Admin/EditVehicleMake
         [HttpPost]
-        public ActionResult EditVehicleMake(VehicleMake vehicleMake)
+        public ActionResult EditVehicleMake(VehicleMake model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(vehicleMake).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(vehicleMake);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveVehicleMakes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteVehicleMake/5
         public void DeleteVehicleMake(int id)
         {
             VehicleMake vehicleMake = _ctx.VehicleMakes.Single(x => x.Id == id);
@@ -2227,7 +1815,6 @@ namespace splc.beholder.web.Controllers
             _ctx.SaveChanges();
         }
 
-        //TODO: VehicleModel Lookup needs further attention because of FK constraint
         public ActionResult VehicleModel()
         {
             var list = _lookupRepo.GetVehicleModels();
@@ -2238,7 +1825,6 @@ namespace splc.beholder.web.Controllers
             return View("VehicleModel", list);
         }
 
-        // GET: /Admin/CreateVehicleModel
         public ActionResult CreateVehicleModel()
         {
             var list = _lookupRepo.GetVehicleMakes();
@@ -2253,44 +1839,31 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditVehicleModel", vehicleModel);
         }
 
-        // POST: /Admin/CreateVehicleModel
         [HttpPost]
-        public ActionResult CreateVehicleModel([Bind(Include = "VehicleMakeId,Id,Name")] VehicleModel vehicleModel)
+        public ActionResult CreateVehicleModel([Bind(Include = "VehicleMakeId,Id,Name")] VehicleModel model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.VehicleModels.Add(vehicleModel);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveVehicleModels(model);
             return null;
         }
 
-        // GET: /Admin/EditVehicleModel/5
         public ActionResult EditVehicleModel(int id)
         {
-            var vehicleModel = _lookupRepo.GetVehicleModels().Where(x => x.Id == id).FirstOrDefault();
+            var vehicleModel = _lookupRepo.GetVehicleModels().FirstOrDefault(x => x.Id == id);
             var list = _lookupRepo.GetVehicleMakes();
             ViewBag.VehicleMakes = list.ToList();
 
             return PartialView("_CreateOrEditVehicleModel", vehicleModel);
         }
 
-        // POST: /Admin/EditVehicleModel
         [HttpPost]
-        public ActionResult EditVehicleModel([Bind(Include = "VehicleMakeId,Id,Name")] VehicleModel vehicleModel)
+        public ActionResult EditVehicleModel([Bind(Include = "VehicleMakeId,Id,Name")] VehicleModel model)
         {
-            if (ModelState.IsValid)
-            {
-                //TODO: Fix this!!
-                vehicleModel.CreatedUserId = CurrentUser.Id;
-                _ctx.Entry(vehicleModel).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(vehicleModel);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveVehicleModels(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteVehicleModel/5
         public void DeleteVehicleModel(int id)
         {
             VehicleModel vehicleModel = _ctx.VehicleModels.Single(x => x.Id == id);
@@ -2310,7 +1883,6 @@ namespace splc.beholder.web.Controllers
             return View("WebIncidentType", list);
         }
 
-        // GET: /Admin/CreateWebIncidentType
         public ActionResult CreateWebIncidentType()
         {
             var list = _lookupRepo.GetWebIncidentTypes();
@@ -2323,39 +1895,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditWebIncidentType", webIncidentType);
         }
 
-        // POST: /Admin/CreateWebIncidentType
         [HttpPost]
-        public ActionResult CreateWebIncidentType(WebIncidentType webIncidentType)
+        public ActionResult CreateWebIncidentType(WebIncidentType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.WebIncidentTypes.Add(webIncidentType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveWebIncidentTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditWebIncidentType/5
         public ActionResult EditWebIncidentType(int id)
         {
             var webIncidentType = _lookupRepo.GetWebIncidentTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditWebIncidentType", webIncidentType);
         }
 
-        // POST: /Admin/EditWebIncidentType
         [HttpPost]
-        public ActionResult EditWebIncidentType(WebIncidentType webIncidentType)
+        public ActionResult EditWebIncidentType(WebIncidentType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(webIncidentType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(webIncidentType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveWebIncidentTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteWebIncidentType/5
         public void DeleteWebIncidentType(int id)
         {
             WebIncidentType webIncidentType = _ctx.WebIncidentTypes.Single(x => x.Id == id);
@@ -2375,7 +1936,6 @@ namespace splc.beholder.web.Controllers
             return View("WebsiteGroupType", list);
         }
 
-        // GET: /Admin/CreateWebsiteGroupType
         public ActionResult CreateWebsiteGroupType()
         {
             var list = _lookupRepo.GetWebsiteGroupTypes();
@@ -2388,39 +1948,28 @@ namespace splc.beholder.web.Controllers
             return PartialView("_CreateOrEditWebsiteGroupType", websiteGroupType);
         }
 
-        // POST: /Admin/CreateWebsiteGroupType
         [HttpPost]
-        public ActionResult CreateWebsiteGroupType(WebsiteGroupType websiteGroupType)
+        public ActionResult CreateWebsiteGroupType(WebsiteGroupType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.WebsiteGroupTypes.Add(websiteGroupType);
-                _ctx.SaveChanges();
-            }
+            if (!ModelState.IsValid) return null;
+            _lookupRepo.SaveWebsiteGroupTypes(model);
             return null;
         }
 
-        // GET: /Admin/EditWebsiteGroupType/5
         public ActionResult EditWebsiteGroupType(int id)
         {
             var websiteGroupType = _lookupRepo.GetWebsiteGroupTypes().Single(x => x.Id == id);
             return PartialView("_CreateOrEditWebsiteGroupType", websiteGroupType);
         }
 
-        // POST: /Admin/EditWebsiteGroupType
         [HttpPost]
-        public ActionResult EditWebsiteGroupType(WebsiteGroupType websiteGroupType)
+        public ActionResult EditWebsiteGroupType(WebsiteGroupType model)
         {
-            if (ModelState.IsValid)
-            {
-                _ctx.Entry(websiteGroupType).State = EntityState.Modified;
-                _ctx.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(websiteGroupType);
+            if (!ModelState.IsValid) return View(model);
+            _lookupRepo.SaveWebsiteGroupTypes(model);
+            return RedirectToAction("Index");
         }
 
-        // GET: /Admin/DeleteWebsiteGroupType/5
         public void DeleteWebsiteGroupType(int id)
         {
             WebsiteGroupType websiteGroupType = _ctx.WebsiteGroupTypes.Single(x => x.Id == id);
@@ -2428,5 +1977,6 @@ namespace splc.beholder.web.Controllers
             _ctx.Entry(websiteGroupType).State = EntityState.Modified;
             _ctx.SaveChanges();
         }
+
     }
 }

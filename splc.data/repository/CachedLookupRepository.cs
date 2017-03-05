@@ -2,7 +2,9 @@ using splc.domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Web;
+using splc.data.Utility;
 
 namespace splc.data.repository
 {
@@ -16,8 +18,7 @@ namespace splc.data.repository
 
         public override List<State> GetStates()
         {
-            Debug.Print("CachedLookupRepository:GetStates");
-            var cacheKey = "States";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<State>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -33,8 +34,7 @@ namespace splc.data.repository
 
         public override List<ChapterType> GetChapterTypes()
         {
-            Debug.Print("CachedLookupRepository:GetChapterTypes");
-            var cacheKey = "ChapterTypes";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ChapterType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -50,8 +50,7 @@ namespace splc.data.repository
 
         public override List<ApprovalStatus> GetApprovalStatuses()
         {
-            Debug.Print("CachedLookupRepository:GetApprovalStatuses");
-            var cacheKey = "ApprovalStatus";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ApprovalStatus>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -67,8 +66,7 @@ namespace splc.data.repository
 
         public override List<ActiveStatus> GetActiveStatuses()
         {
-            Debug.Print("CachedLookupRepository:GetActiveStatuses");
-            var cacheKey = "ActiveStatus";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ActiveStatus>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -84,8 +82,7 @@ namespace splc.data.repository
 
         public override List<MovementClass> GetMovementClasses()
         {
-            Debug.Print("CachedLookupRepository:GetMovementClasses");
-            var cacheKey = "MovementClass";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<MovementClass>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -101,8 +98,7 @@ namespace splc.data.repository
 
         public override List<RemovalStatus> GetRemovalStatus()
         {
-            Debug.Print("CachedLookupRepository:GetRemovalStatus");
-            var cacheKey = "RemovalStatus";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<RemovalStatus>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -118,8 +114,7 @@ namespace splc.data.repository
 
         public override List<RelationshipType> GetRelationshipTypes()
         {
-            Debug.Print("CachedLookupRepository:GetRelationshipTypes");
-            var cacheKey = "RelationshipType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<RelationshipType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -135,8 +130,7 @@ namespace splc.data.repository
 
         public override List<ContactInfoType> GetContactInfoTypes()
         {
-            Debug.Print("CachedLookupRepository:GetContactInfoTypes");
-            var cacheKey = "ContactInfoType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ContactInfoType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -152,8 +146,7 @@ namespace splc.data.repository
 
         public override List<PrimaryStatus> GetPrimaryStatuses()
         {
-            Debug.Print("CachedLookupRepository:GetPrimaryStatuses");
-            var cacheKey = "PrimaryStatus";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<PrimaryStatus>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -169,8 +162,7 @@ namespace splc.data.repository
 
         public override List<EventType> GetEventTypes()
         {
-            Debug.Print("CachedLookupRepository:GetEventTypes");
-            var cacheKey = "EventType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<EventType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -186,8 +178,7 @@ namespace splc.data.repository
 
         public override List<AudioVideoType> GetAudioVideoTypes()
         {
-            Debug.Print("CachedLookupRepository:GetAudioVideoTypes");
-            var cacheKey = "AudioVideoType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<AudioVideoType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -203,8 +194,7 @@ namespace splc.data.repository
 
         public override List<Prefix> GetPrefixes()
         {
-            Debug.Print("CachedLookupRepository:GetPrefixes");
-            var cacheKey = "Prefix";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<Prefix>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -220,8 +210,7 @@ namespace splc.data.repository
 
         public override List<Suffix> GetSuffixes()
         {
-            Debug.Print("CachedLookupRepository:GetSuffixes");
-            var cacheKey = "Suffix";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<Suffix>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -237,8 +226,7 @@ namespace splc.data.repository
 
         public override List<Gender> GetGenders()
         {
-            Debug.Print("CachedLookupRepository:GetGenders");
-            var cacheKey = "Gender";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<Gender>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -254,8 +242,7 @@ namespace splc.data.repository
 
         public override List<Race> GetRaces()
         {
-            Debug.Print("CachedLookupRepository:GetRaces");
-            var cacheKey = "Race";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<Race>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -271,8 +258,7 @@ namespace splc.data.repository
 
         public override List<LicenseType> GetLicenseTypes()
         {
-            Debug.Print("CachedLookupRepository:GetLicenseTypes");
-            var cacheKey = "LicenseType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<LicenseType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -288,8 +274,7 @@ namespace splc.data.repository
 
         public override List<EyeColor> GetEyeColors()
         {
-            Debug.Print("CachedLookupRepository:GetEyeColors");
-            var cacheKey = "EyeColor";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<EyeColor>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -305,8 +290,7 @@ namespace splc.data.repository
 
         public override List<HairColor> GetHairColors()
         {
-            Debug.Print("CachedLookupRepository:GetHairColors");
-            var cacheKey = "HairColor";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<HairColor>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -322,8 +306,7 @@ namespace splc.data.repository
 
         public override List<HairPattern> GetHairPatterns()
         {
-            Debug.Print("CachedLookupRepository:GetHairPatterns");
-            var cacheKey = "HairPattern";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<HairPattern>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -339,8 +322,7 @@ namespace splc.data.repository
 
         public override List<MaritialStatus> GetMaritialStatuses()
         {
-            Debug.Print("CachedLookupRepository:GetMaritialStatuses");
-            var cacheKey = "MaritialStatus";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<MaritialStatus>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -356,8 +338,7 @@ namespace splc.data.repository
 
         public override List<AddressType> GetAddressTypes()
         {
-            Debug.Print("CachedLookupRepository:GetAddressTypes");
-            var cacheKey = "AddressType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<AddressType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -373,8 +354,7 @@ namespace splc.data.repository
 
         public override List<ConfidentialityType> GetConfidentialityTypes(User user)
         {
-            Debug.Print("CachedLookupRepository:GetConfidentialityTypes");
-            var cacheKey = "ConfidentialityType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ConfidentialityType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -390,8 +370,7 @@ namespace splc.data.repository
 
         public override List<ConfidentialityType> GetConfidentialityTypes()
         {
-            Debug.Print("CachedLookupRepository:GetConfidentialityTypes");
-            var cacheKey = "ConfidentialityType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ConfidentialityType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -407,8 +386,7 @@ namespace splc.data.repository
 
         public override List<OrganizationType> GetOrganizationTypes()
         {
-            Debug.Print("CachedLookupRepository:GetOrganizationTypes");
-            var cacheKey = "OrganizationType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<OrganizationType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -424,8 +402,7 @@ namespace splc.data.repository
 
         public override List<WebIncidentType> GetWebIncidentTypes()
         {
-            Debug.Print("CachedLookupRepository:GetWebIncidentTypes");
-            var cacheKey = "WebIncidentType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<WebIncidentType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -441,8 +418,7 @@ namespace splc.data.repository
 
         public override List<EventDocumentationType> GetEventDocumentationTypes()
         {
-            Debug.Print("CachedLookupRepository:GetEventDocumentationTypes");
-            var cacheKey = "EventDocumentationType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<EventDocumentationType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -458,8 +434,7 @@ namespace splc.data.repository
 
         public override List<VehicleMake> GetVehicleMakes()
         {
-            Debug.Print("CachedLookupRepository:GetVehicleMakes");
-            var cacheKey = "VehicleMake";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<VehicleMake>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -475,8 +450,7 @@ namespace splc.data.repository
 
         public override List<VehicleModel> GetVehicleModels()
         {
-            Debug.Print("CachedLookupRepository:GetVehicleModels");
-            var cacheKey = "VehicleModel";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<VehicleModel>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -492,8 +466,7 @@ namespace splc.data.repository
 
         public override List<VehicleType> GetVehicleTypes()
         {
-            Debug.Print("CachedLookupRepository:GetVehicleTypes");
-            var cacheKey = "VehicleType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<VehicleType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -509,8 +482,7 @@ namespace splc.data.repository
 
         public override List<VehicleColor> GetVehicleColors()
         {
-            Debug.Print("CachedLookupRepository:GetVehicleColors");
-            var cacheKey = "VehicleColor";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<VehicleColor>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -526,8 +498,7 @@ namespace splc.data.repository
 
         public override List<NewsSourceType> GetNewSourceType()
         {
-            Debug.Print("CachedLookupRepository:GetNewSourceType");
-            var cacheKey = "NewsSourceType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<NewsSourceType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -543,8 +514,7 @@ namespace splc.data.repository
 
         public override List<MediaType> GetMediaTypes()
         {
-            Debug.Print("CachedLookupRepository:GetMediaTypes");
-            var cacheKey = "MediaType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<MediaType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -560,8 +530,7 @@ namespace splc.data.repository
 
         public override List<ImageType> GetImageTypes()
         {
-            Debug.Print("CachedLookupRepository:GetImageTypes");
-            var cacheKey = "ImageType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ImageType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -577,8 +546,7 @@ namespace splc.data.repository
 
         public override List<MimeType> GetMimeTypes()
         {
-            Debug.Print("CachedLookupRepository:GetMimeTypes");
-            var cacheKey = "MimeType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<MimeType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -594,8 +562,7 @@ namespace splc.data.repository
 
         public override List<RenewalPermmisionType> RenewalPermissionTypes()
         {
-            Debug.Print("CachedLookupRepository:RenewalPermissionTypes");
-            var cacheKey = "RenewalPermmisionType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<RenewalPermmisionType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -611,8 +578,7 @@ namespace splc.data.repository
 
         public override List<NewsSource> GetNewsSources()
         {
-            Debug.Print("CachedLookupRepository:GetNewsSources");
-            var cacheKey = "NewsSource";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<NewsSource>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -628,8 +594,7 @@ namespace splc.data.repository
 
         public override List<CorrespondenceType> GetCorrespondenceTypes()
         {
-            Debug.Print("CachedLookupRepository:GetCorrespondenceTypes");
-            var cacheKey = "CorrespondenceType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<CorrespondenceType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -645,8 +610,7 @@ namespace splc.data.repository
 
         public override List<LibraryCategoryType> GetLibraryCategoryTypes()
         {
-            Debug.Print("CachedLookupRepository:GetLibraryCategoryTypes");
-            var cacheKey = "LibraryCategoryType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<LibraryCategoryType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -662,8 +626,7 @@ namespace splc.data.repository
 
         public override List<PublishedType> GetPublishedTypes()
         {
-            Debug.Print("CachedLookupRepository:GetPublishedTypes");
-            var cacheKey = "TagType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<PublishedType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -679,8 +642,7 @@ namespace splc.data.repository
 
         public override List<TagType> GetTagTypes()
         {
-            Debug.Print("CachedLookupRepository:GetTagTypes");
-            var cacheKey = "TagType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<TagType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -696,8 +658,7 @@ namespace splc.data.repository
 
         public override List<UserType> GetUserTypes()
         {
-            Debug.Print("CachedLookupRepository:GetUserTypes");
-            var cacheKey = "UserType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<UserType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -713,8 +674,7 @@ namespace splc.data.repository
 
         public override List<WebsiteGroupType> GetWebsiteGroupTypes()
         {
-            Debug.Print("CachedLookupRepository:GetWebsiteGroupTypes");
-            var cacheKey = "WebsiteGroupType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<WebsiteGroupType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -730,8 +690,7 @@ namespace splc.data.repository
 
         public override List<Religion> GetReligions()
         {
-            Debug.Print("CachedLookupRepository:GetReligions");
-            var cacheKey = "Religion";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<Religion>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -747,8 +706,7 @@ namespace splc.data.repository
 
         public override List<ContactTopic> GetContactTopics()
         {
-            Debug.Print("CachedLookupRepository:GetContactTopics");
-            var cacheKey = "ContactTopic";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ContactTopic>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -764,8 +722,7 @@ namespace splc.data.repository
 
         public override List<ContactType> GetContactTypes()
         {
-            Debug.Print("CachedLookupRepository:GetContactTypes");
-            var cacheKey = "ContactType";
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceNameFromList();
             var result = HttpRuntime.Cache[cacheKey] as List<ContactType>;
             if (result != null) return result;
             lock (CacheLockObject)
@@ -779,221 +736,306 @@ namespace splc.data.repository
             return result;
         }
 
-
+        ///// SAVE METHODS /////
         public override int SaveEventType(EventType model)
         {
-            HttpRuntime.Cache.Remove(model.GetType().Name);
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveEventType(model);
         }
 
         public override int SavePrefixes(Prefix model)
         {
-            HttpRuntime.Cache.Remove(model.GetType().Name);
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SavePrefixes(model);
         }
 
         public override int SaveSuffixes(Suffix model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveSuffixes(model);
         }
 
         public override int SaveGenders(Gender model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveGenders(model);
         }
 
         public override int SaveRaces(Race model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveRaces(model);
         }
 
         public override int SaveLicenseTypes(LicenseType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveLicenseTypes(model);
         }
 
         public override int SaveEyeColors(EyeColor model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveEyeColors(model);
         }
 
         public override int SaveHairColors(HairColor model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveHairColors(model);
         }
 
         public override int SaveHairPatterns(HairPattern model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveHairPatterns(model);
         }
 
         public override int SaveStates(State model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveStates(model);
         }
 
         public override int SaveMaritialStatuses(MaritialStatus model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveMaritialStatuses(model);
         }
 
         public override int SaveAddressTypes(AddressType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveAddressTypes(model);
         }
 
         public override int SaveApprovalStatuses(ApprovalStatus model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveApprovalStatuses(model);
         }
 
         public override int SaveActiveStatuses(ActiveStatus model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveActiveStatuses(model);
         }
 
         public override int SaveMovementClasses(MovementClass model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveMovementClasses(model);
         }
 
         public override int SaveConfidentialityTypes(ConfidentialityType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveConfidentialityTypes(model);
         }
 
         public override int SaveRemovalStatus(RemovalStatus model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveRemovalStatus(model);
         }
 
         public override int SavePrimaryStatuses(PrimaryStatus model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SavePrimaryStatuses(model);
         }
 
         public override int SaveRelationshipTypes(RelationshipType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveRelationshipTypes(model);
         }
 
         public override int SaveOrganizationTypes(OrganizationType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveOrganizationTypes(model);
         }
 
         public override int SaveChapterTypes(ChapterType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveChapterTypes(model);
         }
 
         public override int SaveContactInfoTypes(ContactInfoType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveContactInfoTypes(model);
         }
 
         public override int SaveWebIncidentTypes(WebIncidentType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveWebIncidentTypes(model);
         }
 
         public override int SaveEventDocumentationTypes(EventDocumentationType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveEventDocumentationTypes(model);
         }
 
         public override int SaveVehicleMakes(VehicleMake model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveVehicleMakes(model);
         }
 
         public override int SaveVehicleModels(VehicleModel model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveVehicleModels(model);
         }
 
         public override int SaveVehicleTypes(VehicleType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveVehicleTypes(model);
         }
 
         public override int SaveVehicleColors(VehicleColor model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveVehicleColors(model);
         }
 
         public override int SaveNewSourceType(NewsSourceType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveNewSourceType(model);
         }
 
         public override int SaveMediaTypes(MediaType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveMediaTypes(model);
         }
 
         public override int SaveImageTypes(ImageType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveImageTypes(model);
         }
 
         public override int SaveMimeTypes(MimeType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveMimeTypes(model);
         }
 
         public override int SaveRenewalPermissionTypes(RenewalPermmisionType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveRenewalPermissionTypes(model);
         }
 
         public override int SaveNewsSources(NewsSource model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveNewsSources(model);
         }
 
         public override int SaveContactTopics(ContactTopic model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveContactTopics(model);
         }
 
         public override int SaveContactTypes(ContactType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveContactTypes(model);
         }
 
         public override int SaveCorrespondenceTypes(CorrespondenceType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveCorrespondenceTypes(model);
         }
 
         public override int SaveLibraryCategoryTypes(LibraryCategoryType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveLibraryCategoryTypes(model);
         }
 
         public override int SavePublishedTypes(PublishedType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SavePublishedTypes(model);
         }
 
         public override int SaveTagTypes(TagType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveTagTypes(model);
         }
 
         public override int SaveUserTypes(UserType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveUserTypes(model);
         }
 
         public override int SaveWebsiteGroupTypes(WebsiteGroupType model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveWebsiteGroupTypes(model);
         }
 
         public override int SaveReligions(Religion model)
         {
+            var cacheKey = ((MethodInfo)MethodBase.GetCurrentMethod()).ReturnType.GetNiceName();
+            HttpRuntime.Cache.Remove(cacheKey);
             return base.SaveReligions(model);
         }
 

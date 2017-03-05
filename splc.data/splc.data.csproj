@@ -141,6 +141,7 @@
     <Compile Include="repository\ChapterRepository.cs" />
     <Compile Include="repository\CommonPersonRepository.cs" />
     <Compile Include="repository\OrganizationRepository.cs" />
+    <Compile Include="Utility\TypeExtensions.cs" />
     <Compile Include="Utility\FTSInterceptor.cs" />
     <Compile Include="Utility\XMLSerializationHelper.cs" />
   </ItemGroup>
